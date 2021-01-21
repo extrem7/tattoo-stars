@@ -1,0 +1,94 @@
+<template>
+  <b-card class="bg-default shadow" no-body>
+    <b-card-header class="bg-transparent border-0">
+      <h3 class="mb-0 text-white">Dark table</h3>
+    </b-card-header>
+
+    <el-table :data="projects"
+              class="table-responsive table table-dark"
+              header-row-class-name="thead-dark">
+      <el-table-column label="Project"
+                       min-width="310px"
+                       prop="name">
+        <template v-slot="{row}">
+          <b-media class="align-items-center" no-body>
+            <a class="mr-3" href="#">
+              <b-img :src="row.img" alt="Image placeholder" class="avatar" rounded="circle"/>
+            </a>
+            <b-media-body>
+              <span class="font-weight-600 name mb-0 text-sm">{{ row.title }}</span>
+            </b-media-body>
+          </b-media>
+        </template>
+      </el-table-column>
+      <el-table-column label="Budget"
+                       min-width="140px"
+                       prop="budget">
+      </el-table-column>
+
+      <el-table-column label="Status"
+                       min-width="170px"
+                       prop="status">
+        <template v-slot="{row}">
+          <badge class="badge-dot mr-4">
+            <i :class="`bg-${row.statusType}`"></i>
+            <span :class="`text-${row.statusType}`" class="status">{{ row.status }}</span>
+          </badge>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="Users" min-width="190px">
+        <div class="avatar-group">
+          <a class="avatar avatar-sm rounded-circle" data-original-title="Ryan Tompson" data-toggle="tooltip"
+             href="#">
+            <img alt="Image placeholder" src="img/theme/team-1.jpg">
+          </a>
+          <a class="avatar avatar-sm rounded-circle" data-original-title="Romina Hadid" data-toggle="tooltip"
+             href="#">
+            <img alt="Image placeholder" src="img/theme/team-2.jpg">
+          </a>
+          <a class="avatar avatar-sm rounded-circle" data-original-title="Alexander Smith" data-toggle="tooltip"
+             href="#">
+            <img alt="Image placeholder" src="img/theme/team-3.jpg">
+          </a>
+          <a class="avatar avatar-sm rounded-circle" data-original-title="Jessica Doe" data-toggle="tooltip"
+             href="#">
+            <img alt="Image placeholder" src="img/theme/team-4.jpg">
+          </a>
+        </div>
+      </el-table-column>
+
+      <el-table-column label="Completion"
+                       min-width="240px"
+                       prop="completion">
+        <template v-slot="{row}">
+          <div class="d-flex align-items-center">
+            <span class="completion mr-2">{{ row.completion }}%</span>
+            <div>
+              <base-progress :type="row.statusType" :value="row.completion"/>
+            </div>
+          </div>
+        </template>
+      </el-table-column>
+    </el-table>
+
+  </b-card>
+</template>
+<script>
+import projects from '../projects'
+import {Table, TableColumn} from 'element-ui'
+
+export default {
+  name: 'light-table',
+  components: {
+    [Table.name]: Table,
+    [TableColumn.name]: TableColumn
+  },
+  data() {
+    return {
+      projects,
+      currentPage: 1
+    }
+  }
+}
+</script>

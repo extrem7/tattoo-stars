@@ -1,0 +1,22 @@
+{
+    "name": "tattoo-stars/admin",
+    "description": "",
+    "authors": [
+        {
+            "name": "Yurii Kinakh",
+            "email": "extremtmnt@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Admin\\": ""
+        }
+    }
+}
