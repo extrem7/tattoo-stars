@@ -22,6 +22,7 @@ class HandleInertiaRequests extends Middleware
             'metaInfo' => fn() => [
                 'title' => \SEOMeta::getTitle()
             ],
+            'user' => fn() => $request->user('web'),
             'flash' => []
         ];
 

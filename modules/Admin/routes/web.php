@@ -5,12 +5,17 @@
  * @routePrefix("admin.")
  */
 
-R::middleware('guest')->group(function () {
-    R::get('/login', 'AuthController@login')->name('login');
+Route::middleware('guest')->group(function () {
+    Route::prefix('login')->as('login')->group(function () {
+        Route::get('', 'AuthController@login');
+        Route::post('', 'AuthController@try')->name('.try');
+    });
 });
 
-R::middleware('auth')->group(function () {
-    R::get('', 'DashboardController@page')->name('dashboard');
+Route::middleware('auth')->group(function () {
+    Route::delete('logout', 'AuthController@logout')->name('logout');
 
-    R::resource('users', 'UserController');
+    Route::get('', 'DashboardController@page')->name('dashboard');
+
+    Route::resource('users', 'UserController');
 });

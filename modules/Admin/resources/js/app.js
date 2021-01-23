@@ -1,5 +1,9 @@
 import Vue from 'vue'
 
+import VueCompositionAPI from '@vue/composition-api'
+
+Vue.use(VueCompositionAPI)
+
 import {InertiaApp, plugin} from '@inertiajs/inertia-vue'
 
 Vue.use(plugin)
@@ -31,6 +35,7 @@ new Vue({
         icon: 'fas fa-trash'
       }
     }
+
     this.$inertia.on('success', (event) => {
       const props = event.detail.page.props
 
