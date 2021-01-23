@@ -67,4 +67,49 @@
 
 @import "custom/vendors";
 
+body {
+    &::-webkit-scrollbar-track {
+        -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+        background-color: #333333
+    }
+
+    &::-webkit-scrollbar {
+        width: 10px;
+        background-color: #333333
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: #5e72e4;
+        border: 2px solid #5e72e4;
+    }
+}
+
+.bg-gradient-success {
+    background: linear-gradient(87deg, #f8913e, #f53e55) !important;
+}
+
+.table {
+    th:first-child, .id-column {
+        width: 50px;
+    }
+
+    .date-column {
+        width: 155px;
+    }
+
+    .actions-column {
+        width: 322px;
+    }
+}
+
+.pagination {
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.tox-notifications-container {
+    opacity: 0;
+    z-index: -1;
+    visibility: hidden;
+}
 

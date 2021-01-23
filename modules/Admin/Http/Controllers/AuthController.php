@@ -10,6 +10,6 @@ class AuthController extends Controller
     {
         $this->seo()->setTitle('Вход');
 
-        return vue('Login');
+        return inertia('Login');
     }
 }

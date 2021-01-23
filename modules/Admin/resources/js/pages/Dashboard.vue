@@ -1,6 +1,5 @@
 <template>
   <div>
-
     <base-header class="pb-6 pb-8 pt-5 pt-md-8 bg-gradient-success">
       <!-- Card stats -->
       <b-row>
@@ -59,7 +58,6 @@
         </b-col>
       </b-row>
     </base-header>
-
     <!--Charts-->
     <b-container class="mt--7" fluid>
       <!--<b-row>
@@ -132,7 +130,6 @@
       </b-row>
       <!--End tables-->
     </b-container>
-
   </div>
 </template>
 
@@ -150,7 +147,7 @@ import StatsCard from '@/argon/components/Cards/StatsCard'
 import SocialTrafficTable from '../argon/views/Dashboard/SocialTrafficTable'
 import PageVisitsTable from '../argon/views/Dashboard/PageVisitsTable'
 
-import DashboardLayout from '../argon/views/Layout/DashboardLayout'
+import DashboardLayout from '@/argon/views/Layout/DashboardLayout'
 
 export default {
   layout: (h, page) => h(DashboardLayout, [page]),

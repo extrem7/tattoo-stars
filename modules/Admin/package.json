@@ -48,7 +48,9 @@
         "vue-clipboard2": "^0.3.0",
         "vue-flatpickr-component": "^8.1.2",
         "vue-meta": "^2.4.0",
+        "vue-moment": "^4.1.0",
         "vue-router": "^3.0.6",
+        "vue-simple-alert": "^1.1.1",
         "vue2-transitions": "^0.2.3",
         "webpack-chunk-rename-plugin": "^1.0.3"
     }

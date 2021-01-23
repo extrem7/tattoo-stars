@@ -3,9 +3,7 @@
     <div class="container-fluid">
 
       <!--Toggler-->
-      <navbar-toggle-button @click.native="showSidebar">
-
-      </navbar-toggle-button>
+      <navbar-toggle-button @click.native="showSidebar"></navbar-toggle-button>
       <inertia-link class="navbar-brand" href="/">
         <img :src="logo" alt="..." class="navbar-brand-img">
       </inertia-link>
@@ -13,49 +11,30 @@
       <slot name="mobile-right">
         <ul class="nav align-items-center d-md-none">
           <base-dropdown class="nav-item" menu-on-right tag="li" title-tag="a">
-            <a slot="title-container" aria-expanded="false" aria-haspopup="true" class="nav-link nav-link-icon"
-               href="#" role="button">
-              <i class="ni ni-bell-55"></i>
-            </a>
-
-            <a class="dropdown-item" href="#">Action</a>
-            <a class="dropdown-item" href="#">Another action</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#">Something else here</a>
-          </base-dropdown>
-          <base-dropdown class="nav-item" menu-on-right tag="li" title-tag="a">
             <a slot="title-container" class="nav-link" href="#" role="button">
               <div class="media align-items-center">
-                              <span class="avatar avatar-sm rounded-circle">
-                                <img alt="Image placeholder" src="img/theme/team-1.jpg">
-                              </span>
+                <span class="avatar avatar-sm rounded-circle">
+                  <img alt="Image placeholder" src="/admin/dist/img/no-avatar.png">
+                </span>
               </div>
             </a>
 
-            <div class=" dropdown-header noti-title">
+            <b-dropdown-header class="noti-title">
               <h6 class="text-overflow m-0">Welcome!</h6>
-            </div>
-            <inertia-link class="dropdown-item" href="/profile">
+            </b-dropdown-header>
+            <b-dropdown-item href="#!">
               <i class="ni ni-single-02"></i>
               <span>My profile</span>
-            </inertia-link>
-            <inertia-link class="dropdown-item" href="/profile">
+            </b-dropdown-item>
+            <b-dropdown-item href="#!">
               <i class="ni ni-settings-gear-65"></i>
               <span>Settings</span>
-            </inertia-link>
-            <inertia-link class="dropdown-item" href="/profile">
-              <i class="ni ni-calendar-grid-58"></i>
-              <span>Activity</span>
-            </inertia-link>
-            <inertia-link class="dropdown-item" href="/profile">
-              <i class="ni ni-support-16"></i>
-              <span>Support</span>
-            </inertia-link>
+            </b-dropdown-item>
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#!">
+            <b-dropdown-item href="/logout" @click.prevent="logout">
               <i class="ni ni-user-run"></i>
               <span>Logout</span>
-            </a>
+            </b-dropdown-item>
           </base-dropdown>
         </ul>
       </slot>
@@ -82,9 +61,9 @@
         <!--Divider-->
         <hr class="my-3">
         <!--Heading-->
-        <h6 class="navbar-heading text-muted">Documentation</h6>
+        <!--<h6 class="navbar-heading text-muted">Documentation</h6>-->
         <!--Navigation-->
-        <ul class="navbar-nav mb-md-3">
+        <!--<ul class="navbar-nav mb-md-3">
           <li class="nav-item">
             <a class="nav-link"
                href="https://www.creative-tim.com/learning-lab/bootstrap-vue/alerts/argon-dashboard">
@@ -103,7 +82,7 @@
               <i class="ni ni-ui-04"></i> Components
             </a>
           </li>
-        </ul>
+        </ul>-->
       </div>
     </div>
   </nav>

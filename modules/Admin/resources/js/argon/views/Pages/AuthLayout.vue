@@ -28,8 +28,7 @@
         <b-row align-v="center" class="justify-content-xl-between">
           <b-col xl="6">
             <div class="copyright text-center text-xl-left text-muted">
-              © {{ year }} <a class="font-weight-bold ml-1" href="https://raxkor.com"
-                              target="_blank">Raxkor</a>
+              © {{ year }} <a class="font-weight-bold ml-1" href="https://raxkor.com" target="_blank">Raxkor</a>
             </div>
           </b-col>
         </b-row>

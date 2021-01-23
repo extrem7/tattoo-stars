@@ -3,8 +3,7 @@
     <b-row align-v="center" class="justify-content-lg-between">
       <b-col lg="6">
         <div class="copyright text-center text-lg-left text-muted">
-          © {{ year }} <a class="font-weight-bold ml-1" href="https://www.creative-tim.com" target="_blank">Creative
-          Tim</a>
+          © {{ year }} <a class="font-weight-bold ml-1" href="https://raxkor.com" target="_blank">Raxkor</a>
         </div>
       </b-col>
       <b-col lg="6">

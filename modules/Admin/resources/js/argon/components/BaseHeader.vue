@@ -9,7 +9,7 @@
 </template>
 <script>
 export default {
-  name: 'base-header',
+  name: 'BaseHeader',
   props: {
     type: {
       type: String,

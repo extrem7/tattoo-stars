@@ -11,4 +11,6 @@ R::middleware('guest')->group(function () {
 
 R::middleware('auth')->group(function () {
     R::get('', 'DashboardController@page')->name('dashboard');
+
+    R::resource('users', 'UserController');
 });

@@ -1,21 +1,26 @@
 <template>
   <div class="wrapper">
-    <notifications></notifications>
-    <side-bar>
+    <Notifications/>
+    <SideBar>
       <template slot="links">
-        <sidebar-item
-          :link="{
-            name: 'Dashboard',
+        <SideBarItem
+            :link="{
+            name: 'Главная',
             path: route('dashboard'),
             icon: 'ni ni-tv-2 text-primary',
           }"
-        >
-        </sidebar-item>
+        />
+        <SideBarItem
+            :link="{
+            name: 'Пользователи',
+            path: route('users.index'),
+            icon: 'ni ni-single-02 text-primary',
+          }"
+        />
       </template>
-      <template slot="links-after"></template>
-    </side-bar>
+    </SideBar>
     <div class="main-content">
-      <dashboard-navbar></dashboard-navbar>
+      <DashboardNavbar/>
 
       <div @click="$sidebar.displaySidebar(false)">
         <fade-transition :duration="200" mode="out-in" origin="center top">
@@ -23,13 +28,12 @@
           <slot></slot>
         </fade-transition>
       </div>
-      <content-footer></content-footer>
+      <ContentFooter/>
     </div>
   </div>
 </template>
 
 <script>
-/* eslint-disable no-new */
 import PerfectScrollbar from 'perfect-scrollbar'
 import 'perfect-scrollbar/css/perfect-scrollbar.css'
 

@@ -23,7 +23,7 @@
 </template>
 <script>
 export default {
-  name: 'base-button',
+  name: 'BaseButton',
   props: {
     round: Boolean,
     icon: Boolean,

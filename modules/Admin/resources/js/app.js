@@ -25,8 +25,32 @@ new Vue({
   }),
   mounted() {
     const {set} = this.$meta().addApp('TattooStars')
+    const messageTypes = {
+      destroy: {
+        style: 'success',
+        icon: 'fas fa-trash'
+      }
+    }
     this.$inertia.on('success', (event) => {
-      set({title: `${event.detail.page.props.metaInfo.title} - TattooStars`})
+      const props = event.detail.page.props
+
+      set({title: `${props.metaInfo.title} - TattooStars`})
+
+      if (props.flash.message !== undefined) {
+        const type = messageTypes[props.flash.type]
+        this.$notify({
+          message: props.flash.message,
+          icon: type.icon,
+          type: type.style,
+        })
+      }
+      if (props.flash.error !== undefined) {
+        this.$notify({
+          message: props.flash.error,
+          icon: '',
+          type: 'warning',
+        })
+      }
     })
   }
 }).$mount(el)

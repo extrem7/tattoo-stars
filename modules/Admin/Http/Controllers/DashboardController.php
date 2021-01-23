@@ -10,6 +10,6 @@ class DashboardController extends Controller
     {
         $this->seo()->setTitle('Главная');
 
-        return vue('Dashboard');
+        return inertia('Dashboard');
     }
 }
