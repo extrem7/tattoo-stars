@@ -12,10 +12,12 @@ use Illuminate\Notifications\Notifiable;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements HasMedia
 {
     use HasFactory,
+        HasRoles,
         Notifiable,
         InteractsWithMedia,
         SoftDeletes,
@@ -33,11 +35,10 @@ class User extends Authenticatable implements HasMedia
         $this->addMediaCollection('avatar')->singleFile()
             ->registerMediaConversions(function (Media $media) {
                 $this->addMediaConversion('icon')
-                    ->width(110)
+                    ->width(72)
                     ->sharpen(0)
                     ->nonQueued();
             });
-        $this->addMediaCollection('resume')->singleFile();
     }
 
     public function uploadAvatar(UploadedFile $image = null): void
@@ -59,6 +60,11 @@ class User extends Authenticatable implements HasMedia
         }
 
         return asset('/admin/dist/img/no-avatar.png');
+    }
+
+    public function isSuperAdmin(): bool
+    {
+        return $this->id === 1 || $this->email === config('admin.initial_user_email');
     }
 
     // RELATIONS

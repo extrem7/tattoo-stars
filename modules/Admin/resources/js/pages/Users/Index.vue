@@ -12,7 +12,7 @@
         </template>
         <BCol cols="12"
               class="d-flex align-items-center justify-content-center justify-content-between flex-column flex-sm-row mb-3">
-          <CreateBtn/>
+          <CreateBtn v-if="can('users.create')"/>
           <SearchForm
             v-model="searchQuery"
             @search="search"
@@ -37,14 +37,19 @@
           ref="table"
           sort-icon-left
           v-show="total">
-          <template v-slot:cell(created_at)="data">
-            {{ data.item.created_at | moment('DD.MM.YYYY HH:mm') }}
+          <template v-slot:cell(icon)="{item:{icon}}">
+            <div class="avatar avatar-sm rounded-circle">
+              <img :src="icon" alt="Image placeholder">
+            </div>
           </template>
-          <template v-slot:cell(actions)="data">
+          <template v-slot:cell(created_at)="{item:{created_at}}">
+            {{ created_at | moment('DD.MM.YYYY HH:mm') }}
+          </template>
+          <template v-slot:cell(actions)="{item:{id}}">
             <ActionsButtons
-              :id="data.item.id"
+              :id="id"
               :resource="resource"
-              @delete="destroy(data.item.id)"
+              @delete="destroy(id)"
             />
           </template>
         </BTable>
@@ -68,14 +73,11 @@
 </template>
 
 <script>
-import DashboardLayout from '@/argon/views/Layout/DashboardLayout'
-
 import CreateBtn from '@/components/includes/tables/CreateBtn'
 import SearchForm from '@/components/includes/tables/SearchForm'
 import ActionsButtons from '@/components/includes/tables/ActionsButtons'
 
 export default {
-  layout: (h, page) => h(DashboardLayout, [page]),
   components: {
     CreateBtn,
     SearchForm,
@@ -92,16 +94,23 @@ export default {
   },
   data() {
     const {data, current_page, per_page, total} = this.data
+
+    const fields = [
+      {key: 'icon'},
+      {key: 'id', sortable: true},
+      {key: 'email', sortable: true},
+      {key: 'name', sortable: true, label: 'Имя'},
+      {key: 'roles', label: 'Роли'},
+      {key: 'created_at', label: 'Зарегистрирован', thClass: 'date-column', sortable: true},
+    ]
+
+    if (this.can('users.edit') || this.can('users.delete')) {
+      fields.push({key: 'actions', label: '', thClass: 'actions-column'})
+    }
+
     return {
       resource: 'users',
-      fields: [
-        {key: 'id', sortable: true},
-        {key: 'email', sortable: true},
-        {key: 'name', sortable: true, label: 'Имя'},
-        {key: 'role', label: 'Роль'},
-        {key: 'created_at', label: 'Зарегистрирован', thClass: 'date-column', sortable: true},
-        {key: 'actions', label: '', thClass: 'actions-column'}
-      ],
+      fields,
       isBusy: false,
       initial: data,
       currentPage: current_page,

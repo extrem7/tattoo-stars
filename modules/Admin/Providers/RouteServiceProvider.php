@@ -4,6 +4,7 @@ namespace Modules\Admin\Providers;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
+use Modules\Admin\Http\Middleware\EnableDebugBar;
 use Modules\Admin\Http\Middleware\HandleInertiaRequests;
 
 class RouteServiceProvider extends ServiceProvider
@@ -28,7 +29,7 @@ class RouteServiceProvider extends ServiceProvider
     protected function mapWebRoutes(): void
     {
         Route::domain(env('ADMIN_DOMAIN'))
-            ->middleware(['web', HandleInertiaRequests::class])
+            ->middleware(['web', EnableDebugBar::class, HandleInertiaRequests::class])
             ->as('admin.')
             ->namespace($this->moduleNamespace)
             ->group(module_path('Admin', '/routes/web.php'));

@@ -20,11 +20,17 @@ InertiaProgress.init()
 
 const el = document.getElementById('app')
 
+import DashboardLayout from '@/argon/views/Layout/DashboardLayout'
+
 new Vue({
   render: h => h(InertiaApp, {
     props: {
       initialPage: JSON.parse(el.dataset.page),
-      resolveComponent: name => import(`./pages/${name}`).then(module => module.default),
+      resolveComponent: name => import(`./pages/${name}`)
+        .then(({default: page}) => {
+          page.layout = page.layout === undefined ? DashboardLayout : page.layout
+          return page
+        })
     },
   }),
   mounted() {

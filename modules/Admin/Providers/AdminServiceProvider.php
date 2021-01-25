@@ -4,6 +4,7 @@ namespace Modules\Admin\Providers;
 
 use Config;
 use Illuminate\Support\ServiceProvider;
+use Validator;
 
 class AdminServiceProvider extends ServiceProvider
 {
@@ -19,7 +20,7 @@ class AdminServiceProvider extends ServiceProvider
         $this->registerViews();
         $this->loadMigrationsFrom(module_path($this->moduleName, 'database/migrations'));
 
-        \Validator::extend('string255', function ($attribute, $value, $parameters, $validator) {
+        Validator::extend('string255', function ($attribute, $value, $parameters, $validator) {
             return is_string($value) && mb_strlen($value) <= 255;
         });
     }
@@ -72,5 +73,6 @@ class AdminServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->register(RouteServiceProvider::class);
+        $this->app->register(AuthServiceProvider::class);
     }
 }

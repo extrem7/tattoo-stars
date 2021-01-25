@@ -25,6 +25,7 @@
           <BMedia class="align-items-center" no-body>
                   <span class="avatar avatar-sm rounded-circle">
                     <img :src="avatar"
+                         class="avatar-image"
                          alt="Image placeholder">
                   </span>
             <BMediaBody class="ml-2 d-none d-lg-block">
@@ -39,10 +40,14 @@
           <BDropdownHeader class="noti-title">
             <h6 class="text-overflow m-0">Приветствую!</h6>
           </BDropdownHeader>
-          <BDropdownItem href="#!">
-            <i class="ni ni-settings-gear-65"></i>
-            <span>Настройки</span>
-          </BDropdownItem>
+          <li>
+            <InertiaLink
+              :href="route('profile.edit')"
+              class="dropdown-item">
+              <i class="ni ni-settings-gear-65"></i>
+              <span>Настройки</span>
+            </InertiaLink>
+          </li>
           <div class="dropdown-divider"></div>
           <BDropdownItem
             @click.prevent="logout"

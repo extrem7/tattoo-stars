@@ -97,7 +97,7 @@ export default {
       description: 'Input group css classes'
     },
     value: {
-      type: [String, Number],
+      type: [String, Number, Array],
       description: 'Input value'
     },
     type: {

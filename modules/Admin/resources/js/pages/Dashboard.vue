@@ -147,10 +147,7 @@ import StatsCard from '@/argon/components/Cards/StatsCard'
 import SocialTrafficTable from '../argon/views/Dashboard/SocialTrafficTable'
 import PageVisitsTable from '../argon/views/Dashboard/PageVisitsTable'
 
-import DashboardLayout from '@/argon/views/Layout/DashboardLayout'
-
 export default {
-  layout: (h, page) => h(DashboardLayout, [page]),
   components: {
     //LineChart,
     //BarChart,

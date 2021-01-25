@@ -14,8 +14,9 @@
                   no-body>
                   <BCardHeader header-bg-variant="transparent">
                     <h3 class="mb-0">
-                      {{ !isEdit ? 'Создать нового' : 'Редактировать' }} пользователя
-                      <span v-if="isEdit">{{ user.name }}</span>
+                      {{ !isEdit ? 'Создать нового' : 'Редактировать' }}
+                      {{ !isProfile ? 'пользователя' : 'профиль' }}
+                      <span v-if="isEdit && !isProfile">{{ user.name }}</span>
                     </h3>
                   </BCardHeader>
                   <BCardBody>
@@ -55,6 +56,19 @@
                       placeholder="Пароль"
                       prepend-icon="ni ni-lock-circle-open"
                     />
+                    <BaseInput
+                      v-if="roles && roles.length"
+                      :rules="{required: !isEdit}"
+                      alternative
+                      class="mb-3"
+                      label="Роль"
+                      name="role">
+                      <b-form-select
+                        v-model="form.roles"
+                        :options="roles"
+                        :select-size="4"
+                        multiple/>
+                    </BaseInput>
                   </BCardBody>
                   <BCardFooter
                     class="d-flex justify-content-between"
@@ -81,15 +95,15 @@
 </template>
 
 <script>
-import DashboardLayout from '@/argon/views/Layout/DashboardLayout'
 import AvatarUploader from '@/components/AvatarUploader'
 
 export default {
   props: {
     errors: Object,
-    user: Object
+    user: Object,
+    roles: Array,
+    isProfile: Boolean
   },
-  layout: (h, page) => h(DashboardLayout, [page]),
   components: {
     AvatarUploader
   },
@@ -99,10 +113,8 @@ export default {
         name: '',
         email: '',
         password: '',
-        role: null,
-      },
-      //roles: [...this.shared('roles')],
-      avatar: null,
+        role: [],
+      }
     }
   },
   computed: {
@@ -118,13 +130,18 @@ export default {
     if (this.isEdit) {
       this.form.name = this.user.name
       this.form.email = this.user.email
+      this.form.roles = this.user.roles
       this.form.password = ''
     }
   },
   methods: {
     submit() {
+      const updateRoute = !this.isProfile
+        ? this.route('users.update', this.user.id)
+        : this.route('profile.update')
+
       this.$inertia.visit(
-        !this.isEdit ? this.route('users.index') : this.route('users.update', this.user.id),
+        !this.isEdit ? this.route('users.index') : updateRoute,
         {
           method: !this.isEdit ? 'post' : 'patch',
           data: this.form,

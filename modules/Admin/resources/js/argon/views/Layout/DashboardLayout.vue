@@ -8,13 +8,16 @@
             name: 'Главная',
             path: route('dashboard'),
             icon: 'ni ni-tv-2 text-primary',
+            active:isRoute('dashboard')
           }"
         />
         <SideBarItem
+            v-if="can('users.index')"
             :link="{
             name: 'Пользователи',
             path: route('users.index'),
             icon: 'ni ni-single-02 text-primary',
+            active:routeIncludes(['users','profile'])
           }"
         />
       </template>
@@ -24,7 +27,6 @@
 
       <div @click="$sidebar.displaySidebar(false)">
         <fade-transition :duration="200" mode="out-in" origin="center top">
-          <!-- your content here -->
           <slot></slot>
         </fade-transition>
       </div>

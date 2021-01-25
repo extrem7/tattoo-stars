@@ -11,30 +11,39 @@
       <slot name="mobile-right">
         <ul class="nav align-items-center d-md-none">
           <base-dropdown class="nav-item" menu-on-right tag="li" title-tag="a">
-            <a slot="title-container" class="nav-link" href="#" role="button">
-              <div class="media align-items-center">
-                <span class="avatar avatar-sm rounded-circle">
-                  <img alt="Image placeholder" src="/admin/dist/img/no-avatar.png">
-                </span>
-              </div>
+            <a slot="title-container" class="nav-link" href="#" @click.prevent>
+              <BMedia class="align-items-center" no-body>
+                  <span class="avatar avatar-sm rounded-circle">
+                    <img :src="avatar"
+                         alt="Image placeholder"
+                         class="avatar-image">
+                  </span>
+                <BMediaBody class="ml-2 d-none d-lg-block">
+              <span class="mb-0 text-sm  font-weight-bold">
+                {{ user.name }}
+              </span>
+                </BMediaBody>
+              </BMedia>
             </a>
 
-            <b-dropdown-header class="noti-title">
-              <h6 class="text-overflow m-0">Welcome!</h6>
-            </b-dropdown-header>
-            <b-dropdown-item href="#!">
-              <i class="ni ni-single-02"></i>
-              <span>My profile</span>
-            </b-dropdown-item>
-            <b-dropdown-item href="#!">
-              <i class="ni ni-settings-gear-65"></i>
-              <span>Settings</span>
-            </b-dropdown-item>
+            <BDropdownHeader class="noti-title">
+              <h6 class="text-overflow m-0">Приветствую!</h6>
+            </BDropdownHeader>
+            <li>
+              <InertiaLink
+                :href="route('profile.edit')"
+                class="dropdown-item">
+                <i class="ni ni-settings-gear-65"></i>
+                <span>Настройки</span>
+              </InertiaLink>
+            </li>
             <div class="dropdown-divider"></div>
-            <b-dropdown-item href="/logout" @click.prevent="logout">
+            <BDropdownItem
+              href="#logout"
+              @click.prevent="logout">
               <i class="ni ni-user-run"></i>
-              <span>Logout</span>
-            </b-dropdown-item>
+              <span>Выйти</span>
+            </BDropdownItem>
           </base-dropdown>
         </ul>
       </slot>
@@ -58,31 +67,6 @@
           <slot name="links">
           </slot>
         </ul>
-        <!--Divider-->
-        <hr class="my-3">
-        <!--Heading-->
-        <!--<h6 class="navbar-heading text-muted">Documentation</h6>-->
-        <!--Navigation-->
-        <!--<ul class="navbar-nav mb-md-3">
-          <li class="nav-item">
-            <a class="nav-link"
-               href="https://www.creative-tim.com/learning-lab/bootstrap-vue/alerts/argon-dashboard">
-              <i class="ni ni-spaceship"></i> Getting started
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link"
-               href="https://www.creative-tim.com/learning-lab/bootstrap-vue/colors/argon-dashboard">
-              <i class="ni ni-palette"></i> Foundation
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link"
-               href="https://www.creative-tim.com/learning-lab/bootstrap-vue/alerts/argon-dashboard">
-              <i class="ni ni-ui-04"></i> Components
-            </a>
-          </li>
-        </ul>-->
       </div>
     </div>
   </nav>
@@ -113,7 +97,18 @@ export default {
       autoClose: this.autoClose
     }
   },
+  computed: {
+    user() {
+      return this.$page.props.auth
+    },
+    avatar() {
+      return this.user.avatar || '/admin/dist/img/no-avatar.png'
+    }
+  },
   methods: {
+    logout() {
+      this.$inertia.delete(this.route('logout'))
+    },
     closeSidebar() {
       this.$sidebar.displaySidebar(false)
     },

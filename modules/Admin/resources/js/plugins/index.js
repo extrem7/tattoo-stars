@@ -14,6 +14,14 @@ Vue.use(VueSimpleAlert)
 
 Vue.mixin({
   methods: {
-    route: (name, params, absolute) => route(`admin.${name}`, params, absolute)
-  }
+    route: (name, params, absolute) => route(`admin.${name}`, params, absolute),
+    isRoute: (name) => route(null, {}, null, Ziggy).current('admin.' + name),
+    routeIncludes: (fragments) => route(null, {}, null, Ziggy)
+      .current()
+      .match(new RegExp(`(${fragments.join('|')})`)),
+
+    can(permission) {
+      return !!this.$page.props.auth.permissions.includes(permission)
+    }
+  },
 })

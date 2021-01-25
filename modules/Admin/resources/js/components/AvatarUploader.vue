@@ -11,11 +11,11 @@
         <img alt="add-photo" src="/admin/dist/img/plus-light.svg">
       </button>
       <InertiaLink
-        v-if="avatar"
-        :href="route('users.avatar.destroy',id)"
-        as="button"
-        class="btn btn-action-img btn-danger btn-delete"
-        method="delete">
+          v-if="avatar"
+          :href="route('users.avatar.destroy',id)"
+          as="button"
+          class="btn btn-action-img btn-danger btn-delete"
+          method="delete">
         <img alt="delete-photo" src="/admin/dist/img/delete-white.svg">
       </InertiaLink>
     </div>
@@ -30,31 +30,31 @@
       <div class="tattoo-image-uploader form-group">
         <div class="company-info-logo d-flex justify-content-center">
           <BaseButton
-            size="lg"
-            type="info"
-            @click.prevent="showFileChooser">
+              size="lg"
+              type="info"
+              @click.prevent="showFileChooser">
             Выбрать файл
           </BaseButton>
         </div>
         <VueCropper
-          v-show="image"
-          ref="cropper"
-          :src="image"
-          class="vue-cropper w-100"/>
+            v-show="image"
+            ref="cropper"
+            :src="image"
+            class="vue-cropper w-100"/>
       </div>
       <template slot="footer">
         <div v-show="image"
              class="modal-actions mt-3">
           <BaseButton
-            :outline="true"
-            type="primary"
-            @click="cancel">
+              :outline="true"
+              type="primary"
+              @click="cancel">
             Отменить
           </BaseButton>
           <BaseButton
-            :outline="true"
-            type="success"
-            @click="upload">
+              :outline="true"
+              type="success"
+              @click="upload">
             Загрузить
           </BaseButton>
         </div>
@@ -88,8 +88,8 @@ export default {
       form.append('avatar', avatar, avatar.name)
 
       this.$inertia.post(this.route('users.avatar.update', this.id), form, {
-        onSuccess: () => {
-          this.isModalOpen = false
+        onSuccess: page => {
+          if (!page.props.flash.error) this.isModalOpen = false
         }
       })
     },

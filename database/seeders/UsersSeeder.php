@@ -16,7 +16,7 @@ class UsersSeeder extends Seeder
                 'password' => env('INITIAL_USER_PASSWORDHASH'),
             ]);
             $user->save();
-            //$user->assignRole('admin');
+            $user->assignRole('admin');
         }
     }
 }

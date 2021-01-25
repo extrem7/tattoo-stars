@@ -60,6 +60,7 @@
     </slot>
   </b-nav-item>
 </template>
+
 <script>
 import {CollapseTransition} from 'vue2-transitions'
 
@@ -190,6 +191,7 @@ export default {
   }
 }
 </script>
+
 <style>
 .sidebar-menu-item {
   cursor: pointer;

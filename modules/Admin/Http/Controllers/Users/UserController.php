@@ -2,6 +2,10 @@
 
 namespace Modules\Admin\Http\Controllers\Users;
 
+use Auth;
+use Exception;
+use Hash;
+use Illuminate\Support\Collection;
 use Modules\Admin\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
@@ -9,6 +13,7 @@ use Illuminate\Http\RedirectResponse;
 use Inertia\Response;
 use Modules\Admin\Http\Requests\IndexRequest;
 use Modules\Admin\Http\Requests\UserRequest;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -21,12 +26,21 @@ class UserController extends Controller
         $this->seo()->setTitle($title);
 
         $users = User::query()->select(['id', 'email', 'name', 'created_at'])
+            ->with(['avatarMedia', 'roles'])
             ->when($request->get('searchQuery'), fn($q) => $q->search($request->get('searchQuery')))
             ->when($request->get('sortBy'), function (Builder $users) use ($request) {
                 $users->orderBy($request->get('sortBy'));
             })
             ->when($request->get('sortDesc'), fn(Builder $q) => $q->latest())
             ->paginate(10);
+
+        /* @var $users Collection<User> */
+        $users->transform(function (User $user) {
+            $user->append('icon');
+            $data = $user->toArray();
+            $data['roles'] = $user->roles->pluck('label')->join(', ');
+            return $data;
+        });
 
         return inertia('Users/Index', [
             'data' => $users,
@@ -40,18 +54,24 @@ class UserController extends Controller
 
     public function create(): Response
     {
+        abort_unless(Auth::user()->can('users.create'), 403);
+
         $this->seo()->setTitle('Создать пользователя');
 
-        return inertia('Users/Profile');
+        return inertia('Users/Profile', [
+            'roles' => $this->getRoles()
+        ]);
     }
 
     public function store(UserRequest $request): RedirectResponse
     {
-        $password = \Hash::make($request->input('password'));
+        abort_unless(Auth::user()->can('users.create'), 403);
+
+        $password = Hash::make($request->input('password'));
 
         $user = User::create(array_merge($request->only('email', 'name'), compact('password')));
 
-        //$user->assignRole($request->input('role'));
+        $user->assignRole($request->roles);
 
         return redirect()->route('admin.users.edit', $user->id)->with([
             'message' => "Пользователь {$request->name} был создан",
@@ -61,39 +81,60 @@ class UserController extends Controller
 
     public function edit(User $user): Response
     {
+        abort_unless(Auth::user()->can('users.edit'), 403);
+
         $this->seo()->setTitle('Редактировать пользователя');
 
         $data = $user->only(['id', 'name', 'email']);
+        $data['roles'] = $user->roles->pluck('id');
 
         if ($user->avatarMedia) {
             $data['avatar'] = $user->avatar;
         }
 
         return inertia('Users/Profile', [
-            'user' => $data
+            'user' => $data,
+            'roles' => $this->getRoles()
         ]);
     }
 
-    public function update(UserRequest $request, User $user)
+    public function update(UserRequest $request, User $user): RedirectResponse
     {
+        abort_unless(Auth::user()->can('users.edit'), 403);
+
         $data = $request->only('email', 'name');
         if ($password = $request->password) {
-            $data['password'] = \Hash::make($password);
+            $data['password'] = Hash::make($password);
         }
         $user->update($data);
 
-        // $user->syncRoles($request->input('role'));
+        $user->syncRoles($request->roles);
 
         return redirect()->back()->with(['message' => "Пользователь {$request->name} был отредактирован"]);
     }
 
     public function destroy(User $user): RedirectResponse
     {
+        abort_unless(Auth::user()->can('users.delete'), 403);
+
+        if ($user->isSuperAdmin()) {
+            return redirect()->back()->with(['error' => 'Ты в своем уме?']);
+        }
+
         try {
             $user->delete();
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Возникла ошибка при удалении пользователя.');
+        } catch (Exception $e) {
+            return redirect()->back()->with(['error' => 'Возникла ошибка при удалении пользователя.']);
         }
+
         return redirect()->back()->with(['message' => 'Пользователь был удален.', 'type' => 'destroy']);
+    }
+
+    protected function getRoles(): array
+    {
+        return collect(Role::all(['id', 'label'])
+            ->map(fn(Role $r) => ['value' => $r->id, 'text' => $r->label]))
+            ->values()
+            ->toArray();
     }
 }
