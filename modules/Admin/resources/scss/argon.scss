@@ -68,6 +68,7 @@
 @import "custom/vendors";
 
 body {
+    margin: 0!important;
     &::-webkit-scrollbar-track {
         -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
         background-color: #333333
@@ -81,6 +82,15 @@ body {
     &::-webkit-scrollbar-thumb {
         background-color: #5e72e4;
         border: 2px solid #5e72e4;
+    }
+}
+
+.wrapper {
+    > .main-content {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
     }
 }
 
@@ -100,6 +110,10 @@ body {
     .actions-column {
         width: 322px;
     }
+
+    &.table-dark thead th {
+        border-color: #1f3a68 !important;
+    }
 }
 
 .pagination {
@@ -113,3 +127,13 @@ body {
     visibility: hidden;
 }
 
+.tattoo-image-uploader {
+    input {
+        display: none;
+    }
+
+    .vue-cropper {
+        width: 275px;
+        margin-top: 15px;
+    }
+}

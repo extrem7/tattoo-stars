@@ -22,13 +22,24 @@ class HandleInertiaRequests extends Middleware
             'metaInfo' => fn() => [
                 'title' => \SEOMeta::getTitle()
             ],
-            'user' => fn() => $request->user('web'),
+            'auth' => function () use ($request) {
+                if (!\Auth::check()) return;
+
+                $user = $request->user('web');
+                $data = $user->only(['id', 'name', 'email']);
+
+                if ($user->avatarMedia) {
+                    $data['avatar'] = $user->avatar;
+                }
+
+                return $data;
+            },
             'flash' => []
         ];
 
         if ($request->session()->has('message')) {
             $shared['flash']['message'] = fn() => $request->session()->get('message');
-            $shared['flash']['type'] = fn() => $request->session()->get('type');
+            $shared['flash']['type'] = fn() => $request->session()->get('type') ?? 'success';
         }
         if ($request->session()->has('error')) {
             $shared['flash']['error'] = fn() => $request->session()->get('error');

@@ -8,48 +8,53 @@
         </svg>
       </div>
     </div>
-    <b-container class="mt--8 pb-5">
-      <b-row class="justify-content-center">
-        <b-col lg="5" md="7">
-          <b-card class="bg-secondary border-0 mb-0" no-body>
-            <b-card-body class="px-lg-5 py-lg-5">
-              <validation-observer ref="formValidator" v-slot="{handleSubmit}">
-                <b-form role="form" @submit.prevent="handleSubmit(onSubmit)">
-                  <b-alert :show="message.length" class="text-center" variant="danger">
+    <BContainer class="mt--8 pb-5">
+      <BRow class="justify-content-center">
+        <BCol lg="5" md="7">
+          <BCard class="bg-secondary border-0 mb-0" no-body>
+            <BCardBody class="px-lg-5 py-lg-5">
+              <ValidationObserver ref="formValidator" v-slot="{handleSubmit}">
+                <BForm role="form" @submit.prevent="handleSubmit(onSubmit)">
+                  <BAlert :show="message.length" class="text-center" variant="danger">
                     {{ message }}
-                  </b-alert>
-                  <base-input v-model="form.email"
-                              :rules="{required: true, email: true}"
-                              alternative
-                              class="mb-3"
-                              name="email"
-                              placeholder="Email"
-                              prepend-icon="ni ni-email-83">
-                  </base-input>
+                  </BAlert>
+                  <BaseInput
+                    v-model="form.email"
+                    :rules="{required: true, email: true}"
+                    alternative
+                    class="mb-3"
+                    name="email"
+                    placeholder="Email"
+                    prepend-icon="ni ni-email-83"
+                  />
 
-                  <base-input v-model="form.password"
-                              :rules="{required: true, min: 6}"
-                              alternative
-                              class="mb-3"
-                              name="password"
-                              placeholder="Пароль"
-                              prepend-icon="ni ni-lock-circle-open"
-                              type="password">
-                  </base-input>
+                  <BaseInput
+                    v-model="form.password"
+                    :rules="{required: true}"
+                    alternative
+                    class="mb-3"
+                    name="password"
+                    placeholder="Пароль"
+                    prepend-icon="ni ni-lock-circle-open"
+                    type="password"
+                  />
 
-                  <b-form-checkbox v-model="form.rememberMe">Запомнить меня</b-form-checkbox>
+                  <BFormCheckbox v-model="form.rememberMe">Запомнить меня</BFormCheckbox>
                   <div class="text-center">
-                    <base-button class="my-4" native-type="submit" type="primary">
+                    <BaseButton
+                      class="my-4"
+                      native-type="submit"
+                      type="primary">
                       Войти
-                    </base-button>
+                    </BaseButton>
                   </div>
-                </b-form>
-              </validation-observer>
-            </b-card-body>
-          </b-card>
-        </b-col>
-      </b-row>
-    </b-container>
+                </BForm>
+              </ValidationObserver>
+            </BCardBody>
+          </BCard>
+        </BCol>
+      </BRow>
+    </BContainer>
   </div>
 </template>
 

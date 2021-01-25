@@ -37,7 +37,7 @@
 </template>
 <script>
 export default {
-  name: 'base-nav',
+  name: 'BaseNav',
   props: {
     show: {
       type: Boolean,

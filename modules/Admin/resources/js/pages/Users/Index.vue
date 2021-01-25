@@ -2,73 +2,66 @@
   <div class="users-index">
     <BaseHeader class="pb-6 pb-8 pt-5 pt-md-8 bg-gradient-success"/>
 
-    <BContainer class="mt--7" fluid>
-      <div class="d-flex align-items-center justify-content-lg-between">
-        <CreateBtn/>
-        <SearchForm
-          v-model="searchQuery"
-          @search="search"
-          placeholder="Имя или email"
-        />
-      </div>
+    <BContainer class="mt--9" fluid>
+      <Card
+        class="shadow bg-default"
+        header-classes="bg-transparent"
+        no-body>
+        <template slot="header">
+          <h3 class="mb-0 text-white">Пользователи</h3>
+        </template>
+        <BCol cols="12"
+              class="d-flex align-items-center justify-content-center justify-content-between flex-column flex-sm-row mb-3">
+          <CreateBtn/>
+          <SearchForm
+            v-model="searchQuery"
+            @search="search"
+            placeholder="Имя или email"
+          />
+        </BCol>
+        <BTable
+          :busy.async="isBusy"
+          :current-page="currentPage"
 
-      <BOverlay
-        :opacity="0.5"
-        :show="isBusy"
-        variant="dark"
-        class="mb-3">
-        <BCard
-          class="shadow bg-default"
-          no-body>
-          <BCardHeader class="border-0" header-bg-variant="transparent">
-            <h3 class="mb-0 text-white">Пользователи</h3>
-          </BCardHeader>
-          <BTable
-            :busy.async="isBusy"
-            :current-page="currentPage"
+          :fields="fields"
+          :items="()=>initial"
+          @context-changed="update"
 
-            :fields="fields"
-            :items="()=>initial"
-            @context-changed="update"
+          :per-page="perPage"
+          :sort-by.sync="sortBy"
+          :sort-desc.sync="sortDesc"
 
-            :per-page="perPage"
-            :sort-by.sync="sortBy"
-            :sort-desc.sync="sortDesc"
+          hover
+          dark
 
-            hover
-            dark
-
-            ref="table"
-            sort-icon-left
-            v-show="total">
-            <template v-slot:cell(created_at)="data">
-              {{ data.item.created_at | moment('DD.MM.YYYY HH:mm') }}
-            </template>
-            <template v-slot:cell(actions)="data">
-              <ActionsButtons
-                :id="data.item.id"
-                :resource="resource"
-                @delete="destroy(data.item.id)"
-              />
-            </template>
-          </BTable>
-        </BCard>
-        <div v-if="!total && searchQuery.length"
-             class="d-flex justify-content-center">
-          <BAlert
-            class="w-25 text-center"
-            show
-            variant="warning">
-            No users found
-          </BAlert>
-        </div>
-      </BOverlay>
-
+          ref="table"
+          sort-icon-left
+          v-show="total">
+          <template v-slot:cell(created_at)="data">
+            {{ data.item.created_at | moment('DD.MM.YYYY HH:mm') }}
+          </template>
+          <template v-slot:cell(actions)="data">
+            <ActionsButtons
+              :id="data.item.id"
+              :resource="resource"
+              @delete="destroy(data.item.id)"
+            />
+          </template>
+        </BTable>
+        <BAlert
+          v-if="!total && searchQuery.length"
+          class="w-100 mt-2 text-center"
+          show
+          variant="warning">
+          Пользователей не найдено
+        </BAlert>
+      </Card>
       <BPagination
         v-if="total"
         v-model="currentPage"
         :per-page="perPage"
         :total-rows="total"
+        class="mt-4"
       />
     </BContainer>
   </div>
@@ -157,7 +150,7 @@ export default {
         try {
           this.isBusy = true
           this.$inertia.delete(this.route(`${this.resource}.destroy`, id), {
-            only: ['data'],
+            only: ['data', 'flash'],
             preserveState: false,
             replace: true
           })

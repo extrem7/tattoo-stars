@@ -30,8 +30,10 @@ new Vue({
   mounted() {
     const {set} = this.$meta().addApp('TattooStars')
     const messageTypes = {
+      created: {
+        icon: 'fas fa-plus-circle'
+      },
       destroy: {
-        style: 'success',
         icon: 'fas fa-trash'
       }
     }
@@ -42,7 +44,10 @@ new Vue({
       set({title: `${props.metaInfo.title} - TattooStars`})
 
       if (props.flash.message !== undefined) {
-        const type = messageTypes[props.flash.type]
+        const type = messageTypes[props.flash.type] || {
+          type: 'success',
+          icon: null
+        }
         this.$notify({
           message: props.flash.message,
           icon: type.icon,

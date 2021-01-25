@@ -17,5 +17,12 @@ Route::middleware('auth')->group(function () {
 
     Route::get('', 'DashboardController@page')->name('dashboard');
 
-    Route::resource('users', 'UserController');
+    Route::namespace('Users')->group(function () {
+        Route::resource('users', 'UserController');
+        Route::prefix('users/{user}/avatar')->as('users.avatar.')->group(function () {
+            Route::post('', 'AvatarController@update')->name('update');
+            Route::delete('', 'AvatarController@destroy')->name('destroy');
+        });
+    });
+
 });

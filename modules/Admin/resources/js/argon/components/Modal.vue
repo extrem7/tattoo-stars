@@ -44,7 +44,7 @@
 import {SlideYUpTransition} from 'vue2-transitions'
 
 export default {
-  name: 'modal',
+  name: 'Modal',
   components: {
     SlideYUpTransition
   },

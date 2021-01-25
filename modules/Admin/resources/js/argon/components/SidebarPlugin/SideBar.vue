@@ -99,7 +99,7 @@ export default {
   props: {
     logo: {
       type: String,
-      default: 'admin/dist/img/logo.svg',
+      default: '/admin/dist/img/logo.svg',
       description: 'Sidebar app logo'
     },
     autoClose: {

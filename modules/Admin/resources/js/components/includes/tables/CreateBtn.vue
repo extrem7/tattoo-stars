@@ -1,10 +1,16 @@
 <template>
-    <div class="form-group">
-        <a :href="route(`${resource}.create`)" class="btn btn-success">Создать</a>
-    </div>
+  <div class="form-group mb-0">
+    <InertiaLink
+      :href="route(`${resource}.create`)"
+      as="BBtn"
+      class="mb-3 mb-sm-0"
+      variant="outline-success">
+      Создать
+    </InertiaLink>
+  </div>
 </template>
 <script>
-    export default {
-        inject: ['resource']
-    }
+export default {
+  inject: ['resource']
+}
 </script>

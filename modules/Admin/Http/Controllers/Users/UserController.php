@@ -1,7 +1,8 @@
 <?php
 
-namespace Modules\Admin\Http\Controllers;
+namespace Modules\Admin\Http\Controllers\Users;
 
+use Modules\Admin\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
@@ -27,7 +28,7 @@ class UserController extends Controller
             ->when($request->get('sortDesc'), fn(Builder $q) => $q->latest())
             ->paginate(10);
 
-        return inertia('Users', [
+        return inertia('Users/Index', [
             'data' => $users,
             'table' => [
                 'searchQuery' => $request->searchQuery,
@@ -37,60 +38,53 @@ class UserController extends Controller
         ]);
     }
 
-    public function create()
+    public function create(): Response
     {
-        $this->seo()->setTitle('Create a new user');
+        $this->seo()->setTitle('Создать пользователя');
 
-        $this->userService->shareForCRUD();
-
-        return $this->form();
+        return inertia('Users/Profile');
     }
 
-    public function store(UserRequest $request)
+    public function store(UserRequest $request): RedirectResponse
     {
-        $this->seo()->setTitle('Edit a user');
+        $password = \Hash::make($request->input('password'));
 
-        $password = Hash::make($request->input('password'));
+        $user = User::create(array_merge($request->only('email', 'name'), compact('password')));
 
-        $user = User::create(array_merge($request->only('email', 'name', 'type'), compact('password')));
+        //$user->assignRole($request->input('role'));
 
-        $user->assignRole($request->input('role'));
+        return redirect()->route('admin.users.edit', $user->id)->with([
+            'message' => "Пользователь {$request->name} был создан",
+            'type' => 'created'
+        ]);
+    }
 
-        if ($user->is_volunteer) {
-            $user->volunteer()->create();
+    public function edit(User $user): Response
+    {
+        $this->seo()->setTitle('Редактировать пользователя');
+
+        $data = $user->only(['id', 'name', 'email']);
+
+        if ($user->avatarMedia) {
+            $data['avatar'] = $user->avatar;
         }
 
-        return response()->json([
-            'status' => 'User has been created',
-            'title' => $this->seo()->getTitle(),
-            'user' => $user
-        ], 201);
-    }
-
-    public function edit(User $user)
-    {
-        $this->seo()->setTitle('Edit a user');
-
-        $this->userService->shareForCRUD();
-
-        $user->role = $user->roles()->first()->id ?? null;
-
-        share(compact('user'));
-
-        return $this->form();
+        return inertia('Users/Profile', [
+            'user' => $data
+        ]);
     }
 
     public function update(UserRequest $request, User $user)
     {
-        $data = $request->only('email', 'name', 'type');
-        if ($password = $request->input('password')) {
-            $data['password'] = Hash::make($password);
+        $data = $request->only('email', 'name');
+        if ($password = $request->password) {
+            $data['password'] = \Hash::make($password);
         }
         $user->update($data);
 
-        $user->syncRoles($request->input('role'));
+        // $user->syncRoles($request->input('role'));
 
-        return response()->json(['status' => 'User has been updated', 'user' => $user]);
+        return redirect()->back()->with(['message' => "Пользователь {$request->name} был отредактирован"]);
     }
 
     public function destroy(User $user): RedirectResponse

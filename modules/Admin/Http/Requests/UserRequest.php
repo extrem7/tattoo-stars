@@ -7,7 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class UserRequest extends FormRequest
 {
-    public function rules()
+    public function rules(): array
     {
         $update = request()->isMethod('PATCH');
 
@@ -15,13 +15,12 @@ class UserRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'unique:users,email,' . ($update ? $this->user->id : '')],
             'password' => [$update ? 'nullable' : 'required', 'string', 'min:8'],
-            'type' => ['required', 'in:' . implode(',', array_keys(User::$types))],
-            'role' => ['required', 'numeric', 'exists:user_roles,id'],
-            'avatar' => ['nullable', 'image', 'mimes:jpg,jpeg,bmp,png'],
+            //'role' => ['required', 'numeric', 'exists:user_roles,id'],
+            //'avatar' => ['nullable', 'image', 'mimes:jpg,jpeg,bmp,png'],
         ];
     }
 
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }

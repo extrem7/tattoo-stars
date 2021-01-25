@@ -4,7 +4,7 @@ const config = require('./intelij.webpack.js')
 
 mix.webpackConfig({
   output: {
-    publicPath: 'admin/dist/',
+    publicPath: '/admin/dist/',
     filename: '[name].js',
     chunkFilename: 'js/chunks/[name].js?id=[chunkhash]'
   },

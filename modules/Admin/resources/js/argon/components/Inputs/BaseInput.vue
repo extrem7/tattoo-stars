@@ -56,7 +56,7 @@
 <script>
 export default {
   inheritAttrs: false,
-  name: 'base-input',
+  name: 'BaseInput',
   props: {
     required: {
       type: Boolean,
