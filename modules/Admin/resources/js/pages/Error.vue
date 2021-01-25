@@ -107,13 +107,16 @@
 
 <script>
 export default {
+  layout: null,
   props: {
     status: Number,
     message: String
   },
   computed: {
     back() {
-      return document.referrer !== location.href ? document.referrer : '/'
+      return document.referrer.length && (document.referrer !== location.href)
+        ? document.referrer
+        : '/'
     }
   },
 }

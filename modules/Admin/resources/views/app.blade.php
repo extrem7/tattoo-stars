@@ -16,9 +16,9 @@
 </head>
 <body>
 @inertia
-@auth
+@can('admin-panel.access')
     @routes('admin')
-@endauth
+@endcan
 <script src="{{ mix('js/manifest.js','admin/dist') }}" defer></script>
 <script src="{{ mix('js/vendor.js','admin/dist') }}" defer></script>
 <script src="{{ mix('js/app.js','admin/dist') }}" defer></script>

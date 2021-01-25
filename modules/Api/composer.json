@@ -1,0 +1,22 @@
+{
+  "name": "tattoo-stars/api",
+  "description": "",
+  "authors": [
+    {
+      "name": "Yurii Kinakh",
+      "email": "extremtmnt@gmail.com"
+    }
+  ],
+  "extra": {
+    "laravel": {
+      "providers": [],
+      "aliases": {
+      }
+    }
+  },
+  "autoload": {
+    "psr-4": {
+      "Modules\\Api\\": ""
+    }
+  }
+}

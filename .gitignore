@@ -7,7 +7,9 @@
 /public/storage
 /public/admin/
 /public/vendor/
+/public/apidoc
 /public/mix-manifest.json
+/public/api-doc
 /storage/*.key
 /vendor
 
