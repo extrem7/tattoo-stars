@@ -14,6 +14,8 @@ class EmailVerificationController extends Controller
      * @apiName VerifyEmail
      * @apiGroup User
      *
+     * @apiUse Token
+     *
      * @apiParam {Number} code Verification code.
      *
      * @apiSuccess {String} message.
@@ -25,6 +27,10 @@ class EmailVerificationController extends Controller
         ]);
 
         $user = $request->user();
+
+        if ($user->hasVerifiedEmail()) {
+            abort(403, 'Already verified.');
+        }
 
         if ($user->email_verification_code === $request->code) {
             $user->markEmailAsVerified();
@@ -39,9 +45,11 @@ class EmailVerificationController extends Controller
     }
 
     /**
-     * @api {get} /verify-email Verify email
-     * @apiName VerifyEmail
+     * @api {get} /verify-email/resend Resend email verification
+     * @apiName VerifyEmailResend
      * @apiGroup User
+     *
+     * @apiUse Token
      *
      * @apiSuccess {String} message.
      */

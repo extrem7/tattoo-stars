@@ -4,8 +4,14 @@
  * @apiDefine User
  * @apiSuccess {Object} user Registered user.
  * @apiSuccess {Number} user.id User id.
+ * @apiSuccess {String} user.nickname User nickname.
  * @apiSuccess {String} user.name User name.
  * @apiSuccess {String} user.email User email.
+ * @apiSuccess {Boolean} user.emailVerified Is user email verified.
+ * @apiSuccess {String} user.avatar User avatar.
+ * @apiSuccess {Object} user.accountType User account type.
+ * @apiSuccess {Number} user.accountType.id Account type id.
+ * @apiSuccess {String} user.accountType.label Account type label.
  */
 
 /**
@@ -62,6 +68,7 @@ class AuthController extends Controller
      * @apiName RegisterUser
      * @apiGroup User
      *
+     * @apiParam {Number} account_type_id User account type.
      * @apiParam {String} nickname User nickname.
      * @apiParam {String} email User email.
      * @apiParam {String} password User password.
