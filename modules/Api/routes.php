@@ -10,7 +10,7 @@ $versions = ['', 'v1'];
 foreach ($versions as $version) {
     Route::prefix($version)->middleware('api')->group(function () {
         Route::get('', 'HelperController@root');
-        Route::get('account-types', 'AuthController@accountTypes');
+        Route::get('account-types', 'Auth\AuthController@accountTypes');
 
         Route::prefix('users')
             ->namespace('Auth')

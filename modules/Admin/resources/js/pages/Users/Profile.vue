@@ -36,6 +36,15 @@
                       placeholder="Имя"
                     />
                     <BaseInput
+                      v-model="form.nickname"
+                      :rules="{required: true,max:255}"
+                      alternative
+                      class="mb-3"
+                      label="Никнейм"
+                      name="nickname"
+                      placeholder="Никнейм"
+                    />
+                    <BaseInput
                       v-model="form.email"
                       :rules="{required: true, email: true}"
                       alternative
@@ -122,6 +131,7 @@ export default {
       form: {
         account_type_id: 1,
         name: '',
+        nickname: '',
         email: '',
         password: '',
         role: [],
@@ -141,6 +151,7 @@ export default {
     if (this.isEdit) {
       this.form.account_type_id = this.user.account_type_id
       this.form.name = this.user.name
+      this.form.nickname = this.user.nickname
       this.form.email = this.user.email
       this.form.roles = this.user.roles
       this.form.password = ''
@@ -148,9 +159,10 @@ export default {
   },
   methods: {
     submit() {
-      const updateRoute = !this.isProfile
-        ? this.route('users.update', this.user.id)
-        : this.route('profile.update')
+      let updateRoute = this.route('profile.update')
+      if (!this.isProfile && this.isEdit) {
+        updateRoute = this.route('users.update', this.user.id)
+      }
 
       this.$inertia.visit(
         !this.isEdit ? this.route('users.index') : updateRoute,

@@ -73,7 +73,7 @@ class UserController extends Controller
 
         $password = Hash::make($request->input('password'));
 
-        $user = User::create(array_merge($request->only('email', 'name'), compact('password')));
+        $user = User::create(array_merge($request->only('email', 'name', 'nickname'), compact('password')));
 
         $user->assignRole($request->roles);
         $user->markEmailAsVerified();
@@ -90,7 +90,7 @@ class UserController extends Controller
 
         $this->seo()->setTitle('Редактировать пользователя');
 
-        $data = $user->only(['id', 'account_type_id', 'name', 'email']);
+        $data = $user->only(['id', 'account_type_id', 'name', 'nickname', 'email']);
         $data['roles'] = $user->roles->pluck('id');
 
         if ($user->avatarMedia) {
