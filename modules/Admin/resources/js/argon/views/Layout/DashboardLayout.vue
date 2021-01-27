@@ -4,7 +4,7 @@
     <SideBar>
       <template slot="links">
         <SideBarItem
-            :link="{
+          :link="{
             name: 'Главная',
             path: route('dashboard'),
             icon: 'ni ni-tv-2 text-primary',
@@ -12,13 +12,21 @@
           }"
         />
         <SideBarItem
-            v-if="can('users.index')"
-            :link="{
+          v-if="can('users.index')"
+          :link="{
             name: 'Пользователи',
             path: route('users.index'),
             icon: 'ni ni-single-02 text-primary',
             active:routeIncludes(['users','profile'])
           }"
+        />
+        <SideBarItem
+          :link="{
+            name: 'Выйти',
+            path: '#logout',
+            icon: 'ni ni-user-run text-primary',
+          }"
+          @click.prevent="logout"
         />
       </template>
     </SideBar>

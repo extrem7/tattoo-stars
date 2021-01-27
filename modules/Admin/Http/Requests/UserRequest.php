@@ -13,6 +13,7 @@ class UserRequest extends FormRequest
 
         return [
             'name' => ['required', 'string', 'max:255'],
+            'account_type_id' => ['required', 'exists:account_types,id'],
             'email' => ['required', 'email', 'unique:users,email,' . ($update ? $this->user->id : '')],
             'password' => [$update ? 'nullable' : 'required', 'string', 'min:8'],
             'roles' => ['array'],

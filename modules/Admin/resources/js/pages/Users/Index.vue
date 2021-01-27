@@ -42,6 +42,12 @@
               <img :src="icon" alt="Image placeholder">
             </div>
           </template>
+          <template v-slot:cell(emailVerified)="{item:{emailVerified}}">
+            {{ emailVerified ? 'Да' : 'Нет' }}
+          </template>
+          <template v-slot:cell(account_type_id)="{item:{account_type}}">
+            {{ account_type.label }}
+          </template>
           <template v-slot:cell(created_at)="{item:{created_at}}">
             {{ created_at | moment('DD.MM.YYYY HH:mm') }}
           </template>
@@ -99,6 +105,8 @@ export default {
       {key: 'icon'},
       {key: 'id', sortable: true},
       {key: 'email', sortable: true},
+      {key: 'account_type_id', sortable: true, label: 'Тип аккаунта'},
+      {key: 'emailVerified', label: 'Email подтвержден'},
       {key: 'name', sortable: true, label: 'Имя'},
       {key: 'roles', label: 'Роли'},
       {key: 'created_at', label: 'Зарегистрирован', thClass: 'date-column', sortable: true},

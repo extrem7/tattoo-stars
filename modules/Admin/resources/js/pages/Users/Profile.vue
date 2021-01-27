@@ -57,13 +57,22 @@
                       prepend-icon="ni ni-lock-circle-open"
                     />
                     <BaseInput
-                      v-if="roles && roles.length"
-                      :rules="{required: !isEdit}"
+                      v-if="accountTypes && accountTypes.length"
                       alternative
                       class="mb-3"
-                      label="Роль"
+                      label="Тип аккаунта"
                       name="role">
-                      <b-form-select
+                      <BFormSelect
+                        v-model="form.account_type_id"
+                        :options="accountTypes"/>
+                    </BaseInput>
+                    <BaseInput
+                      v-if="roles && roles.length"
+                      alternative
+                      class="mb-3"
+                      label="Роли"
+                      name="role">
+                      <BFormSelect
                         v-model="form.roles"
                         :options="roles"
                         :select-size="4"
@@ -101,6 +110,7 @@ export default {
   props: {
     errors: Object,
     user: Object,
+    accountTypes: Array,
     roles: Array,
     isProfile: Boolean
   },
@@ -110,6 +120,7 @@ export default {
   data() {
     return {
       form: {
+        account_type_id: 1,
         name: '',
         email: '',
         password: '',
@@ -128,6 +139,7 @@ export default {
     })
 
     if (this.isEdit) {
+      this.form.account_type_id = this.user.account_type_id
       this.form.name = this.user.name
       this.form.email = this.user.email
       this.form.roles = this.user.roles

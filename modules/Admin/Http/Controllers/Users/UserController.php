@@ -2,6 +2,7 @@
 
 namespace Modules\Admin\Http\Controllers\Users;
 
+use App\Models\User\AccountType;
 use Auth;
 use Exception;
 use Hash;
@@ -25,8 +26,8 @@ class UserController extends Controller
         }
         $this->seo()->setTitle($title);
 
-        $users = User::query()->select(['id', 'email', 'name', 'created_at'])
-            ->with(['avatarMedia', 'roles'])
+        $users = User::with(['avatarMedia', 'accountType', 'roles'])
+            ->select(['id', 'account_type_id', 'email', 'email_verified_at', 'name', 'created_at'])
             ->when($request->get('searchQuery'), fn($q) => $q->search($request->get('searchQuery')))
             ->when($request->get('sortBy'), function (Builder $users) use ($request) {
                 $users->orderBy($request->get('sortBy'));
@@ -37,7 +38,9 @@ class UserController extends Controller
         /* @var $users Collection<User> */
         $users->transform(function (User $user) {
             $user->append('icon');
+            $user->accountType->append('label');
             $data = $user->toArray();
+            $data['emailVerified'] = $user->hasVerifiedEmail();
             $data['roles'] = $user->roles->pluck('label')->join(', ');
             return $data;
         });
@@ -59,6 +62,7 @@ class UserController extends Controller
         $this->seo()->setTitle('Создать пользователя');
 
         return inertia('Users/Profile', [
+            'accountTypes' => $this->getAccountTypes(),
             'roles' => $this->getRoles()
         ]);
     }
@@ -72,6 +76,7 @@ class UserController extends Controller
         $user = User::create(array_merge($request->only('email', 'name'), compact('password')));
 
         $user->assignRole($request->roles);
+        $user->markEmailAsVerified();
 
         return redirect()->route('admin.users.edit', $user->id)->with([
             'message' => "Пользователь {$request->name} был создан",
@@ -85,7 +90,7 @@ class UserController extends Controller
 
         $this->seo()->setTitle('Редактировать пользователя');
 
-        $data = $user->only(['id', 'name', 'email']);
+        $data = $user->only(['id', 'account_type_id', 'name', 'email']);
         $data['roles'] = $user->roles->pluck('id');
 
         if ($user->avatarMedia) {
@@ -94,6 +99,7 @@ class UserController extends Controller
 
         return inertia('Users/Profile', [
             'user' => $data,
+            'accountTypes' => $this->getAccountTypes(),
             'roles' => $this->getRoles()
         ]);
     }
@@ -128,6 +134,17 @@ class UserController extends Controller
         }
 
         return redirect()->back()->with(['message' => 'Пользователь был удален.', 'type' => 'destroy']);
+    }
+
+    protected function getAccountTypes(): array
+    {
+        $accountTypes = AccountType::all(['id', 'name'])
+            ->map(function (AccountType $t) {
+                $t->append('label');
+                return ['value' => $t->id, 'text' => $t->label];
+            });
+
+        return array_reverse($accountTypes->toArray());
     }
 
     protected function getRoles(): array

@@ -3,7 +3,9 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\Exceptions\ThrottleRequestsException;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Throwable;
 
@@ -29,8 +31,19 @@ class Handler extends ExceptionHandler
 
         $domain = Str::of($request->getHost());
         if ($domain->contains('api.')) {
+            if ($e instanceof ValidationException) {
+                return $this->convertValidationExceptionToResponse($e, $request);
+            }
 
-            return $this->prepareJsonResponse($request, $e);
+            $jsonResponse = $this->prepareJsonResponse($request, $e);
+
+            if ($e instanceof ThrottleRequestsException) {
+                $jsonResponse->setData([
+                    'wait' => $e->getHeaders()['Retry-After']
+                ]);
+            }
+
+            return $jsonResponse;
         }
 
         if ($domain->contains('admin.')) {
@@ -64,5 +77,13 @@ class Handler extends ExceptionHandler
 
 
         return $response;
+    }
+
+    protected function invalidJson($request, ValidationException $exception)
+    {
+        return response()->json([
+            'message' => __('validation.invalid'),
+            'errors' => $exception->errors(),
+        ], $exception->status);
     }
 }

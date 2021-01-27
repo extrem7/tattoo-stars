@@ -22,6 +22,10 @@ Vue.mixin({
 
     can(permission) {
       return !!this.$page.props.auth.permissions.includes(permission)
-    }
+    },
+
+    logout() {
+      this.$inertia.delete(this.route('logout'))
+    },
   },
 })

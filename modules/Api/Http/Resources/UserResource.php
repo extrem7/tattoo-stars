@@ -11,12 +11,18 @@ class UserResource extends JsonResource
     {
         /* @var $user User */
         $user = $this->resource;
-        $user->append('icon');
+        $user->load('avatarMedia');
 
         return [
             'id' => $user->id,
             'name' => $user->name,
-            'email' => $user->email
+            'email' => $user->email,
+            'emailVerified' => $user->hasVerifiedEmail(),
+            'avatar' => $this->whenLoaded('avatarMedia', $user->icon),
+            'accountType' => [
+                'id' => $user->account_type_id,
+                'label' => $user->accountType->label
+            ]
         ];
     }
 }

@@ -106,9 +106,6 @@ export default {
     }
   },
   methods: {
-    logout() {
-      this.$inertia.delete(this.route('logout'))
-    },
     closeSidebar() {
       this.$sidebar.displaySidebar(false)
     },

@@ -17,12 +17,18 @@
  *     }
  */
 
-namespace Modules\Api\Http\Controllers;
+namespace Modules\Api\Http\Controllers\Auth;
 
 use App\Models\User;
+use App\Models\User\AccountType;
 use Auth;
 use Hash;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
+use Modules\Api\Http\Controllers\Controller;
+use Modules\Api\Http\Requests\Users\LoginRequest;
 use Modules\Api\Http\Requests\Users\RegistrationRequest;
 use Modules\Api\Http\Resources\UserResource;
 use Modules\Api\Notifications\ResetPassword;
@@ -31,45 +37,53 @@ use Str;
 /**
  * @group User
  */
-class UserController extends Controller
+class AuthController extends Controller
 {
+    /**
+     * @api {get} /account-types List of account types
+     * @apiName GetAccountTypes
+     * @apiGroup Auth
+     *
+     * @apiSuccess {Number} id Account type id.
+     * @apiSuccess {String} name Account type name (system name).
+     * @apiSuccess {String} label Account type label.
+     *
+     */
+    public function accountTypes(): array
+    {
+        $accountTypes = AccountType::all(['id', 'name'])
+            ->map(fn(AccountType $t) => $t->append('label'));
+
+        return array_reverse($accountTypes->toArray());
+    }
+
     /**
      * @api {post} /users/register Register a new user
      * @apiName RegisterUser
      * @apiGroup User
      *
-     * @apiParam {String} name User name.
+     * @apiParam {String} nickname User nickname.
      * @apiParam {String} email User email.
      * @apiParam {String} password User password.
-     * @apiParam {File}   [avatar] User avatar file.
-     * @apiParam {String} [bio] User biography.
-     * @apiParam {String} [country_id] User country id.
-     * @apiParam {String} device Device name for token generation.
+     * @apiParam {String} password_confirmation Password confirmation.
+     * @apiParam {String} device Device unique name for token generation.
      *
      * @apiUse User
      * @apiSuccess {String} token Bearer Token.
      */
-    public function register(RegistrationRequest $request): array
+    public function register(RegistrationRequest $request): JsonResponse
     {
-        $validated = $request->only(['name', 'email']);
+        $validated = $request->only(['account_type_id', 'nickname', 'email']);
         $password = Hash::make($request->input('password'));
 
         $user = User::create(array_merge($validated, [
+            'name' => $request->nickname,
             'password' => $password
         ]));
 
-        $user->load('information.country');
+        event(new Registered($user));
 
-        return $this->userWithToken($user, $request->input('device'));
-    }
-
-    protected function userWithToken(User $user, string $device = null): array
-    {
-        $token = $user->createToken($device ?? $user->currentAccessToken()->name);
-        return [
-            'user' => new UserResource($user),
-            'token' => $token->plainTextToken
-        ];
+        return response()->json($this->userWithToken($user, $request->device), 201);
     }
 
     /**
@@ -84,21 +98,11 @@ class UserController extends Controller
      * @apiUse User
      * @apiSuccess {String} token Bearer Token.
      */
-    public function login(Request $request): array
+    public function login(LoginRequest $request): array
     {
-        $this->validate($request, [
-            'email' => ['required', 'email'],
-            'password' => ['required', 'string'],
-            'device' => ['required', 'string']
-        ]);
+        $request->authenticate();
 
-        if (Auth::once($request->only(['email', 'password']))) {
-            $user = Auth::getUser();
-
-            return $this->userWithToken($user, $request->input('device'));
-        }
-
-        abort(403, trans('auth.failed'));
+        return $this->userWithToken(Auth::getUser(), $request->device);
     }
 
     /**
@@ -130,16 +134,26 @@ class UserController extends Controller
     public function resetPassword(Request $request): array
     {
         $this->validate($request, [
-            'email' => ['required', 'email']
+            'email' => ['required', 'email', 'exists:users,email']
         ]);
 
-        $user = User::where('email', '=', $request->input('email'))->first();
-        if ($user !== null) {
+        if ($user = User::where('email', '=', $request->email)->first()) {
             $password = Str::random(8);
             if ($user->update(['password' => Hash::make($password)])) {
                 $user->notify(new ResetPassword($password));
+                $user->tokens()->delete();
             }
         }
-        return ['message' => 'New password has been sent to your email'];
+
+        return ['message' => __('auth.password_reset_sent')];
+    }
+
+    protected function userWithToken(User $user, string $device = null): array
+    {
+        $token = $user->createToken($device ?? $user->currentAccessToken()->name);
+        return [
+            'user' => new UserResource($user),
+            'token' => $token->plainTextToken
+        ];
     }
 }

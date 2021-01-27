@@ -109,6 +109,12 @@ return [
     'url' => 'The :attribute format is invalid.',
     'uuid' => 'The :attribute must be a valid UUID.',
 
+    // password rules
+    'letters' => 'Поле :attribute должно содержать по меньшей мере одну букву.',
+    'case_diff' => 'Поле :attribute должно содержать буквы разного регистра, например я и Я',
+    'numbers' => 'Поле :attribute должно содержать по меньшей мере одну цифру.',
+    'symbols' => 'Поле :attribute должно содержать по меньшей мере один символ, например @.',
+
     /*
     |--------------------------------------------------------------------------
     | Custom Validation Language Lines
@@ -121,22 +127,13 @@ return [
     */
 
     'custom' => [
-        'attribute-name' => [
-            'rule-name' => 'custom-message',
+        'email' => [
+            'exists' => 'There are no user with this email.',
         ],
     ],
 
-    /*
-    |--------------------------------------------------------------------------
-    | Custom Validation Attributes
-    |--------------------------------------------------------------------------
-    |
-    | The following language lines are used to swap our attribute placeholder
-    | with something more reader friendly such as "E-Mail Address" instead
-    | of "email". This simply helps us make our message more expressive.
-    |
-    */
-
-    'attributes' => [],
+    'attributes' => [
+        'account_type_id' => 'Account type',
+    ],
 
 ];

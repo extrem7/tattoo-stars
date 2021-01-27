@@ -23,6 +23,7 @@
       "laravel/telescope": "^4.4",
       "laravel/tinker": "^2.5",
       "nwidart/laravel-modules": "^8.2",
+      "schuppo/password-strength": "^2.3",
       "spatie/eloquent-sortable": "^3.11",
       "spatie/laravel-medialibrary": "^9.0.0",
       "spatie/laravel-permission": "^3.18",

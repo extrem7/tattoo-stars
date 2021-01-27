@@ -18,17 +18,16 @@ class ResetPassword extends Notification implements ShouldQueue
         $this->password = $password;
     }
 
-    public function via($notifiable)
+    public function via($notifiable): array
     {
         return ['mail'];
     }
 
-    public function toMail($notifiable)
+    public function toMail($notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('[Red Medial] Reset Password')
-            ->greeting("Hello, {$notifiable->name}!")
-            ->line("Your new password: **{$this->password}**.")
-            ->line('You could change it in profile settings in your mobile.');
+            ->subject(__('Reset Password Notification'))
+            ->line(__("Your new password: **:password**.", ['password' => $this->password]))
+            ->line(__('You could change it in your profile settings.'));
     }
 }
