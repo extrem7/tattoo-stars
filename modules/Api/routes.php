@@ -11,7 +11,10 @@ $versions = ['', 'v1'];
 foreach ($versions as $version) {
     Route::prefix($version)->middleware('api')->group(function () {
         Route::get('', [HelperController::class, 'root']);
+
         Route::get('support', [HelperController::class, 'support']);
+        Route::post('support/help', [HelperController::class, 'help'])->middleware('throttle:1,1');
+
         Route::get('account-types', [AuthController::class, 'accountTypes']);
 
         Route::prefix('users')

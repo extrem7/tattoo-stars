@@ -4,9 +4,11 @@ namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Exceptions\ThrottleRequestsException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -39,7 +41,14 @@ class Handler extends ExceptionHandler
 
             if ($e instanceof ThrottleRequestsException) {
                 $jsonResponse->setData([
+                    'message' => __('Too Many Requests'),
                     'wait' => $e->getHeaders()['Retry-After']
+                ]);
+            }
+
+            if ($e instanceof NotFoundHttpException) {
+                $jsonResponse->setData([
+                    'message' => __('Not Found')
                 ]);
             }
 
@@ -79,7 +88,7 @@ class Handler extends ExceptionHandler
         return $response;
     }
 
-    protected function invalidJson($request, ValidationException $exception)
+    protected function invalidJson($request, ValidationException $exception): JsonResponse
     {
         return response()->json([
             'message' => __('validation.invalid'),

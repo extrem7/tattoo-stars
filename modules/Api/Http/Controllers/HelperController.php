@@ -2,6 +2,10 @@
 
 namespace Modules\Api\Http\Controllers;
 
+use Mail;
+use Modules\Api\Http\Requests\SupportHelpRequest;
+use Modules\Api\Mail\ContactForm;
+
 class HelperController extends Controller
 {
     public function root(): array
@@ -28,5 +32,24 @@ class HelperController extends Controller
     public function support()
     {
         return config('api.support');
+    }
+
+    /**
+     * @api {post} /support/help Ask for help
+     * @apiName GetSupportHelp
+     * @apiGroup General
+     *
+     * @apiParam {String} name Email.
+     * @apiParam {String} email Email.
+     * @apiParam {String} message Message.
+     *
+     * @apiSuccess {String} message Response text.
+     *
+     */
+    public function help(SupportHelpRequest $request)
+    {
+        Mail::to(config('api.support.email'))->send(new ContactForm($request->validated()));
+
+        return response()->json(['message' => 'Your message has been sent.']);
     }
 }
