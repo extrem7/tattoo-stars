@@ -24,7 +24,7 @@ class PermissionsSeeder extends Seeder
         $sections = [
             'admin-panel' => [
                 'name' => 'Админ-панель',
-                'permissions' => ['access'],
+                'permissions' => ['access', 'telescope'],
             ],
             'users' => [
                 'name' => 'Пользователи',

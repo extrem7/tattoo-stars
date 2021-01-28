@@ -3,77 +3,83 @@
     <BaseHeader class="pb-6 pb-8 pt-5 pt-md-8 bg-gradient-success"/>
 
     <BContainer class="mt--9" fluid>
-      <Card
-        class="shadow bg-default"
-        header-classes="bg-transparent"
-        no-body>
-        <template slot="header">
-          <h3 class="mb-0 text-white">Пользователи</h3>
-        </template>
-        <BCol cols="12"
-              class="d-flex align-items-center justify-content-center justify-content-between flex-column flex-sm-row mb-3">
-          <CreateBtn v-if="can('users.create')"/>
-          <SearchForm
-            v-model="searchQuery"
-            @search="search"
-            placeholder="Имя или email"
+      <BRow>
+        <BCol>
+          <Card
+            class="shadow bg-default"
+            header-classes="bg-transparent"
+            no-body>
+            <template slot="header">
+              <h3 class="mb-0 text-white">Пользователи</h3>
+            </template>
+            <BCol
+              class="d-flex align-items-center justify-content-center justify-content-between flex-column flex-sm-row mb-3"
+              cols="12">
+              <CreateBtn v-if="can('users.create')"/>
+              <SearchForm
+                v-model="searchQuery"
+                placeholder="Имя или email"
+                @search="search"
+              />
+            </BCol>
+            <BTable
+              v-show="total"
+              ref="table"
+
+              :busy.async="isBusy"
+              :current-page="currentPage"
+              :fields="fields"
+
+              :items="()=>initial"
+              :per-page="perPage"
+              :sort-by.sync="sortBy"
+
+              :sort-desc.sync="sortDesc"
+              dark
+              hover
+
+              responsive
+              sort-icon-left
+              @context-changed="update">
+              <template v-slot:cell(icon)="{item:{icon}}">
+                <div class="avatar avatar-sm rounded-circle">
+                  <img :src="icon" alt="Image placeholder">
+                </div>
+              </template>
+              <template v-slot:cell(emailVerified)="{item:{emailVerified}}">
+                {{ emailVerified ? 'Да' : 'Нет' }}
+              </template>
+              <template v-slot:cell(account_type_id)="{item:{account_type}}">
+                {{ account_type.label }}
+              </template>
+              <template v-slot:cell(created_at)="{item:{created_at}}">
+                {{ created_at | moment('DD.MM.YYYY HH:mm') }}
+              </template>
+              <template v-slot:cell(actions)="{item:{id}}">
+                <ActionsButtons
+                  :id="id"
+                  :resource="resource"
+                  @delete="destroy(id)"
+                />
+              </template>
+            </BTable>
+            <BAlert
+              v-if="!total && searchQuery.length"
+              class="w-100 mt-2 text-center"
+              show
+              variant="warning">
+              Пользователей не найдено
+            </BAlert>
+          </Card>
+          <BPagination
+            v-if="total"
+            v-model="currentPage"
+            :per-page="perPage"
+            :total-rows="total"
+            class="mt-4"
           />
         </BCol>
-        <BTable
-          :busy.async="isBusy"
-          :current-page="currentPage"
-
-          :fields="fields"
-          :items="()=>initial"
-          @context-changed="update"
-
-          :per-page="perPage"
-          :sort-by.sync="sortBy"
-          :sort-desc.sync="sortDesc"
-
-          hover
-          dark
-
-          ref="table"
-          sort-icon-left
-          v-show="total">
-          <template v-slot:cell(icon)="{item:{icon}}">
-            <div class="avatar avatar-sm rounded-circle">
-              <img :src="icon" alt="Image placeholder">
-            </div>
-          </template>
-          <template v-slot:cell(emailVerified)="{item:{emailVerified}}">
-            {{ emailVerified ? 'Да' : 'Нет' }}
-          </template>
-          <template v-slot:cell(account_type_id)="{item:{account_type}}">
-            {{ account_type.label }}
-          </template>
-          <template v-slot:cell(created_at)="{item:{created_at}}">
-            {{ created_at | moment('DD.MM.YYYY HH:mm') }}
-          </template>
-          <template v-slot:cell(actions)="{item:{id}}">
-            <ActionsButtons
-              :id="id"
-              :resource="resource"
-              @delete="destroy(id)"
-            />
-          </template>
-        </BTable>
-        <BAlert
-          v-if="!total && searchQuery.length"
-          class="w-100 mt-2 text-center"
-          show
-          variant="warning">
-          Пользователей не найдено
-        </BAlert>
-      </Card>
-      <BPagination
-        v-if="total"
-        v-model="currentPage"
-        :per-page="perPage"
-        :total-rows="total"
-        class="mt-4"
-      />
+      </BRow>
     </BContainer>
   </div>
 </template>

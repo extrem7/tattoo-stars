@@ -14,7 +14,8 @@ class LoginRequest extends FormRequest
     {
         return [
             'email' => ['required', 'email'],
-            'password' => ['required', 'string']
+            'password' => ['required', 'string'],
+            'rememberMe' => ['nullable', 'boolean']
         ];
     }
 
@@ -60,7 +61,7 @@ class LoginRequest extends FormRequest
     {
         return Auth::attempt(
             $this->only('email', 'password'),
-            $this->filled('remember')
+            $this->filled('rememberMe')
         );
     }
 

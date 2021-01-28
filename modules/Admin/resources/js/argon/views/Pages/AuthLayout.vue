@@ -5,6 +5,7 @@
       v-model="showMenu"
       :transparent="true"
       class="navbar-horizontal navbar-main navbar-top navbar-dark"
+      container-classes="container justify-content-center"
       expand="lg"
       menu-classes="justify-content-end"
     >

@@ -15,9 +15,18 @@ class ApiServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        $this->registerConfig();
+
         JsonResource::withoutWrapping();
         Sanctum::usePersonalAccessTokenModel(
             PersonalAccessToken::class
+        );
+    }
+
+    protected function registerConfig(): void
+    {
+        $this->mergeConfigFrom(
+            module_path($this->moduleName, 'config.php'), $this->moduleNameLower
         );
     }
 

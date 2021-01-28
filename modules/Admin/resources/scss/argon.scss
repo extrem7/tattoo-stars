@@ -87,6 +87,9 @@ body {
 }
 
 .wrapper {
+    max-width: 100vw;
+    overflow: hidden;
+
     > .main-content {
         min-height: 100vh;
         display: flex;
@@ -99,7 +102,7 @@ body {
     background: linear-gradient(87deg, #f8913e, #f53e55) !important;
 }
 
-.avatar-image {
+.avatar-image, .avatar img {
     width: 36px;
     height: 36px;
     object-fit: cover;

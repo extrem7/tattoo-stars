@@ -7,8 +7,6 @@ use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvi
 
 class RouteServiceProvider extends ServiceProvider
 {
-    protected $moduleNamespace = 'Modules\Api\Http\Controllers';
-
     public function map(): void
     {
         $this->mapApiRoutes();
@@ -18,7 +16,6 @@ class RouteServiceProvider extends ServiceProvider
     {
         Route::domain(env('API_DOMAIN'))
             ->middleware('api')
-            ->namespace($this->moduleNamespace)
             ->group(module_path('Api', 'routes.php'));
     }
 }

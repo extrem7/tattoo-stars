@@ -8,7 +8,7 @@
         </svg>
       </div>
     </div>
-    <BContainer class="mt--8 pb-5">
+    <BContainer class="mt--5 mt-lg--8 pb-5">
       <BRow class="justify-content-center">
         <BCol lg="5" md="7">
           <BCard class="bg-secondary border-0 mb-0" no-body>

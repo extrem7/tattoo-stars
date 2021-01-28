@@ -1,6 +1,6 @@
 <template>
-  <BForm @submit.prevent="$emit('search')" class="d-flex">
-    <BFormGroup class="mb-0">
+  <BForm class="d-flex flex-column flex-sm-row align-items-center" @submit.prevent="$emit('search')">
+    <BFormGroup class="mb-1 mb-sm-0">
       <BInputGroup class="input-group-alternative input-group-merge border border-primary">
         <BFormInput
           :value="value"
@@ -8,7 +8,8 @@
           :placeholder="placeholder"
           class="bg-transparent"
           type="search"/>
-        <div class="input-group-append "><span class="input-group-text bg-transparent"><i class="fas fa-search"></i></span></div>
+        <div class="input-group-append "><span class="input-group-text bg-transparent"><i
+          class="fas fa-search"></i></span></div>
       </BInputGroup>
     </BFormGroup>
     <BaseButton
@@ -33,6 +34,6 @@ export default {
 <style scoped>
 .form-control {
   position: relative;
-  min-width: 225px;
+  min-width: 200px;
 }
 </style>

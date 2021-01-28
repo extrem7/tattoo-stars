@@ -20,14 +20,13 @@
             active:routeIncludes(['users','profile'])
           }"
         />
-        <SideBarItem
-          :link="{
-            name: 'Выйти',
-            path: '#logout',
-            icon: 'ni ni-user-run text-primary',
-          }"
+        <BNavItem
           @click.prevent="logout"
-        />
+          class="nav-item"
+        >
+          <i class="ni ni-user-run text-primary"></i>
+          <span class="nav-link-text">Выйти</span>
+        </BNavItem>
       </template>
     </SideBar>
     <div class="main-content">
