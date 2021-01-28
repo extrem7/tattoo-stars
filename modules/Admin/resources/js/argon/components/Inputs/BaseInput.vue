@@ -46,7 +46,7 @@
         </div>
       </slot>
       <slot name="error">
-        <div v-if="errors[0]" class="invalid-feedback" style="display: block;">
+        <div v-if="blured && errors[0]" class="invalid-feedback" style="display: block;">
           {{ errors[0] }}
         </div>
       </slot>
@@ -126,7 +126,8 @@ export default {
   },
   data() {
     return {
-      focused: false
+      focused: false,
+      blured: false
     }
   },
   computed: {
@@ -167,6 +168,7 @@ export default {
     },
     onBlur(evt) {
       this.focused = false
+      if (!this.blured) this.blured = true
       this.$emit('blur', evt)
     }
   }

@@ -2,6 +2,36 @@
   <b-navbar :class="classes" toggleable>
     <div :class="containerClasses">
       <slot name="brand"></slot>
+
+      <slot name="toggle-button">
+        <button
+          v-if="hasMenu"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+          class="navbar-toggler collapsed"
+          type="button"
+          @click="toggleMenu"
+        >
+          <span class="navbar-toggler-bar navbar-kebab"></span>
+          <span class="navbar-toggler-bar navbar-kebab"></span>
+          <span class="navbar-toggler-bar navbar-kebab"></span>
+        </button>
+      </slot>
+
+      <b-navbar-toggle
+        target="nav-text-collapse"
+        @click.stop="toggleMenu">
+      </b-navbar-toggle>
+
+      <b-collapse
+        id="nav-text-collapse"
+        v-click-outside="closeMenu"
+        :class="menuClasses"
+        :visible="show"
+        class="navbar-custom-collapse collapse"
+        is-nav>
+        <slot :close-menu="closeMenu"></slot>
+      </b-collapse>
     </div>
   </b-navbar>
 </template>

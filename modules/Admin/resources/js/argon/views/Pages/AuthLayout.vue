@@ -1,20 +1,20 @@
 <template>
   <div class="main-content bg-default">
     <Notifications/>
-    <base-nav
-      v-model="showMenu"
+    <BaseNav
       :transparent="true"
       class="navbar-horizontal navbar-main navbar-top navbar-dark"
       container-classes="container justify-content-center"
       expand="lg"
-      menu-classes="justify-content-end"
+      menu-classes="d-none"
     >
+      <slot name="toggle-button"></slot>
       <div slot="brand" class="navbar-wrapper">
         <b-navbar-brand>
           <img src="/admin/dist/img/logo.svg">
         </b-navbar-brand>
       </div>
-    </base-nav>
+    </BaseNav>
 
     <div class="main-content">
       <zoom-center-transition
@@ -140,5 +140,9 @@ $scaleSize: 0.8;
 
 .main-content .zoomOut {
   animation-name: zoomOut8;
+}
+
+.navbar-toggler {
+  display: none;
 }
 </style>

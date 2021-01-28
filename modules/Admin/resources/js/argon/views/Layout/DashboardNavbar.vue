@@ -3,6 +3,8 @@
     :class="{'navbar-dark': type === 'default'}"
     class="navbar-top navbar-expand"
     container-classes="container-fluid">
+    <slot name="toggle-button"></slot>
+
     <a aria-current="page" class="h4 mb-0 text-white d-none d-lg-inline-block active router-link-active"
        href="#">
       {{ $page.props.metaInfo.title }}
