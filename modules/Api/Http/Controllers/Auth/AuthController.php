@@ -98,7 +98,7 @@ class AuthController extends Controller
      * @apiName LoginUser
      * @apiGroup User
      *
-     * @apiParam {String} email User email.
+     * @apiParam {String} email_or_nickname User email or nickname.
      * @apiParam {String} password User password.
      * @apiParam {String} device Device name for token generation.
      *

@@ -133,6 +133,7 @@ return [
     ],
 
     'attributes' => [
+        'email_or_nickname' => 'email or nickname',
         'account_type_id' => 'Account type',
     ],
 

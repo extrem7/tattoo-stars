@@ -149,6 +149,7 @@ return [
         'available' => 'Доступно',
         'size' => 'Размер',
 
+        'email_or_nickname' => 'Email либо Никнейм',
         'nickname' => 'Никнейм',
         'account_type_id' => 'Тип аккаунта',
         'device' => 'Устройство'

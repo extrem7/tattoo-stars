@@ -9,14 +9,22 @@ class LoginRequest extends BaseLoginRequest
 {
     public function rules(): array
     {
-        return array_merge(parent::rules(), [
+        return array_merge([
+            'email_or_nickname' => ['required', 'string'],
+            'password' => ['required', 'string'],
             'device' => ['required', 'string']
         ]);
     }
 
     public function try(): bool
     {
-        return Auth::once($this->only('email', 'password'));
+        $emailOrNickname = $this->email_or_nickname;
+        $field = filter_var($emailOrNickname, FILTER_VALIDATE_EMAIL) ? 'email' : 'nickname';
+        return Auth::once([
+            $field => $emailOrNickname,
+            'password' => $this->password
+        ]);
+
     }
 
     public function throttleKey(): string

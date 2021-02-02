@@ -12,6 +12,12 @@ class ProfileRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
+            'nickname' => [
+                'required',
+                'string',
+                'max:255',
+                'regex:/^([A-Za-z0-9_](?:(?:[A-Za-z0-9_]|(?:\.(?!\.))){0,28}(?:[A-Za-z0-9_]))?)$/'
+            ],
             'email' => ['required', 'email', 'unique:users,email,' . Auth::id()],
             'password' => ['nullable', 'string', 'min:8']
         ];
