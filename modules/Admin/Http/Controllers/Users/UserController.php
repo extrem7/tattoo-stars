@@ -73,7 +73,9 @@ class UserController extends Controller
 
         $password = Hash::make($request->input('password'));
 
-        $user = User::create(array_merge($request->only('email', 'name', 'nickname'), compact('password')));
+        $user = User::create(
+            array_merge($request->only('email', 'name', 'nickname', 'account_type_id'), compact('password')
+            ));
 
         $user->assignRole($request->roles);
         $user->markEmailAsVerified();
@@ -108,7 +110,7 @@ class UserController extends Controller
     {
         abort_unless(Auth::user()->can('users.edit'), 403);
 
-        $data = $request->only('email', 'name');
+        $data = $request->only('email', 'name', 'account_type_id');
         if ($password = $request->password) {
             $data['password'] = Hash::make($password);
         }

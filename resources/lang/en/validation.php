@@ -110,10 +110,11 @@ return [
     'uuid' => 'The :attribute must be a valid UUID.',
 
     // password rules
-    'letters' => 'Поле :attribute должно содержать по меньшей мере одну букву.',
-    'case_diff' => 'Поле :attribute должно содержать буквы разного регистра, например я и Я',
-    'numbers' => 'Поле :attribute должно содержать по меньшей мере одну цифру.',
-    'symbols' => 'Поле :attribute должно содержать по меньшей мере один символ, например @.',
+    "letters" => "The :attribute must include at least one letter.",
+    "case_diff" => "The :attribute must include both upper and lower case letters.",
+    "numbers" => "The :attribute must include at least one number.",
+    "symbols" => "The :attribute must include at least one symbol.",
+    'string255' => 'The :attribute may not be greater than 255 characters.',
 
     /*
     |--------------------------------------------------------------------------
