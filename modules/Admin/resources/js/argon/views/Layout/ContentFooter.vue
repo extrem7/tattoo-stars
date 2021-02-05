@@ -6,6 +6,9 @@
           © {{ year }} <a class="font-weight-bold ml-1" href="https://raxkor.com" target="_blank">Raxkor</a>
         </div>
       </b-col>
+      <div class="copyright text-right text-muted">
+        <a class="font-weight-bold ml-1" href="/">TattooStars</a> v{{ $page.props.version }}
+      </div>
     </b-row>
   </footer>
 </template>

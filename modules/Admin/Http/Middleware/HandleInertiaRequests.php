@@ -38,7 +38,8 @@ class HandleInertiaRequests extends Middleware
 
                 return $data;
             },
-            'flash' => []
+            'flash' => [],
+            'version' => config('admin.version')
         ];
 
         if ($request->session()->has('message')) {
