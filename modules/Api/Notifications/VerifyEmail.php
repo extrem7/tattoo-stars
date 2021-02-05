@@ -19,7 +19,7 @@ class VerifyEmail extends Notification
 
         return (new MailMessage)
             ->subject(__('Verify Email Address'))
-            ->line(__("Please enter this code in app to verify your email address: **:code**.", [
+            ->line(__("Please enter this code in app to verify your email address: **:code**", [
                 'code' => $code
             ]))
             ->line(__('If you did not create an account, no further action is required.'));
