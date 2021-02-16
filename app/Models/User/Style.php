@@ -4,14 +4,16 @@ namespace App\Models\User;
 
 use Illuminate\Database\Eloquent\Model;
 
-class AccountType extends Model
+class Style extends Model
 {
+    public $table = 'user_styles';
+
     public $timestamps = null;
 
     protected $fillable = ['name'];
 
     public function getNameAttribute(string $name): string
     {
-        return __('tattoo.account_types.' . $name) ?? $name;
+        return __('tattoo.styles.' . $name) ?? $name;
     }
 }

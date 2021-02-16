@@ -10,5 +10,6 @@ return [
             'whatsapp' => env('SUPPORT_WHATSAPP'),
             'telegram' => env('SUPPORT_TELEGRAM')
         ]
-    ]
+    ],
+    'local_geoip' => env('LOCAL_GEOIP')
 ];

@@ -1,9 +1,11 @@
 <?php
 
-use Modules\Api\Http\Controllers\{
+use Modules\Api\Http\Controllers\{CitiesController,
     HelperController,
+    Profile\AvatarController,
+    Profile\ProfileController,
     Auth\AuthController,
-    Auth\EmailVerificationController,
+    Auth\EmailVerificationController
 };
 
 $versions = ['', 'v1'];
@@ -34,6 +36,20 @@ foreach ($versions as $version) {
             });
 
             Route::get('users/self', [AuthController::class, 'self']);
+
+            Route::middleware('verified')->group(function () {
+                Route::get('genders', [ProfileController::class, 'genders']);
+                Route::get('styles', [ProfileController::class, 'styles']);
+
+                Route::get('countries/{query?}', [CitiesController::class, 'countries']);
+                Route::get('cities/{country}/{query?}', [CitiesController::class, 'cities']);
+                Route::get('geoip', [CitiesController::class, 'geoip']);
+
+                Route::prefix('profile')->group(function () {
+                    Route::post('', [ProfileController::class, 'update']);
+                    Route::post('avatar', [AvatarController::class, 'store']);
+                });
+            });
         });
     });
 }

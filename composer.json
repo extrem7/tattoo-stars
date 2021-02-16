@@ -27,7 +27,8 @@
       "spatie/eloquent-sortable": "^3.11",
       "spatie/laravel-medialibrary": "^9.0.0",
       "spatie/laravel-permission": "^3.18",
-      "tightenco/ziggy": "^1.0"
+      "tightenco/ziggy": "^1.0",
+      "torann/geoip": "^3.0"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

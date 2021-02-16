@@ -10,6 +10,7 @@
 /public/apidoc
 /public/mix-manifest.json
 /public/api-doc
+/resources/db
 /storage/*.key
 /vendor
 

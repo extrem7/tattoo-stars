@@ -4,9 +4,11 @@ namespace App\Models;
 
 use App\Models\Traits\SearchTrait;
 use App\Models\User\AccountType;
+use App\Models\User\Information;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -16,6 +18,7 @@ use Laravel\Sanctum\HasApiTokens;
 use Modules\Api\Notifications\VerifyEmail;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Exceptions\MediaCannotBeDeleted;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\Permission\Traits\HasRoles;
 
@@ -30,7 +33,7 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
         SearchTrait;
 
     protected $fillable = [
-        'account_type_id', 'name', 'nickname', 'email', 'email_verification_code', 'password'
+        'account_type_id', 'name', 'nickname', 'email', 'email_verification_code', 'email_verified_at', 'password'
     ];
 
     protected $hidden = ['password', 'remember_token',];
@@ -38,6 +41,13 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
     protected $search = ['email', 'name'];
 
     // FUNCTIONS
+    public static function boot(): void
+    {
+        parent::boot();
+
+        static::created(fn(self $u) => $u->information()->create());
+    }
+
     public function sendEmailVerificationNotification(): void
     {
         $this->update(['email_verification_code' => random_int(1111, 9999)]);
@@ -63,11 +73,17 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
             });
     }
 
-    public function uploadAvatar(UploadedFile $image = null): void
+    public function uploadAvatar(UploadedFile $image = null): bool
     {
-        if ($this->avatarMedia) $this->deleteMedia($this->avatarMedia);
+        if ($this->avatarMedia) {
+            try {
+                $this->deleteMedia($this->avatarMedia);
+            } catch (MediaCannotBeDeleted $e) {
+                \Log::error('Avatar cannot be deleted: ' . $e->getMessage());
+            }
+        }
 
-        $this->addMedia($image)->toMediaCollection('avatar');
+        return $this->addMedia($image)->toMediaCollection('avatar') !== null;
     }
 
     public function deleteAvatar(): bool
@@ -84,6 +100,13 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
         return asset('/admin/dist/img/no-avatar.png');
     }
 
+    public function loadInfo(): self
+    {
+        $this->load('information', 'avatarMedia');
+        $this->append('icon');
+        return $this;
+    }
+
     public function isSuperAdmin(): bool
     {
         return $this->id === 1 || $this->email === config('admin.initial_user_email');
@@ -93,6 +116,11 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
     public function accountType(): BelongsTo
     {
         return $this->belongsTo(AccountType::class);
+    }
+
+    public function information(): HasOne
+    {
+        return $this->hasOne(Information::class);
     }
 
     public function avatarMedia(): MorphOne

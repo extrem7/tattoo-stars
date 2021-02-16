@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Exceptions\ThrottleRequestsException;
 use Illuminate\Http\JsonResponse;
@@ -50,6 +51,12 @@ class Handler extends ExceptionHandler
                 $jsonResponse->setData([
                     'message' => __('Not Found')
                 ]);
+            }
+
+            if ($e instanceof AuthenticationException) {
+                $jsonResponse->setData([
+                    'message' => __('Unauthenticated')
+                ])->setStatusCode(401);
             }
 
             return $jsonResponse;

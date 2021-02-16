@@ -11,7 +11,7 @@
  * @apiSuccess {String} user.avatar User avatar.
  * @apiSuccess {Object} user.accountType User account type.
  * @apiSuccess {Number} user.accountType.id Account type id.
- * @apiSuccess {String} user.accountType.label Account type label.
+ * @apiSuccess {String} user.accountType.name Account type name.
  */
 
 /**
@@ -27,18 +27,13 @@ namespace Modules\Api\Http\Controllers\Auth;
 
 use App\Models\User;
 use App\Models\User\AccountType;
-use Auth;
-use Hash;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Validation\ValidationException;
 use Modules\Api\Http\Controllers\Controller;
 use Modules\Api\Http\Requests\Users\LoginRequest;
 use Modules\Api\Http\Requests\Users\RegistrationRequest;
-use Modules\Api\Http\Resources\UserResource;
 use Modules\Api\Notifications\ResetPassword;
-use Str;
 
 /**
  * @group User
@@ -51,14 +46,12 @@ class AuthController extends Controller
      * @apiGroup Auth
      *
      * @apiSuccess {Number} id Account type id.
-     * @apiSuccess {String} name Account type name (system name).
-     * @apiSuccess {String} label Account type label.
+     * @apiSuccess {String} name Account type name.
      *
      */
     public function accountTypes(): array
     {
-        $accountTypes = AccountType::all(['id', 'name'])
-            ->map(fn(AccountType $t) => $t->append('label'));
+        $accountTypes = AccountType::all(['id', 'name']);
 
         return array_reverse($accountTypes->toArray());
     }
@@ -81,7 +74,7 @@ class AuthController extends Controller
     public function register(RegistrationRequest $request): JsonResponse
     {
         $validated = $request->only(['account_type_id', 'nickname', 'email']);
-        $password = Hash::make($request->input('password'));
+        $password = \Hash::make($request->input('password'));
 
         $user = User::create(array_merge($validated, [
             'name' => $request->nickname,
@@ -90,7 +83,7 @@ class AuthController extends Controller
 
         event(new Registered($user));
 
-        return response()->json($this->userWithToken($user, $request->device), 201);
+        return response()->json($this->getUserWithToken($user, $request->device), 201);
     }
 
     /**
@@ -109,7 +102,7 @@ class AuthController extends Controller
     {
         $request->authenticate();
 
-        return $this->userWithToken(Auth::getUser(), $request->device);
+        return $this->getUserWithToken(\Auth::getUser(), $request->device);
     }
 
     /**
@@ -123,12 +116,7 @@ class AuthController extends Controller
      */
     public function self(Request $request): array
     {
-        /* @var $user User */
-        $user = $request->user();
-
-        return [
-            'user' => new UserResource($user)
-        ];
+        return $this->getUser($request->user()->loadInfo()->append('avatar'));
     }
 
     /**
@@ -145,22 +133,13 @@ class AuthController extends Controller
         ]);
 
         if ($user = User::where('email', '=', $request->email)->first()) {
-            $password = Str::random(8);
-            if ($user->update(['password' => Hash::make($password)])) {
+            $password = \Str::random(8);
+            if ($user->update(['password' => \Hash::make($password)])) {
                 $user->notify(new ResetPassword($password));
                 $user->tokens()->delete();
             }
         }
 
         return ['message' => __('auth.password_reset_sent')];
-    }
-
-    protected function userWithToken(User $user, string $device = null): array
-    {
-        $token = $user->createToken($device ?? $user->currentAccessToken()->name);
-        return [
-            'user' => new UserResource($user),
-            'token' => $token->plainTextToken
-        ];
     }
 }

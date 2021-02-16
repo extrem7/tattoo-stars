@@ -18,11 +18,15 @@ class UserResource extends JsonResource
             'name' => $user->name,
             'email' => $user->email,
             'emailVerified' => $user->hasVerifiedEmail(),
-            'avatar' => $this->whenLoaded('avatarMedia', $user->icon),
+            'icon' => $this->whenAppended('icon', $user->icon),
+            'avatar' => $this->whenAppended('avatar', $user->avatar),
             'accountType' => [
                 'id' => $user->account_type_id,
                 'label' => $user->accountType->label
-            ]
+            ],
+            $this->mergeWhen(
+                $user->relationLoaded('information'), new InformationResource($user->information)
+            )
         ];
     }
 }
