@@ -102,7 +102,7 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
 
     public function loadInfo(): self
     {
-        $this->load('information', 'avatarMedia');
+        $this->load('information.city', 'avatarMedia');
         $this->append('icon');
         return $this;
     }
