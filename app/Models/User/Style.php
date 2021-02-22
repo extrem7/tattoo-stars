@@ -12,6 +12,8 @@ class Style extends Model
 
     protected $fillable = ['name'];
 
+    protected $hidden = ['pivot'];
+
     public function getNameAttribute(string $name): string
     {
         return __('tattoo.styles.' . $name) ?? $name;

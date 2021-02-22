@@ -15,6 +15,27 @@
  */
 
 /**
+ * @apiDefine UserInformation
+ * @apiSuccess {Object} user.
+ * @apiSuccess {Object} user.gender User gender.
+ * @apiSuccess {Number} user.gender.id Gender id.
+ * @apiSuccess {String} user.gender.name Gender name.
+ * @apiSuccess {String} user.birthday User birthday.
+ * @apiSuccess {Object} user.city User city.
+ * @apiSuccess {Number} user.city.id City id.
+ * @apiSuccess {String} user.city.name City name.
+ * @apiSuccess {String} user.address User address.
+ * @apiSuccess {String} user.bio User bio.
+ * @apiSuccess {String} user.phone User phone.
+ * @apiSuccess {String} user.website User website.
+ * @apiSuccess {String} user.instagram User instagram.
+ * @apiSuccess {String} user.facebook User facebook.
+ * @apiSuccess {Object[]} user.styles User styles.
+ * @apiSuccess {Number} user.styles.id Style id.
+ * @apiSuccess {String} user.styles.name Style name.
+ */
+
+/**
  * @apiDefine Token
  * @apiHeader  Authorization Bearer token from register|login.
  * @apiHeaderExample {json} Header-Example:
@@ -113,6 +134,7 @@ class AuthController extends Controller
      * @apiUse Token
      *
      * @apiUse User
+     * @apiUse UserInformation
      */
     public function self(Request $request): array
     {

@@ -16,17 +16,19 @@ class UserResource extends JsonResource
         return [
             'id' => $user->id,
             'name' => $user->name,
+            'nickname' => $user->nickname,
             'email' => $user->email,
             'emailVerified' => $user->hasVerifiedEmail(),
             'icon' => $this->whenAppended('icon', $user->icon),
             'avatar' => $this->whenAppended('avatar', $user->avatar),
             'accountType' => [
                 'id' => $user->account_type_id,
-                'label' => $user->accountType->label
+                'name' => $user->accountType->name
             ],
             $this->mergeWhen(
                 $user->relationLoaded('information'), new InformationResource($user->information)
-            )
+            ),
+            'styles' => $this->when($user->relationLoaded('styles'), fn() => $user->getRelation('styles'))
         ];
     }
 }

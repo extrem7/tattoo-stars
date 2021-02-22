@@ -10,7 +10,7 @@ class AvatarController extends Controller
 {
     /**
      * @api {post} /profile/avatar Upload user's avatar
-     * @apiName UploadLogo
+     * @apiName UploadAvatar
      * @apiGroup Profile
      *
      * @apiUse Token
@@ -33,6 +33,25 @@ class AvatarController extends Controller
         return response()->json([
             'message' => $uploaded ? 'Avatar has been uploaded' : 'Error during uploading',
             'avatar' => $uploaded ?? $request->user()->avatar
+        ]);
+    }
+
+    /**
+     * @api {delete} /profile/avatar Delete user's avatar
+     * @apiName DeleteAvatar
+     * @apiGroup Profile
+     *
+     * @apiUse Token
+     *
+     * @apiSuccess {String} message Uploading status message.
+     */
+    public function destroy(): JsonResponse
+    {
+        if (($user = \Auth::user()) && $user->avatarMedia) {
+            $user->avatarMedia->delete();
+        }
+        return response()->json([
+            'message' => 'Avatar has been deleted.',
         ]);
     }
 }

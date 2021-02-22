@@ -47,7 +47,10 @@ foreach ($versions as $version) {
 
                 Route::prefix('profile')->group(function () {
                     Route::post('', [ProfileController::class, 'update']);
-                    Route::post('avatar', [AvatarController::class, 'store']);
+                    Route::prefix('avatar')->group(function () {
+                        Route::post('', [AvatarController::class, 'store']);
+                        Route::delete('', [AvatarController::class, 'destroy']);
+                    });
                 });
             });
         });

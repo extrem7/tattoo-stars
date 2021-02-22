@@ -5,9 +5,11 @@ namespace App\Models;
 use App\Models\Traits\SearchTrait;
 use App\Models\User\AccountType;
 use App\Models\User\Information;
+use App\Models\User\Style;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -102,7 +104,7 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
 
     public function loadInfo(): self
     {
-        $this->load('information.city', 'avatarMedia');
+        $this->load('information.city', 'styles', 'avatarMedia');
         $this->append('icon');
         return $this;
     }
@@ -121,6 +123,11 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
     public function information(): HasOne
     {
         return $this->hasOne(Information::class);
+    }
+
+    public function styles(): BelongsToMany
+    {
+        return $this->belongsToMany(Style::class, 'user_has_styles');
     }
 
     public function avatarMedia(): MorphOne

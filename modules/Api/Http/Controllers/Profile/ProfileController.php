@@ -98,8 +98,12 @@ class ProfileController extends Controller
             }
         }
 
+        if ($request->filled('styles') && $styles = $request->input('styles')) {
+            $user->styles()->sync($styles);
+        }
+
         $additional = $request->only([
-            'gender_id', 'birthday', 'city_id', 'address', 'bio', 'phone', 'website', 'instagram', 'facebook', 'styles'
+            'gender_id', 'birthday', 'city_id', 'address', 'bio', 'phone', 'website', 'instagram', 'facebook'
         ]);
 
         $user->information->update($additional);
