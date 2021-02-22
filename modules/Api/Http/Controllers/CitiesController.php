@@ -24,8 +24,11 @@ class CitiesController extends Controller
     public function countries(string $query = null): array
     {
         $countries = Country::when($query, fn($q) => $q->where('name', 'like', "$query%"))
-            ->get()
-            ->sortByDesc(fn(Country $c) => in_array($c->name, ['Ukraine', 'Russia', 'Belarus']));
+            ->get(['id', app()->getLocale() === 'ru' ? 'name_ru' : 'name'])
+            ->sortByDesc(fn(Country $c) => in_array($c->name, [
+                'Ukraine', 'Russia', 'Belarus', 'Украина', 'Россия', 'Беларусь'
+            ]))
+            ->map(fn(Country $c) => $c->only(['id', 'name']));
 
         return $countries->toArray();
     }
@@ -42,11 +45,14 @@ class CitiesController extends Controller
      */
     public function cities(string $country, string $query = null): array
     {
+        $translatedField = app()->getLocale() === 'ru' ? 'name_ru' : 'name';
+
         $countries = City::where('country_id', '=', strtoupper($country))
-            ->when($query, fn($q) => $q->where('name', 'like', "$query%"))
+            ->when($query, fn($q) => $q->where($translatedField, 'like', "$query%"))
             ->biggest()
             ->limit(20)
-            ->get(['id', 'name']);
+            ->get(['id', $translatedField])
+            ->map(fn(City $c) => $c->only(['id', 'name']));
 
         return $countries->toArray();
     }

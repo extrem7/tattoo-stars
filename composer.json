@@ -27,6 +27,7 @@
       "spatie/eloquent-sortable": "^3.11",
       "spatie/laravel-medialibrary": "^9.0.0",
       "spatie/laravel-permission": "^3.18",
+      "stichoza/google-translate-php": "^4.1",
       "tightenco/ziggy": "^1.0",
       "torann/geoip": "^3.0"
     },

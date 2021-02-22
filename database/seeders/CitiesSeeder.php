@@ -44,7 +44,7 @@ class CitiesSeeder extends Seeder
                 City::insert([
                     'id' => $data['id'],
                     'country_id' => $data['iso2'],
-                    'name' => $data['city'],
+                    'name' => str_replace('”', '`', $data['city']),
                     'lat' => $data['lat'],
                     'lng' => $data['lng'],
                     'population' => $data['population'] !== '' ? $data['population'] : null

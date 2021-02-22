@@ -12,7 +12,7 @@ class City extends Model
 
     public $timestamps = null;
 
-    protected $fillable = ['id', 'country_id', 'name', 'lat', 'lng', 'population'];
+    protected $fillable = ['id', 'country_id', 'name', 'name_ru', 'lat', 'lng', 'population'];
 
     public function country(): BelongsTo
     {
@@ -22,5 +22,10 @@ class City extends Model
     public function scopeBiggest(Builder $query): Builder
     {
         return $query->orderByDesc('population');
+    }
+
+    public function getNameAttribute(string $name = null): string
+    {
+        return app()->getLocale() === 'ru' ? $this->name_ru : $name;
     }
 }

@@ -9,9 +9,17 @@ class StylesSeeder extends Seeder
 {
     public function run(): void
     {
-        $styles = ['Graphics', 'Style 2', 'Style 3', 'Style 4', 'Style 5', 'Style 6'];
+        $styles = [
+            'Black&grey', 'Abstraction', 'Watercolor', 'Baroque', 'Biomechanics', 'Blackwork', 'Geometric', 'Engraving',
+            'Graphics', 'Linework', 'Dotwork', 'Cyberpunk', 'Lettering', 'Maori', 'Mayan', 'Miniature', 'Minimalism',
+            'Neo Traditional', 'New School', 'Old School', 'Ornamental', 'Pin-Up', 'Polynesian', 'Portrait', 'Realism',
+            'Scetch', 'Surrealism', 'Traditional', 'Tribal', 'Trash Polka', 'Ultraviolet', 'Fantasy', 'Hand-Poked',
+            'Horror', 'Chicano', 'Japanese', '3D'
+        ];
         foreach ($styles as $name) {
-            Style::create(compact('name'));
+            Style::create([
+                'name' => \Str::slug($name)
+            ]);
         }
     }
 }
