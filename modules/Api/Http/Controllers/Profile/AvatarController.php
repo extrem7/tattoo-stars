@@ -43,7 +43,7 @@ class AvatarController extends Controller
      *
      * @apiUse Token
      *
-     * @apiSuccess {String} message Uploading status message.
+     * @apiSuccess {String} message Is avatar deleted message.
      */
     public function destroy(): JsonResponse
     {

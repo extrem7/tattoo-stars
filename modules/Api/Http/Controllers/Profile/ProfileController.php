@@ -112,4 +112,23 @@ class ProfileController extends Controller
 
         return response()->json($needUpdatePassword ? $this->getUserWithToken($user) : $this->getUser($user));
     }
+
+    /**
+     * @api {delete} /profile Delete user
+     * @apiName DeleteUser
+     * @apiGroup Profile
+     *
+     * @apiUse Token
+     *
+     * @apiSuccess {String} message Is profile deleted message.
+     */
+    public function destroy(): JsonResponse
+    {
+        $user = \Auth::user();
+        $user->update(['deleted_self' => true]);
+        $user->delete();
+        //todo soft delete relations
+
+        return response()->json(['message' => 'User profile has been deleted.']);
+    }
 }

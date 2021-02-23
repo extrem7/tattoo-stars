@@ -35,7 +35,8 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
         SearchTrait;
 
     protected $fillable = [
-        'account_type_id', 'name', 'nickname', 'email', 'email_verification_code', 'email_verified_at', 'password'
+        'account_type_id', 'name', 'nickname', 'email', 'email_verification_code', 'email_verified_at', 'password',
+        'deleted_self'
     ];
 
     protected $hidden = ['password', 'remember_token',];
