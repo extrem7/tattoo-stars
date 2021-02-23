@@ -9,8 +9,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Information extends Model
 {
     public $timestamps = null;
+
     protected $table = 'users_information';
+
     protected $primaryKey = 'user_id';
+
     protected $guarded = ['user_id'];
 
     protected $fillable = [
@@ -18,6 +21,8 @@ class Information extends Model
     ];
 
     protected $hidden = ['user_id'];
+
+    protected $dates = ['birthday'];
 
     public function gender(): BelongsTo
     {

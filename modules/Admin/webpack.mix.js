@@ -1,6 +1,7 @@
 const mix = require('laravel-mix')
 const ChunkRenamePlugin = require('webpack-chunk-rename-plugin')
 const config = require('./intelij.webpack.js')
+mix.browserSync('admin.tattoostars.loc')
 
 mix.webpackConfig({
   output: {
@@ -20,14 +21,17 @@ mix.webpackConfig({
   .setPublicPath('../../public/admin/dist/')
 
 const options = {
-  processCssUrls: false
+  processCssUrls: false,
+  terser: {
+    extractComments: false,
+  }
 }
 
 mix.options(options)
 
 mix.js(__dirname + '/resources/js/app.js', 'js/app.js')
   .vue()
-  .extract()
+  .extract(['vue', '@vue/composition-api', '@inertiajs/inertia-vue', '@inertiajs/progress', 'axios'])
 
 mix.sass(__dirname + '/resources/scss/argon.scss', 'css/app.css')
 
@@ -38,5 +42,5 @@ mix.version(['../../public/admin/dist/js/app.js', '../../public/admin/dist/css/a
 
 mix.sourceMaps()
 
-mix.disableNotifications()
+mix.disableSuccessNotifications()
 

@@ -14,7 +14,7 @@ class InformationResource extends JsonResource
 
         return [
             'gender' => $info->gender,
-            'birthday' => $info->birthday,
+            'birthday' => $info->birthday->format('d.m.Y'),
             'city' => $this->whenLoaded('city', fn() => $info->city->only(['id', 'name'])),
             'address' => $info->address,
             'bio' => $info->bio,

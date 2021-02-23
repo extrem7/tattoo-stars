@@ -2,8 +2,8 @@
   <div class="user-create-or-edit">
     <BaseHeader class="pb-6 pb-8 pt-5 pt-md-8 bg-gradient-success"/>
     <div class="container-fluid mt--9">
-      <b-row align-h="center">
-        <b-col lg="4">
+      <BRow align-h="center">
+        <BCol lg="8" md="10" xl="5">
           <div class="card-wrapper">
             <ValidationObserver ref="formValidator" v-slot="{handleSubmit}">
               <BForm
@@ -106,8 +106,51 @@
               </BForm>
             </ValidationObserver>
           </div>
-        </b-col>
-      </b-row>
+          <div class="card-wrapper mt-4">
+            <BCard
+              bg-variant="secondary"
+              no-body>
+              <BCardBody>
+                <BFormGroup label="Пол">
+                  <BFormInput :value="user.gender_id?user.gender.name:null" disabled/>
+                </BFormGroup>
+                <BFormGroup label="День рождения">
+                  <BFormInput :value="user.birthday" disabled/>
+                </BFormGroup>
+                <BFormGroup label="Город">
+                  <BFormInput :value="user.city_id?`${user.city.name}, ${user.city.country.name}`:null" disabled/>
+                </BFormGroup>
+                <BFormGroup label="Адрес">
+                  <BFormInput :value="user.address" disabled/>
+                </BFormGroup>
+                <BFormGroup label="Био">
+                  <BFormInput :value="user.bio" disabled/>
+                </BFormGroup>
+                <BFormGroup label="Телефон">
+                  <BFormInput :value="user.phone" disabled/>
+                </BFormGroup>
+                <BFormGroup label="Вебсайт">
+                  <BLink :href="user.website" target="_blank">{{ user.website }}</BLink>
+                </BFormGroup>
+                <BFormGroup label="Instagram">
+                  <BLink :href="user.instagram" target="_blank">{{ user.instagram }}</BLink>
+                </BFormGroup>
+                <BFormGroup label="Facebook">
+                  <BLink :href="user.facebook" target="_blank">{{ user.facebook }}</BLink>
+                </BFormGroup>
+                <BListGroup v-if="user.styles.length">
+                  <h3 class="mb-2">Стили</h3>
+                  <BListGroupItem
+                    v-for="{id,name} in user.styles"
+                    :key="id">
+                    {{ name }}
+                  </BListGroupItem>
+                </BListGroup>
+              </BCardBody>
+            </BCard>
+          </div>
+        </BCol>
+      </BRow>
     </div>
   </div>
 </template>
