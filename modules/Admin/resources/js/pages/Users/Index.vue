@@ -103,6 +103,12 @@ export default {
     SearchForm,
     ActionsButtons
   },
+  provide() {
+    return {
+      resource: this.resource,
+      isTrash: this.isTrash
+    }
+  },
   props: {
     data: Object,
     isTrash: {
@@ -110,12 +116,6 @@ export default {
       default: false
     },
     table: Object
-  },
-  provide() {
-    return {
-      resource: this.resource,
-      isTrash: this.isTrash
-    }
   },
   data() {
     const fields = [
@@ -172,7 +172,7 @@ export default {
 
       if (this.searchQuery) params.searchQuery = this.searchQuery
 
-      this.$inertia.get(this.route(`${this.resource}.index`), params)
+      this.$inertia.get(this.route(`${this.resource}.${!this.isTrash ? 'index' : 'trash'}`), params)
     },
     search() {
       this.update({
