@@ -28,9 +28,7 @@ class ProfileUpdateRequest extends FormRequest
             'password' => ['nullable', config('tattoo.password_rules')],
 
             'website' => ['nullable', 'active_url'],
-            'instagram' => [
-                'nullable', 'url', 'regex:' . config('tattoo.nickname_regex')
-            ],
+            'instagram' => ['nullable', 'regex:' . config('tattoo.nickname_regex')],
             'facebook' => [
                 'nullable',
                 'url',
@@ -39,7 +37,7 @@ class ProfileUpdateRequest extends FormRequest
         ];
     }
 
-    public function all($keys = null)
+    public function all($keys = null): array
     {
         $data = parent::all($keys);
         if ($this->filled('birthday')) {
