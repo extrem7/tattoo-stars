@@ -12,7 +12,7 @@ module.exports = {
     //'plugin:vue/strongly-recommended'
   ],
   rules: {
-    'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+    //'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     //vue
     'vue/max-attributes-per-line': 'off',
