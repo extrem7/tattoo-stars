@@ -1,7 +1,6 @@
 <template>
   <div class="users-index">
     <BaseHeader class="pb-6 pb-8 pt-5 pt-md-8 bg-gradient-success"/>
-
     <BContainer class="mt--9" fluid>
       <BRow>
         <BCol>
@@ -10,7 +9,21 @@
             header-classes="bg-transparent"
             no-body>
             <template slot="header">
-              <h3 class="mb-0 text-white">Пользователи</h3>
+              <div class="d-flex justify-content-between align-items-center">
+                <h3 class="mb-0 text-white">{{ !isTrash ? 'Пользователи' : 'Удаленные пользователи' }}</h3>
+                <InertiaLink
+                  v-if="!isTrash"
+                  :href="route(`${resource}.trash`)"
+                  class="btn btn-outline-warning">
+                  Корзина
+                </InertiaLink>
+                <InertiaLink
+                  v-else
+                  :href="route(`${resource}.index`)"
+                  class="btn btn-outline-success">
+                  Активные
+                </InertiaLink>
+              </div>
             </template>
             <BCol
               class="d-flex align-items-center justify-content-center justify-content-between flex-column flex-sm-row mb-3"
@@ -22,54 +35,49 @@
                 @search="search"
               />
             </BCol>
-            <BTable
-              v-show="total"
-              ref="table"
+            <div class="table-responsive" scroll-region>
+              <BTable
+                v-show="total"
+                ref="table"
 
-              :busy.async="isBusy"
-              :current-page="currentPage"
-              :fields="fields"
+                :busy="isBusy"
+                :current-page="currentPage"
+                :fields="fields"
 
-              :items="()=>initial"
-              :per-page="perPage"
-              :sort-by.sync="sortBy"
+                :items="()=>initial"
+                :per-page="perPage"
+                :sort-by.sync="sortBy"
 
-              :sort-desc.sync="sortDesc"
-              dark
-              hover
+                :sort-desc.sync="sortDesc"
+                dark
+                hover
 
-              responsive
-              sort-icon-left
-              @context-changed="update">
-              <template v-slot:cell(icon)="{item:{icon}}">
-                <div class="avatar avatar-sm rounded-circle">
-                  <img :src="icon" alt="Image placeholder">
-                </div>
-              </template>
-              <template v-slot:cell(emailVerified)="{item:{emailVerified}}">
-                {{ emailVerified ? 'Да' : 'Нет' }}
-              </template>
-              <template v-slot:cell(account_type_id)="{item:{account_type}}">
-                {{ account_type.label }}
-              </template>
-              <template v-slot:cell(created_at)="{item:{created_at}}">
-                {{ created_at | moment('DD.MM.YYYY HH:mm') }}
-              </template>
-              <template v-slot:cell(actions)="{item:{id}}">
-                <ActionsButtons
-                  :id="id"
-                  :resource="resource"
-                  @delete="destroy(id)"
-                />
-              </template>
-            </BTable>
-            <BAlert
-              v-if="!total && searchQuery.length"
-              class="w-100 mt-2 text-center"
-              show
-              variant="warning">
-              Пользователей не найдено
-            </BAlert>
+                sort-icon-left
+                @context-changed="update">
+                <template v-slot:cell(icon)="{item:{icon}}">
+                  <div class="avatar avatar-sm rounded-circle">
+                    <img :src="icon" alt="Image placeholder">
+                  </div>
+                </template>
+                <template v-slot:cell(emailVerified)="{item:{emailVerified}}">
+                  {{ emailVerified ? 'Да' : 'Нет' }}
+                </template>
+                <template v-slot:cell(account_type_id)="{item:{account_type}}">
+                  {{ account_type.name }}
+                </template>
+                <template v-slot:cell(created_at)="{item:{created_at}}">
+                  {{ created_at | moment('DD.MM.YYYY HH:mm') }}
+                </template>
+                <template v-slot:cell(actions)="{item:{id}}">
+                  <ActionsButtons
+                    :id="id"
+                    :resource="resource"
+                    @delete="destroy(id)"
+                    @restore="restore(id)"
+                  />
+                </template>
+              </BTable>
+            </div>
           </Card>
           <BPagination
             v-if="total"
@@ -97,16 +105,19 @@ export default {
   },
   props: {
     data: Object,
+    isTrash: {
+      type: Boolean,
+      default: false
+    },
     table: Object
   },
   provide() {
     return {
       resource: this.resource,
+      isTrash: this.isTrash
     }
   },
   data() {
-    const {data, current_page, per_page, total} = this.data
-
     const fields = [
       {key: 'icon'},
       {key: 'id', sortable: true},
@@ -126,18 +137,28 @@ export default {
       resource: 'users',
       fields,
       isBusy: false,
-      initial: data,
-      currentPage: current_page,
+      initial: null,
+      currentPage: null,
 
       searchQuery: this.table.searchQuery || '',
       sortBy: this.table.sortBy || 'id',
       sortDesc: !!this.table.sortDesc || false,
 
-      perPage: per_page,
-      total: total
+      perPage: null,
+      total: null
     }
   },
+  created() {
+    this.fillData()
+  },
   methods: {
+    fillData() {
+      const {data, current_page, per_page, total} = this.data
+      this.initial = data
+      this.currentPage = current_page
+      this.perPage = per_page
+      this.total = total
+    },
     update(ctx) {
       console.log(ctx)
       let {currentPage, sortBy, sortDesc} = ctx
@@ -159,6 +180,21 @@ export default {
         currentPage: 1
       })
     },
+    async restore(id) {
+      try {
+        this.isBusy = true
+        this.$inertia.post(this.route(`${this.resource}.restore`, id), null, {
+          only: ['data', 'flash'],
+          preserveState: false,
+          preserveScroll: true,
+          replace: true
+        })
+      } catch (e) {
+        console.log('Ошибка при восстановлении пользователя:', e)
+      } finally {
+        this.isBusy = false
+      }
+    },
     async destroy(id) {
       this.$confirm('Вы уверены?', null, null, {
         confirmButtonText: 'Да',
@@ -172,9 +208,10 @@ export default {
       }).then(async () => {
         try {
           this.isBusy = true
-          this.$inertia.delete(this.route(`${this.resource}.destroy`, id), {
+          this.$inertia.delete(this.route(`${this.resource}.${!this.isTrash ? 'destroy' : 'forceDestroy'}`, id), {
             only: ['data', 'flash'],
             preserveState: false,
+            preserveScroll: true,
             replace: true
           })
         } catch (e) {

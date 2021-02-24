@@ -126,6 +126,24 @@ body {
     }
 }
 
+.table-responsive {
+    &::-webkit-scrollbar-track {
+        -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+        background-color: #333333
+    }
+
+    &::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+        background-color: #333333
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: #5e72e4;
+        border: 2px solid #5e72e4;
+    }
+}
+
 .pagination {
     justify-content: center;
     flex-wrap: wrap;

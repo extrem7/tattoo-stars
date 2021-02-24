@@ -3,7 +3,7 @@ import '@/polyfills'
 // Notifications plugin. Used on Notifications page
 import Notifications from '@/argon/components/NotificationPlugin'
 // Validation plugin used to validate forms
-import {localize, configure} from 'vee-validate'
+import {localize, configure, extend} from 'vee-validate'
 // A plugin file where you could register global components used across the app
 import GlobalComponents from './globalComponents'
 // A plugin file where you could register global directives
@@ -21,7 +21,6 @@ locale.use(lang)
 import {BootstrapVue, IconsPlugin} from 'bootstrap-vue'
 
 // asset imports
-import {extend} from 'vee-validate'
 import * as rules from 'vee-validate/dist/rules'
 import ru from 'vee-validate/dist/locale/ru.json'
 

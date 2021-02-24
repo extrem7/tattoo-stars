@@ -45,6 +45,7 @@ new Vue({
     }
 
     this.$inertia.on('success', (event) => {
+
       const props = event.detail.page.props
 
       set({title: `${props.metaInfo.title} - TattooStars`})

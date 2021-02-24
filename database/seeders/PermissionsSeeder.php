@@ -20,6 +20,7 @@ class PermissionsSeeder extends Seeder
         */
 
         $crudPermissions = ['index', 'create', 'edit', 'delete'];
+        $trashPermissions = ['trash', 'restore', 'force-delete'];
 
         $sections = [
             'admin-panel' => [
@@ -28,7 +29,7 @@ class PermissionsSeeder extends Seeder
             ],
             'users' => [
                 'name' => 'Пользователи',
-                'permissions' => [...$crudPermissions],
+                'permissions' => [...$crudPermissions, ...$trashPermissions],
             ]
         ];
 

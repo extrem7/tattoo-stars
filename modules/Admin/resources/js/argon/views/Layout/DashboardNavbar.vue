@@ -64,14 +64,14 @@
 </template>
 
 <script>
-import {CollapseTransition} from 'vue2-transitions'
-import {BaseNav, Modal} from '@/argon/components'
+//import {CollapseTransition} from 'vue2-transitions'
+import {BaseNav, /*Modal*/} from '@/argon/components'
 
 export default {
   components: {
-    CollapseTransition,
+    //CollapseTransition,
     BaseNav,
-    Modal
+    //Modal
   },
   props: {
     type: {

@@ -24,7 +24,7 @@ class CitiesController extends Controller
     public function countries(string $query = null): array
     {
         $countries = Country::when($query, fn($q) => $q->where('name', 'like', "$query%"))
-            ->get(['id', app()->getLocale() === 'ru' ? 'name_ru' : 'name'])
+            ->get(['id', $this->localizedColumn()])
             ->sortByDesc(fn(Country $c) => in_array($c->name, [
                 'Ukraine', 'Russia', 'Belarus', 'Украина', 'Россия', 'Беларусь'
             ]))
@@ -45,13 +45,13 @@ class CitiesController extends Controller
      */
     public function cities(string $country, string $query = null): array
     {
-        $translatedField = app()->getLocale() === 'ru' ? 'name_ru' : 'name';
+        $translatedColumn = $this->localizedColumn();
 
         $countries = City::where('country_id', '=', strtoupper($country))
-            ->when($query, fn($q) => $q->where($translatedField, 'like', "$query%"))
+            ->when($query, fn($q) => $q->where($translatedColumn, 'like', "$query%"))
             ->biggest()
             ->limit(20)
-            ->get(['id', $translatedField])
+            ->get(['id', $translatedColumn])
             ->map(fn(City $c) => $c->only(['id', 'name']));
 
         return $countries->toArray();
@@ -85,7 +85,7 @@ class CitiesController extends Controller
                     if ($city = $country->cities()
                         ->where('name', 'like', "$location->city%")
                         ->biggest()
-                        ->first(['id', 'name'])) {
+                        ->first(['id', $this->localizedColumn()])) {
                         $geoip['city'] = $city->only(['id', 'name']);
                     }
                 }
@@ -95,5 +95,10 @@ class CitiesController extends Controller
         }
 
         return $geoip;
+    }
+
+    protected function localizedColumn(): string
+    {
+        return app()->getLocale() === 'ru' ? 'name_ru' : 'name';
     }
 }

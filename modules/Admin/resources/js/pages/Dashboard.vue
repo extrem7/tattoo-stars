@@ -140,7 +140,7 @@
 //import BarChart from '@/argon/components/Charts/BarChart'
 
 // Components
-import BaseProgress from '@/argon/components/BaseProgress'
+//import BaseProgress from '@/argon/components/BaseProgress'
 import StatsCard from '@/argon/components/Cards/StatsCard'
 
 // Tables
@@ -151,7 +151,7 @@ export default {
   components: {
     //LineChart,
     //BarChart,
-    BaseProgress,
+    //BaseProgress,
     StatsCard,
     PageVisitsTable,
     SocialTrafficTable
@@ -189,7 +189,7 @@ export default {
     }
   },
   methods: {
-    initBigChart(index) {
+    initBigChart(/*index*/) {
       /*let chartData = {
         datasets: [
           {

@@ -43,9 +43,9 @@
       <component
         :is="elementType(link, false)"
         :class="{ active: link.active }"
-        :href="link.path"
+        :href="link.path?link.path:'/'"
         :target="link.target"
-        :to="link.path"
+        :to="link.path?link.path:'/'"
         class="nav-link"
         @click="linkClick"
       >
@@ -117,6 +117,7 @@ export default {
         let words = this.link.name.split(' ')
         return words.map(word => word.substring(0, 1)).join('')
       }
+      return ''
     },
     isMenu() {
       return this.children.length > 0 || this.menu === true

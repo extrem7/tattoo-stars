@@ -20,7 +20,7 @@ class UserRequest extends FormRequest
                 'regex:/^([A-Za-z0-9_](?:(?:[A-Za-z0-9_]|(?:\.(?!\.))){0,28}(?:[A-Za-z0-9_]))?)$/'
             ],
             'account_type_id' => ['required', 'exists:account_types,id'],
-            'email' => ['required', 'email', 'unique:users,email,' . ($update ? $this->user->id : '')],
+            'email' => ['required', 'email', 'unique:users,email,' . ($update ? $this->route()->parameter('user') : '')],
             'password' => [$update ? 'nullable' : 'required', 'string', 'min:8'],
             'roles' => ['array'],
             'roles.*' => ['nullable', 'numeric', 'exists:user_roles,id']

@@ -22,7 +22,7 @@ class UserResource extends JsonResource
             'icon' => $this->whenAppended('icon', $user->icon),
             'avatar' => $this->whenAppended('avatar', $user->avatar),
             'accountType' => [
-                'id' => $user->account_type_id,
+                'id' => $user->accountType->id,
                 'name' => $user->accountType->name
             ],
             $this->mergeWhen(

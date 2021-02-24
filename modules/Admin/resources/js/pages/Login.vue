@@ -74,7 +74,7 @@ export default {
     }
   },
   created() {
-    this.$inertia.on('error', e => {
+    this.$inertia.on('error', () => {
       this.$refs.formValidator.setErrors(this.errors)
     })
   },

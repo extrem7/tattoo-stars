@@ -106,49 +106,49 @@
               </BForm>
             </ValidationObserver>
           </div>
-          <div class="card-wrapper mt-4">
-            <BCard
-              bg-variant="secondary"
-              no-body>
-              <BCardBody>
-                <BFormGroup label="Пол">
-                  <BFormInput :value="user.gender_id?user.gender.name:null" disabled/>
-                </BFormGroup>
-                <BFormGroup label="День рождения">
-                  <BFormInput :value="user.birthday" disabled/>
-                </BFormGroup>
-                <BFormGroup label="Город">
-                  <BFormInput :value="user.city_id?`${user.city.name}, ${user.city.country.name}`:null" disabled/>
-                </BFormGroup>
-                <BFormGroup label="Адрес">
-                  <BFormInput :value="user.address" disabled/>
-                </BFormGroup>
-                <BFormGroup label="Био">
-                  <BFormInput :value="user.bio" disabled/>
-                </BFormGroup>
-                <BFormGroup label="Телефон">
-                  <BFormInput :value="user.phone" disabled/>
-                </BFormGroup>
-                <BFormGroup label="Вебсайт">
-                  <BLink :href="user.website" target="_blank">{{ user.website }}</BLink>
-                </BFormGroup>
-                <BFormGroup label="Instagram">
-                  <BLink :href="user.instagram" target="_blank">{{ user.instagram }}</BLink>
-                </BFormGroup>
-                <BFormGroup label="Facebook">
-                  <BLink :href="user.facebook" target="_blank">{{ user.facebook }}</BLink>
-                </BFormGroup>
-                <BListGroup v-if="user.styles.length">
-                  <h3 class="mb-2">Стили</h3>
-                  <BListGroupItem
-                    v-for="{id,name} in user.styles"
-                    :key="id">
-                    {{ name }}
-                  </BListGroupItem>
-                </BListGroup>
-              </BCardBody>
-            </BCard>
-          </div>
+          <BCard
+            v-if="isEdit"
+            bg-variant="secondary"
+            class="mt-4"
+            no-body>
+            <BCardBody>
+              <BFormGroup label="Пол">
+                <BFormInput :value="user.gender_id?user.gender.name:null" disabled/>
+              </BFormGroup>
+              <BFormGroup label="День рождения">
+                <BFormInput :value="user.birthday" disabled/>
+              </BFormGroup>
+              <BFormGroup label="Город">
+                <BFormInput :value="user.city_id?`${user.city.name}, ${user.city.country.name}`:null" disabled/>
+              </BFormGroup>
+              <BFormGroup label="Адрес">
+                <BFormInput :value="user.address" disabled/>
+              </BFormGroup>
+              <BFormGroup label="Био">
+                <BFormInput :value="user.bio" disabled/>
+              </BFormGroup>
+              <BFormGroup label="Телефон">
+                <BFormInput :value="user.phone" disabled/>
+              </BFormGroup>
+              <BFormGroup label="Вебсайт">
+                <BLink :href="user.website" target="_blank">{{ user.website }}</BLink>
+              </BFormGroup>
+              <BFormGroup label="Instagram">
+                <BLink :href="user.instagram" target="_blank">{{ user.instagram }}</BLink>
+              </BFormGroup>
+              <BFormGroup label="Facebook">
+                <BLink :href="user.facebook" target="_blank">{{ user.facebook }}</BLink>
+              </BFormGroup>
+              <BListGroup v-if="user.styles.length">
+                <h3 class="mb-2">Стили</h3>
+                <BListGroupItem
+                  v-for="{id,name} in user.styles"
+                  :key="id">
+                  {{ name }}
+                </BListGroupItem>
+              </BListGroup>
+            </BCardBody>
+          </BCard>
         </BCol>
       </BRow>
     </div>
@@ -177,7 +177,7 @@ export default {
         nickname: '',
         email: '',
         password: '',
-        role: [],
+        roles: [],
       }
     }
   },
@@ -187,7 +187,7 @@ export default {
     }
   },
   created() {
-    this.$inertia.on('error', e => {
+    this.$inertia.on('error', () => {
       this.$refs.formValidator.setErrors(this.errors)
     })
 

@@ -2,8 +2,7 @@
 
 namespace Modules\Admin\Http\Controllers\Users;
 
-use App\Models\User\AccountType;
-use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Modules\Admin\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
@@ -11,15 +10,22 @@ use Illuminate\Http\RedirectResponse;
 use Inertia\Response;
 use Modules\Admin\Http\Requests\IndexRequest;
 use Modules\Admin\Http\Requests\UserRequest;
-use Spatie\Permission\Models\Role;
+use Modules\Admin\Repositories\UserRepository;
 
 class UserController extends Controller
 {
+    protected UserRepository $repository;
+
     public function __construct()
     {
+        $this->repository = app(UserRepository::class);
+
         $this->middleware('can:users.create')->only(['create', 'store']);
         $this->middleware('can:users.edit')->only(['edit', 'update']);
         $this->middleware('can:users.delete')->only('destroy');
+        $this->middleware('can:users.trash')->only('trash');
+        $this->middleware('can:users.restore')->only('restore');
+        $this->middleware('can:users.force-destroy')->only('forceDestroy');
     }
 
     public function index(IndexRequest $request): Response
@@ -30,30 +36,16 @@ class UserController extends Controller
         }
         $this->seo()->setTitle($title);
 
-        $users = User::with(['avatarMedia', 'accountType', 'roles'])
-            ->select(['id', 'account_type_id', 'email', 'email_verified_at', 'name', 'created_at'])
-            ->when($request->get('searchQuery'), fn($q) => $q->search($request->get('searchQuery')))
-            ->when($request->get('sortBy'), function (Builder $users) use ($request) {
-                $users->orderBy($request->get('sortBy'));
-            })
-            ->when($request->get('sortDesc'), fn(Builder $q) => $q->latest())
-            ->paginate(10);
+        $users = $this->repository->getUsersForIndex($request->only(['searchQuery', 'sortBy', 'sortDesc']));
 
-        /* @var $users Collection<User> */
-        $users->transform(function (User $user) {
-            $user->append('icon');
-            $data = $user->toArray();
-            $data['emailVerified'] = $user->hasVerifiedEmail();
-            $data['roles'] = $user->roles->pluck('label')->join(', ');
-            return $data;
-        });
+        $this->repository->transformUsers($users);
 
         return inertia('Users/Index', [
             'data' => $users,
             'table' => [
-                'searchQuery' => $request->searchQuery,
-                'sortBy' => $request->sortBy,
-                'sortDesc' => $request->sortDesc
+                'searchQuery' => $request->input('searchQuery'),
+                'sortBy' => $request->input('sortBy'),
+                'sortDesc' => $request->input('sortDesc')
             ]
         ]);
     }
@@ -63,8 +55,8 @@ class UserController extends Controller
         $this->seo()->setTitle('Создать пользователя');
 
         return inertia('Users/Profile', [
-            'accountTypes' => $this->getAccountTypes(),
-            'roles' => $this->getRoles()
+            'accountTypes' => $this->repository->getAccountTypes(),
+            'roles' => $this->repository->getRoles()
         ]);
     }
 
@@ -85,8 +77,10 @@ class UserController extends Controller
         ]);
     }
 
-    public function edit(User $user): Response
+    public function edit(int $id): Response
     {
+        $user = $this->repository->findById($id);
+
         $this->seo()->setTitle('Редактировать пользователя');
 
         $data = array_merge(
@@ -101,14 +95,16 @@ class UserController extends Controller
 
         return inertia('Users/Profile', [
             'user' => $data,
-            'accountTypes' => $this->getAccountTypes(),
-            'roles' => $this->getRoles()
+            'accountTypes' => $this->repository->getAccountTypes(),
+            'roles' => $this->repository->getRoles()
         ]);
     }
 
-    public function update(UserRequest $request, User $user): RedirectResponse
+    public function update(UserRequest $request, int $id): RedirectResponse
     {
-        $data = $request->only('email', 'name', 'account_type_id');
+        $user = $this->repository->findById($id);
+
+        $data = $request->only(['email', 'name', 'nickname', 'account_type_id']);
         if ($password = $request->password) {
             $data['password'] = \Hash::make($password);
         }
@@ -116,38 +112,67 @@ class UserController extends Controller
 
         $user->syncRoles($request->roles);
 
-        return redirect()->back()->with(['message' => "Пользователь {$request->name} был отредактирован"]);
+        return back()->with(['message' => "Пользователь {$request->name} был отредактирован."]);
     }
 
-    public function destroy(User $user): RedirectResponse
+    public function destroy(int $id): RedirectResponse
     {
+        $user = $this->repository->findById($id);
+
         if ($user->isSuperAdmin()) {
-            return redirect()->back()->with(['error' => 'Ты в своем уме?']);
+            return back()->with(['error' => 'Ты в своем уме?']);
         }
 
         try {
             $user->delete();
         } catch (\Exception $e) {
-            return redirect()->back()->with(['error' => 'Возникла ошибка при удалении пользователя.']);
+            return back()->with(['error' => 'Возникла ошибка при удалении пользователя.']);
         }
 
-        return redirect()->back()->with(['message' => 'Пользователь был удален.', 'type' => 'destroy']);
+        return back()->with(['message' => 'Пользователь был удален.', 'type' => 'destroy']);
     }
 
-    protected function getAccountTypes(): array
+    public function trash(IndexRequest $request): Response
     {
-        $accountTypes = AccountType::all(['id', 'name'])->map(
-            fn(AccountType $t) => ['value' => $t->id, 'text' => $t->name]
+        $title = 'Удаленные пользователи';
+        if ($page = $request->input('page')) {
+            $title .= " - страница $page";
+        }
+        $this->seo()->setTitle($title);
+
+        /* @var $q SoftDeletes */
+        $users = $this->repository->getUsersForIndex(
+            $request->only(['searchQuery', 'sortBy', 'sortDesc']), fn(Builder $q) => $q->onlyTrashed()
         );
 
-        return array_reverse($accountTypes->toArray());
+        $this->repository->transformUsers($users);
+
+        return inertia('Users/Index', [
+            'data' => $users,
+            'isTrash' => true,
+            'table' => [
+                'searchQuery' => $request->input('searchQuery'),
+                'sortBy' => $request->input('sortBy'),
+                'sortDesc' => $request->input('sortDesc')
+            ]
+        ]);
     }
 
-    protected function getRoles(): array
+    public function restore(int $id): RedirectResponse
     {
-        return collect(Role::all(['id', 'label'])
-            ->map(fn(Role $r) => ['value' => $r->id, 'text' => $r->label]))
-            ->values()
-            ->toArray();
+        $user = $this->repository->findById($id);
+        if ($user->trashed()) {
+            $user->restore();
+        }
+        return back()->with(['message' => "Пользователь {$user->name} был восстановлен."]);
+    }
+
+    public function forceDestroy(int $id): RedirectResponse
+    {
+        $user = $this->repository->findById($id);
+        if ($user->trashed()) {
+            $user->forceDelete();
+        }
+        return back()->with(['message' => 'Пользователь был удален окончательно.', 'type' => 'destroy']);
     }
 }

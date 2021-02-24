@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Facades\ResourceRegistrar;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
@@ -36,6 +37,11 @@ class RouteServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->configureRateLimiting();
+
+        $registrar = new ResourceRegistrar($this->app['router']);
+        $this->app->bind(\Illuminate\Routing\ResourceRegistrar::class, function () use ($registrar) {
+            return $registrar;
+        });
 
         /*$this->routes(function () {
             Route::prefix('api')

@@ -12,10 +12,9 @@
       <slot :index="index" :row="item">
         <td
           v-for="(column, index) in columns"
-          v-if="hasValue(item, column)"
           :key="index"
         >
-          {{ itemValue(item, column) }}
+          {{ hasValue(item, column) ? itemValue(item, column) : null }}
         </td>
       </slot>
     </tr>

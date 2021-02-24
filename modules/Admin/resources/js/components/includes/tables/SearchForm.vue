@@ -34,6 +34,6 @@ export default {
 <style scoped>
 .form-control {
   position: relative;
-  min-width: 200px;
+  min-width: 150px;
 }
 </style>

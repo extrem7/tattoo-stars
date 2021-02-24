@@ -29,9 +29,7 @@ class ProfileUpdateRequest extends FormRequest
 
             'website' => ['nullable', 'active_url'],
             'instagram' => [
-                'nullable',
-                'url',
-                'regex:/(?:(?:http|https):\/\/)?(?:www.)?(?:instagram.com|instagr.am)\/([A-Za-z0-9-_]+)/im',
+                'nullable', 'url', 'regex:' . config('tattoo.nickname_regex')
             ],
             'facebook' => [
                 'nullable',

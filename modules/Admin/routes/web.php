@@ -21,8 +21,10 @@ Route::middleware(['auth', 'can:admin-panel.access'])->group(function () {
 
     Route::namespace('Users')->group(function () {
         Route::resource('users', 'UserController')
-            ->except('show')
+            ->parameter('user', 'id')
+            ->except(['show'])
             ->middleware('can:users.index');
+
         Route::prefix('users/{user}/avatar')
             ->as('users.avatar.')
             ->middleware('can:users.edit')

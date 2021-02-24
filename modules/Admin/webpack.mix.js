@@ -4,6 +4,16 @@ const config = require('./intelij.webpack.js')
 mix.browserSync('admin.tattoostars.loc')
 
 mix.webpackConfig({
+  module: {
+    rules: [
+      {
+        enforce: 'pre',
+        exclude: /node_modules/,
+        loader: 'eslint-loader',
+        test: /\.(js|vue)?$/
+      },
+    ]
+  },
   output: {
     publicPath: '/admin/dist/',
     filename: '[name].js',
@@ -29,14 +39,14 @@ const options = {
 
 mix.options(options)
 
-mix.js(__dirname + '/resources/js/app.js', 'js/app.js')
+mix.js(`${__dirname}/resources/js/app.js`, 'js/app.js')
   .vue()
   .extract(['vue', '@vue/composition-api', '@inertiajs/inertia-vue', '@inertiajs/progress', 'axios'])
 
-mix.sass(__dirname + '/resources/scss/argon.scss', 'css/app.css')
+mix.sass(`${__dirname}/resources/scss/argon.scss`, 'css/app.css')
 
-mix.copyDirectory(__dirname + '/resources/assets/img', '../../public/admin/dist/img')
-mix.copyDirectory(__dirname + '/resources/assets/vendor', '../../public/admin/dist/vendor')
+mix.copyDirectory(`${__dirname}/resources/assets/img`, '../../public/admin/dist/img')
+mix.copyDirectory(`${__dirname}/resources/assets/vendor`, '../../public/admin/dist/vendor')
 
 mix.version(['../../public/admin/dist/js/app.js', '../../public/admin/dist/css/app.css'])
 
