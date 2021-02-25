@@ -3,7 +3,7 @@ module.exports = {
   env: {
     node: true
   },
-  'plugins': ['unused-imports'],
+  plugins: ['unused-imports'],
   extends: [
     'eslint:recommended',
     //'plugin:vue/base',
@@ -11,6 +11,7 @@ module.exports = {
     'plugin:vue/recommended',
     //'plugin:vue/strongly-recommended'
   ],
+  ignorePatterns: ['resources/js/argon/**/*.js', 'apidoc-generate.js'],
   rules: {
     //'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
@@ -21,6 +22,7 @@ module.exports = {
     'vue/html-closing-bracket-newline': 'off',
     'vue/require-default-prop': 'off',
     'vue/html-self-closing': 'off',
+    'vue/html-indent': 'off',
     // ES6
     'arrow-spacing': 'error',
     'no-confusing-arrow': 'error',
@@ -31,6 +33,8 @@ module.exports = {
     'prefer-template': 'error',
   },
   parserOptions: {
-    parser: '@babel/eslint-parser'
+    parser: '@babel/eslint-parser',
+    'ecmaVersion': 6,
+    'sourceType': 'module',
   }
 }
