@@ -21,8 +21,11 @@ Vue.mixin({
       .current()
       .match(new RegExp(`(${fragments.join('|')})`)),
     /* eslint-enable no-undef */
-    can(permission) {
-      return !!this.$page.props.auth.permissions.includes(permission)
+    can(permissions) {
+      if (!Array.isArray(permissions)) {
+        permissions = [permissions]
+      }
+      return !!this.$page.props.auth.permissions.some(p => permissions.indexOf(p) >= 0)
     },
 
     logout() {

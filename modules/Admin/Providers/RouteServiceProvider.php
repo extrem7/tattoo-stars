@@ -30,7 +30,6 @@ class RouteServiceProvider extends ServiceProvider
         Route::domain(env('ADMIN_DOMAIN'))
             ->middleware(['web', HandleInertiaRequests::class])
             ->as('admin.')
-            ->namespace($this->moduleNamespace)
             ->group(module_path('Admin', '/routes/web.php'));
     }
 }

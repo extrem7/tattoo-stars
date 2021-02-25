@@ -38,6 +38,11 @@ class HandleInertiaRequests extends Middleware
 
                 return $data;
             },
+            'localization' => [
+                'locales' => config('tattoo.languages'),
+                'default' => config('app.locale'),
+                'fallback' => config('app.fallback_locale')
+            ],
             'flash' => [],
             'version' => config('admin.version')
         ];

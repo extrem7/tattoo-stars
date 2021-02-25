@@ -26,9 +26,13 @@
 <script>
 export default {
   props: {
-    id: Number
-  },
-  inject: ['resource', 'isTrash']
+    id: Number,
+    resource: String,
+    isTrash: {
+      type: Boolean,
+      default: false
+    }
+  }
 }
 </script>
 

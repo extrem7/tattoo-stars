@@ -63,8 +63,7 @@ class ProfileController extends Controller
      * @apiParam {String} [birthday] User birthday.
      * @apiParam {String} [city_id] User city.
      * @apiParam {String} [address] User address.
-     * @apiParam {Object} [styles] User styles array.
-     * @apiParam {String} [styles.*] User style item.
+     * @apiParam {Array} [styles] User styles array of ids.
      * @apiParam {String} [bio] User bio.
      * @apiParam {String} [phone] User phone.
      * @apiParam {String} [email] User email.

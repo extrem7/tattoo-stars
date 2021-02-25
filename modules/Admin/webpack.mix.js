@@ -52,5 +52,5 @@ mix.version(['../../public/admin/dist/js/app.js', '../../public/admin/dist/css/a
 
 mix.sourceMaps()
 
-mix.disableSuccessNotifications()
+mix.disableNotifications()
 

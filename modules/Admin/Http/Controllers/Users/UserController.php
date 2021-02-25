@@ -41,6 +41,7 @@ class UserController extends Controller
         $this->repository->transformUsers($users);
 
         return inertia('Users/Index', [
+            'resource' => 'users',
             'data' => $users,
             'table' => [
                 'searchQuery' => $request->input('searchQuery'),
@@ -148,6 +149,7 @@ class UserController extends Controller
         $this->repository->transformUsers($users);
 
         return inertia('Users/Index', [
+            'resource' => 'users',
             'data' => $users,
             'isTrash' => true,
             'table' => [

@@ -20,9 +20,18 @@
             active:routeIncludes(['users','profile'])
           }"
         />
+        <SideBarItem
+          v-if="can('pages.index')"
+          :link="{
+            name: 'Страницы приложения',
+            path: route('pages.index'),
+            icon: 'ni ni-books text-primary',
+            active:routeIncludes(['pages'])
+          }"
+        />
         <BNavItem
-          @click.prevent="logout"
           class="nav-item"
+          @click.prevent="logout"
         >
           <i class="ni ni-user-run text-primary"></i>
           <span class="nav-link-text">Выйти</span>
@@ -73,6 +82,9 @@ export default {
     //DashboardContent,
     FadeTransition
   },
+  mounted() {
+    this.initScrollbar()
+  },
   methods: {
     initScrollbar() {
       let isWindows = navigator.platform.startsWith('Win')
@@ -80,9 +92,6 @@ export default {
         initScrollbar('sidenav')
       }
     }
-  },
-  mounted() {
-    this.initScrollbar()
   }
 }
 </script>

@@ -1,0 +1,18 @@
+{
+  "name": "TattooStars",
+  "version": "1.0.0",
+  "description": "RESTFUL API for TattooStars project.",
+  "title": "TattooStars REST API",
+  "url": "https://gitlab.com/Sheshlyuk/tatoostars-web",
+  "order": [
+    "General",
+    "Auth",
+    "User",
+    "Profile",
+    "Cities"
+  ],
+  "template": {
+    "withCompare": false,
+    "withGenerator": true
+  }
+}

@@ -2,6 +2,7 @@
 
 use Modules\Api\Http\Controllers\{CitiesController,
     HelperController,
+    PageController,
     Profile\AvatarController,
     Profile\ProfileController,
     Auth\AuthController,
@@ -16,6 +17,9 @@ foreach ($versions as $version) {
 
         Route::get('support', [HelperController::class, 'support']);
         Route::post('support/help', [HelperController::class, 'help'])->middleware('throttle:1,1');
+
+        Route::get('reference', [PageController::class, 'reference']);
+        Route::get('privacy-policy', [PageController::class, 'privacyPolicy']);
 
         Route::get('account-types', [AuthController::class, 'accountTypes']);
 

@@ -27,6 +27,10 @@ class PermissionsSeeder extends Seeder
                 'name' => 'Админ-панель',
                 'permissions' => ['access', 'telescope'],
             ],
+            'pages' => [
+                'name' => 'Страницы приложения',
+                'permissions' => [...$crudPermissions],
+            ],
             'users' => [
                 'name' => 'Пользователи',
                 'permissions' => [...$crudPermissions, ...$trashPermissions],
