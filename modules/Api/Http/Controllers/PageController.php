@@ -15,6 +15,9 @@ class PageController extends Controller
      *
      * @apiSuccess {String} title Page title.
      * @apiSuccess {String} body Page html body.
+     * @apiSuccess {Array} faqs Faqs.
+     * @apiSuccess {String} faqs.question Question.
+     * @apiSuccess {String} faqs.answer Answer.
      */
     public function reference(): JsonResponse
     {
