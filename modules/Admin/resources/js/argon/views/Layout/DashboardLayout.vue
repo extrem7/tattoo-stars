@@ -29,6 +29,23 @@
             active:routeIncludes(['pages'])
           }"
         />
+        <SideBarItem
+          v-if="can('faqs.index')"
+          :link="{
+            name: 'FAQ',
+            path: route('faqs.index'),
+            icon: 'fa fa-question text-primary',
+            active:routeIncludes(['faqs'])
+          }"
+        />
+        <SideBarItem
+          v-if="can('admin-panel.telescope')"
+          :link="{
+            name: 'Telescope',
+            path: '/telescope',
+            icon: 'ni ni-spaceship text-primary'
+          }"
+        />
         <BNavItem
           class="nav-item"
           @click.prevent="logout"

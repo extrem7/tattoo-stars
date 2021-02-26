@@ -22,7 +22,7 @@
             </div>
           </Card>
           <BPagination
-            v-if="total"
+            v-if="usePagination && total"
             :per-page="perPage"
             :total-rows="total"
             :value="currentPage"
@@ -44,6 +44,10 @@ export default {
   },
   props: {
     resource: String,
+    usePagination: {
+      type: Boolean,
+      default: false
+    },
     total: Number,
     currentPage: Number,
     perPage: Number,

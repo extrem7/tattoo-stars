@@ -113,6 +113,16 @@ body {
         width: 50px;
     }
 
+    .vertical-align-center {
+        vertical-align: middle !important;
+    }
+
+    .drag {
+        cursor: grabbing;
+        display: flex;
+        justify-content: center;
+    }
+
     .date-column {
         width: 155px;
     }

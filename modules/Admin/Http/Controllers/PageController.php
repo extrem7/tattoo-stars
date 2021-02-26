@@ -75,10 +75,6 @@ class PageController extends Controller
 
     public function destroy(Page $page): RedirectResponse
     {
-        if (app()->environment('production')) {
-            return back()->with(['error' => 'Ты в своем уме?']);
-        }
-
         try {
             $page->delete();
         } catch (\Exception $e) {

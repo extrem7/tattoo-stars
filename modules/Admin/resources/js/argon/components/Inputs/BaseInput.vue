@@ -50,6 +50,7 @@
           {{ errors[0] }}
         </div>
       </slot>
+      <slot name="errors-backend"></slot>
     </b-form-group>
   </validation-provider>
 </template>

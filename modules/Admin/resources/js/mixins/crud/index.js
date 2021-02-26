@@ -36,7 +36,9 @@ export default {
     }
   },
   created() {
-    this.fillData()
+    if (this.data) {
+      this.fillData()
+    }
     if (this.can([`${this.resource}.edit`, `${this.resource}.delete`])) {
       this.fields.push({key: 'actions', label: '', thClass: 'actions-column'})
     }

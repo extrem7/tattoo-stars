@@ -7,6 +7,7 @@
 
 use Modules\Admin\Http\Controllers\{AuthController,
     DashboardController,
+    FaqController,
     PageController,
     Users\AvatarController,
     Users\ProfileController,
@@ -43,6 +44,11 @@ Route::middleware(['auth', 'can:admin-panel.access'])->group(function () {
     Route::resource('pages', PageController::class)
         ->except(['show', 'trash', 'restore', 'force-destroy'])
         ->middleware('can:users.index');
+
+    Route::resource('faqs', FaqController::class)
+        ->except(['show', 'trash', 'restore', 'force-destroy'])
+        ->middleware('can:faqs.index');
+    Route::post('faqs/sort', [FaqController::class, 'sort'])->name('faqs.sort');
 
     Route::prefix('profile')->as('profile.')->group(function () {
         Route::get('', [ProfileController::class, 'edit'])->name('edit');

@@ -31,6 +31,10 @@ class PermissionsSeeder extends Seeder
                 'name' => 'Страницы приложения',
                 'permissions' => [...$crudPermissions],
             ],
+            'faqs' => [
+                'name' => 'Часто задаваемые вопросы',
+                'permissions' => [...$crudPermissions],
+            ],
             'users' => [
                 'name' => 'Пользователи',
                 'permissions' => [...$crudPermissions, ...$trashPermissions],
