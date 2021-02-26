@@ -14,8 +14,10 @@ class InformationResource extends JsonResource
 
         return [
             'gender' => $info->gender,
-            'birthday' => $info->birthday->format('d.m.Y'),
-            'city' => $this->whenLoaded('city', fn() => $info->city->only(['id', 'name'])),
+            'birthday' => $info->birthday ? $info->birthday->format('d.m.Y') : null,
+            'city' => $this->whenLoaded('city', fn() => array_merge(
+                $info->city->only(['id', 'name']), ['country' => $info->city->country->only(['id', 'name'])]
+            )),
             'address' => $info->address,
             'bio' => $info->bio,
             'phone' => $info->phone,
