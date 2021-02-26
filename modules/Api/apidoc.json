@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "RESTFUL API for TattooStars project.",
   "title": "TattooStars REST API",
-  "url": "https://gitlab.com/Sheshlyuk/tatoostars-web",
+  "url": "https://api.tattoostars.pro",
   "order": [
     "General",
     "Auth",
