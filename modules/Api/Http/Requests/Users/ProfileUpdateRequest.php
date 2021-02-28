@@ -46,6 +46,13 @@ class ProfileUpdateRequest extends FormRequest
         return $data;
     }
 
+    public function prepareForValidation(): void
+    {
+        if (($website = $this->input('website')) && !\Str::contains($website, ['http://', 'https://'])) {
+            $this->merge(['website' => "https://$website"]);
+        }
+    }
+
     public function authorize(): bool
     {
         return true;
