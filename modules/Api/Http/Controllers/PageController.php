@@ -2,32 +2,29 @@
 
 namespace Modules\Api\Http\Controllers;
 
-use App\Models\Api\Faq;
-use App\Models\Api\Page;
 use Illuminate\Http\JsonResponse;
 
 class PageController extends Controller
 {
+    protected PageViewController $viewController;
+
+    public function __construct()
+    {
+        $this->viewController = app(PageViewController::class);
+    }
+
     /**
      * @api {get} /reference Reference information
      * @apiName GetReference
      * @apiGroup General
      *
-     * @apiSuccess {String} title Page title.
-     * @apiSuccess {String} body Page html body.
-     * @apiSuccess {Array} faqs Faqs.
-     * @apiSuccess {String} faqs.question Question.
-     * @apiSuccess {String} faqs.answer Answer.
+     * @apiSuccess {String} view Page html.
      */
     public function reference(): JsonResponse
     {
-        $page = Page::find(1);
-        $faqs = Faq::ordered()->get(['question', 'answer']);
-
-        return response()->json(array_merge(
-            $page->translated()->only(['title', 'body']),
-            ['faqs' => $faqs->map(fn(Faq $faq) => $faq->translated())]
-        ));
+        return response()->json([
+            'view' => $this->viewController->reference()->render()
+        ]);
     }
 
     /**
@@ -35,13 +32,12 @@ class PageController extends Controller
      * @apiName GetPrivacyPolicy
      * @apiGroup General
      *
-     * @apiSuccess {String} title Page title.
-     * @apiSuccess {String} body Page html body.
+     * @apiSuccess {String} view Page html.
      */
     public function privacyPolicy(): JsonResponse
     {
-        $page = Page::find(2);
-
-        return response()->json($page->translated()->only(['title', 'body']));
+        return response()->json([
+            'view' => $this->viewController->privacyPolicy()->render()
+        ]);
     }
 }

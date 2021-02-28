@@ -3,6 +3,7 @@
 use Modules\Api\Http\Controllers\{CitiesController,
     HelperController,
     PageController,
+    PageViewController,
     Profile\AvatarController,
     Profile\ProfileController,
     Auth\AuthController,
@@ -12,7 +13,7 @@ use Modules\Api\Http\Controllers\{CitiesController,
 $versions = ['', 'v1'];
 
 foreach ($versions as $version) {
-    Route::prefix($version)->middleware('api')->group(function () {
+    Route::prefix("$version/")->middleware('api')->group(function () {
         Route::get('', [HelperController::class, 'root']);
 
         Route::get('support', [HelperController::class, 'support']);
@@ -61,3 +62,9 @@ foreach ($versions as $version) {
         });
     });
 }
+
+Route::prefix('preview')->group(function () {
+    Route::get('reference', [PageViewController::class, 'reference']);
+    Route::get('privacy-policy', [PageViewController::class, 'privacyPolicy']);
+});
+
