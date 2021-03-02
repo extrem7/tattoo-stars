@@ -7,7 +7,8 @@
       :initial-value="initial"
       :value="value"
       api-key="no-api-key"
-      @input="input"/>
+      @input="content = $event"
+      @onChange="input"/>
   </div>
 </template>
 
@@ -39,6 +40,7 @@ export default {
   },
   data() {
     return {
+      content: '',
       init: {
         height: null,
         placeholder: this.placeholder,
@@ -57,7 +59,7 @@ export default {
           const formData = new FormData()
           formData.append('image', blobInfo.blob(), blobInfo.filename())
           try {
-            const {data} = await this.axios.post(this.route('admin.media.upload'), formData, {
+            const {data} = await this.axios.post(this.route('media.upload'), formData, {
               headers: {
                 'Content-Type': 'multipart/form-data'
               }
@@ -86,8 +88,8 @@ export default {
     this.text = this.initial
   },
   methods: {
-    input($event) {
-      if (this.value !== $event) this.$emit('input', $event)
+    input() {
+      this.$emit('input', this.content)
     }
   }
 }

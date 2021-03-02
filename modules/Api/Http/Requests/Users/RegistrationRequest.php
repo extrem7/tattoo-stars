@@ -10,7 +10,9 @@ class RegistrationRequest extends FormRequest
     {
         return [
             'account_type_id' => ['required', 'exists:account_types,id'],
-            'nickname' => ['required', 'string255', 'regex:' . config('tattoo.nickname_regex')],
+            'nickname' => [
+                'required', 'string255', 'regex:' . config('tattoo.nickname_regex'), 'unique:users,nickname'
+            ],
             'email' => ['required', 'email', 'unique:users,email'],
             'password' => ['required', ...config('tattoo.password_rules')],
             'device' => ['required', 'string']

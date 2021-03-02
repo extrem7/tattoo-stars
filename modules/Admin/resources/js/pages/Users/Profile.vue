@@ -116,7 +116,7 @@
                 <BFormInput :value="user.gender_id?user.gender.name:null" disabled/>
               </BFormGroup>
               <BFormGroup label="День рождения">
-                <BFormInput :value="user.birthday" disabled/>
+                {{ user.birthday | moment('DD.MM.YYYY') }}
               </BFormGroup>
               <BFormGroup label="Город">
                 <BFormInput :value="user.city_id?`${user.city.name}, ${user.city.country.name}`:null" disabled/>
@@ -125,7 +125,7 @@
                 <BFormInput :value="user.address" disabled/>
               </BFormGroup>
               <BFormGroup label="Био">
-                <BFormInput :value="user.bio" disabled/>
+                <BFormTextarea :value="user.bio" disabled/>
               </BFormGroup>
               <BFormGroup label="Телефон">
                 <BFormInput :value="user.phone" disabled/>
@@ -134,7 +134,10 @@
                 <BLink :href="user.website" target="_blank">{{ user.website }}</BLink>
               </BFormGroup>
               <BFormGroup label="Instagram">
-                <BLink :href="user.instagram" target="_blank">{{ user.instagram }}</BLink>
+                <BLink :href="`https://www.instagram.com/${user.instagram}`" target="_blank">{{
+                    user.instagram
+                  }}
+                </BLink>
               </BFormGroup>
               <BFormGroup label="Facebook">
                 <BLink :href="user.facebook" target="_blank">{{ user.facebook }}</BLink>
@@ -159,15 +162,15 @@
 import AvatarUploader from '@/components/AvatarUploader'
 
 export default {
+  components: {
+    AvatarUploader
+  },
   props: {
     errors: Object,
     user: Object,
     accountTypes: Array,
     roles: Array,
     isProfile: Boolean
-  },
-  components: {
-    AvatarUploader
   },
   data() {
     return {

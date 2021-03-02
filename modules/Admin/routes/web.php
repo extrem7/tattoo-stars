@@ -5,9 +5,11 @@
  * @routePrefix("admin.")
  */
 
-use Modules\Admin\Http\Controllers\{AuthController,
+use Modules\Admin\Http\Controllers\{
+    AuthController,
     DashboardController,
     FaqController,
+    MediaController,
     PageController,
     Users\AvatarController,
     Users\ProfileController,
@@ -58,4 +60,6 @@ Route::middleware(['auth', 'can:admin-panel.access'])->group(function () {
             Route::delete('', [ProfileController::class, 'destroyAvatar'])->name('destroy');
         });
     });
+
+    Route::post('media', [MediaController::class, 'upload'])->name('media.upload');
 });

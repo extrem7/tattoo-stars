@@ -61,7 +61,7 @@ class FaqController extends Controller
         $data = $faq->only(['id', 'question', 'answer']);
 
         return inertia('ApiFaqs/Form', [
-            'Faq' => $data
+            'faq' => $data
         ]);
     }
 

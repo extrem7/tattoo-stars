@@ -10,7 +10,12 @@ class ProfileUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nickname' => ['nullable', 'string255', 'regex:' . config('tattoo.nickname_regex')],
+            'nickname' => [
+                'nullable',
+                'string255',
+                'regex:' . config('tattoo.nickname_regex'),
+                'unique:users,nickname,' . $this->user()->id
+            ],
             'name' => ['nullable', 'string255'],
 
             'gender_id' => ['nullable', 'exists:user_genders,id'],

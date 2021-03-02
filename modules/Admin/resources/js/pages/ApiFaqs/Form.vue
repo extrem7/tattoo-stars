@@ -51,12 +51,10 @@
                         :height="200"
                         :placeholder="`Ответ на ${nativeLocale}`"
                       />
-                      <template slot="errors-backend">
-                        <Invalid
-                          :errors="errors"
-                          name="answer"
-                        />
-                      </template>
+                      <Invalid
+                        :errors="errors"
+                        name="answer"
+                      />
                     </BaseInput>
                   </BCardBody>
                   <BCardFooter
