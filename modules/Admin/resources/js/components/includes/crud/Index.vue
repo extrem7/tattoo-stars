@@ -46,7 +46,7 @@ export default {
     resource: String,
     usePagination: {
       type: Boolean,
-      default: false
+      default: true
     },
     total: Number,
     currentPage: Number,

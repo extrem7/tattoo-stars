@@ -20,10 +20,10 @@ class UserRepository
     {
         return User::with(['avatarMedia', 'accountType', 'roles'])
             ->select(['id', 'account_type_id', 'email', 'email_verified_at', 'name', 'created_at'])
-            ->when($scope, fn($q) => $scope($q))
             ->when(isset($search['searchQuery']), fn($q) => $q->search($search['searchQuery']))
             ->when(isset($search['sortBy']), fn(Builder $q) => $q->orderBy($search['sortBy']))
             ->when(isset($search['sortDesc']), fn(Builder $q) => $q->latest())
+            ->when($scope, fn($q) => $scope($q))
             ->paginate(10);
     }
 

@@ -70,7 +70,7 @@
     </style>
 </head>
 <body>
-<div class="header d-flex align-items-center">
+<!--<div class="header d-flex align-items-center">
     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
         <g clip-path="url(#clip0)">
             <path
@@ -91,7 +91,7 @@
     </svg>
     <h1 class="title mb-0">{{ $title }}</h1>
 </div>
-<hr>
+<hr>-->
 <p>{!! $body  !!}</p>
 @yield('content')
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"

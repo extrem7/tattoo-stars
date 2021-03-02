@@ -57,7 +57,7 @@
         {{ emailVerified ? 'Да' : 'Нет' }}
       </template>
       <template #cell(account_type_id)="{item:{account_type}}">
-        {{ account_type.name }}
+        <span v-if="account_type">{{ account_type.name }}</span>
       </template>
       <template #cell(created_at)="{item:{created_at}}">
         {{ created_at | moment('DD.MM.YYYY HH:mm') }}

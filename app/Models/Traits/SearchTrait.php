@@ -15,17 +15,17 @@ trait SearchTrait
      */
     public static function scopeSearch($query, $keyword, $matchAllFields = false)
     {
-        // return static::where(function ($query) use ($keyword, $matchAllFields) {
+        return static::where(function ($query) use ($keyword, $matchAllFields) {
 
-        foreach (static::getSearchFields() as $field) {
-            if ($matchAllFields) {
-                $query->where($field, 'LIKE', "%$keyword%");
-            } else {
-                $query->orWhere($field, 'LIKE', "%$keyword%");
+            foreach (static::getSearchFields() as $field) {
+                if ($matchAllFields) {
+                    $query->where($field, 'LIKE', "%$keyword%");
+                } else {
+                    $query->orWhere($field, 'LIKE', "%$keyword%");
+                }
             }
-        }
 
-        //  });
+        });
     }
 
     /**
@@ -33,7 +33,7 @@ trait SearchTrait
      *
      * @return array
      */
-    public static function getSearchFields()
+    public static function getSearchFields(): array
     {
         $model = new static;
 
