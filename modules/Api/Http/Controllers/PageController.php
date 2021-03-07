@@ -2,6 +2,7 @@
 
 namespace Modules\Api\Http\Controllers;
 
+use App\Models\Api\Page;
 use Illuminate\Http\JsonResponse;
 
 class PageController extends Controller
@@ -22,7 +23,10 @@ class PageController extends Controller
      */
     public function reference(): JsonResponse
     {
+        $page = Page::find(1);
+
         return response()->json([
+            'title' => $page->translated()->title,
             'view' => $this->viewController->reference()->render()
         ]);
     }
@@ -36,7 +40,10 @@ class PageController extends Controller
      */
     public function privacyPolicy(): JsonResponse
     {
+        $page = Page::find(2);
+
         return response()->json([
+            'title' => $page->translated()->title,
             'view' => $this->viewController->privacyPolicy()->render()
         ]);
     }

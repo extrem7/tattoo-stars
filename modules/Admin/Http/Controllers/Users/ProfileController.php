@@ -6,12 +6,9 @@ use Auth;
 use Hash;
 use Illuminate\Http\Request;
 use Modules\Admin\Http\Controllers\Controller;
-use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Response;
 use Modules\Admin\Http\Requests\ProfileRequest;
-use Modules\Admin\Http\Requests\UserRequest;
-use Spatie\Permission\Models\Role;
 
 class ProfileController extends Controller
 {
@@ -21,7 +18,10 @@ class ProfileController extends Controller
 
         $user = Auth::user();
 
-        $data = $user->only(['id', 'name', 'email']);
+        $data = array_merge(
+            $user->only(['id', 'account_type_id', 'name', 'nickname', 'email', 'styles']),
+            $user->information->load(['gender', 'city.country'])->toArray()
+        );
         $data['roles'] = $user->roles->pluck('id');
 
         if ($user->avatarMedia) {

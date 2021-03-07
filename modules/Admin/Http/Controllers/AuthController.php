@@ -23,7 +23,7 @@ class AuthController extends Controller
         $request->authenticate();
 
         if (!$request->user()->can('admin-panel.access')) {
-            $request->session()->invalidate();
+            \Auth::logout();
             throw ValidationException::withMessages([
                 'email' => 'У вас нету доступа к админ-панели.',
             ]);
