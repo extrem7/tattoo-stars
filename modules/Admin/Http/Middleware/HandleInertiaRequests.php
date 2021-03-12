@@ -2,10 +2,8 @@
 
 namespace Modules\Admin\Http\Middleware;
 
-use Auth;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
-use SEOMeta;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -22,10 +20,12 @@ class HandleInertiaRequests extends Middleware
     {
         $shared = [
             'metaInfo' => fn() => [
-                'title' => SEOMeta::getTitle()
+                'title' => \SEOMeta::getTitle()
             ],
             'auth' => function () use ($request) {
-                if (!Auth::check()) return;
+                if (!\Auth::check()) {
+                    return;
+                }
 
                 $user = $request->user('web');
                 $data = $user->only(['id', 'name', 'email']);
