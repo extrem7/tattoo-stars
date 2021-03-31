@@ -10,6 +10,7 @@
     "license": "MIT",
     "require": {
       "php": "^7.4.4|^8.0",
+      "ext-gd": "*",
       "artesaos/seotools": "^0.20.0",
       "barryvdh/laravel-debugbar": "^3.5",
       "barryvdh/laravel-ide-helper": "^2.9",
@@ -23,6 +24,8 @@
       "laravel/telescope": "^4.4",
       "laravel/tinker": "^2.5",
       "nwidart/laravel-modules": "^8.2",
+      "pbmedia/laravel-ffmpeg": "^7.5",
+      "php-ffmpeg/php-ffmpeg": "^0.17.0",
       "schuppo/password-strength": "^2.3",
       "spatie/eloquent-sortable": "^3.11",
       "spatie/laravel-medialibrary": "^9.0.0",

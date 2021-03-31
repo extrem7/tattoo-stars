@@ -200,5 +200,6 @@
   "You may not leave a team that you created.": "Вы не можете покидать созданную Вами команду.",
   "Your email address is not verified.": "Ваш email адрес не подтвержден.",
   "Your new password: **:password**.": "Ваш новый пароль: **:password**.",
-  "You could change it in your profile settings.": "Вы можете изменить его в настройках вашего профиля."
+  "You could change it in your profile settings.": "Вы можете изменить его в настройках вашего профиля.",
+  "Your are not allowed to delete this post.": "Вам не разрешено удалять этот пост."
 }

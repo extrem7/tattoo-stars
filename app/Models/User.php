@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\Traits\SearchTrait;
+use App\Models\Traits\Searchable;
 use App\Models\User\AccountType;
 use App\Models\User\Information;
 use App\Models\User\Style;
@@ -10,6 +10,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -32,7 +33,7 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
         Notifiable,
         InteractsWithMedia,
         SoftDeletes,
-        SearchTrait;
+        Searchable;
 
     protected $fillable = [
         'account_type_id', 'name', 'nickname', 'email', 'email_verification_code', 'email_verified_at', 'password',
@@ -134,6 +135,11 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
     public function avatarMedia(): MorphOne
     {
         return $this->morphOne(Media::class, 'model')->where('collection_name', 'avatar');
+    }
+
+    public function posts(): HasMany
+    {
+        return $this->hasMany(Post::class);
     }
 
     // ACCESSORS

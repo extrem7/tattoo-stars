@@ -4,6 +4,7 @@ use Modules\Api\Http\Controllers\{CitiesController,
     HelperController,
     PageController,
     PageViewController,
+    PostController,
     Profile\AvatarController,
     Profile\ProfileController,
     Auth\AuthController,
@@ -57,6 +58,11 @@ foreach ($versions as $version) {
                         Route::post('', [AvatarController::class, 'store']);
                         Route::delete('', [AvatarController::class, 'destroy']);
                     });
+                });
+
+                Route::prefix('posts')->group(function () {
+                    Route::post('create', [PostController::class, 'store']);
+                    Route::delete('{post}', [PostController::class, 'destroy']);
                 });
             });
         });

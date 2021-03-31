@@ -115,6 +115,7 @@ return [
     "numbers" => "The :attribute must include at least one number.",
     "symbols" => "The :attribute must include at least one symbol.",
     'string255' => 'The :attribute may not be greater than 255 characters.',
+    'video_duration' => 'The :attribute may not be longer than :seconds seconds.',
 
     /*
     |--------------------------------------------------------------------------

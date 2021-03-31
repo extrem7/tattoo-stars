@@ -12,6 +12,7 @@
 /public/api-doc
 /resources/db
 /storage/*.key
+/storage/media-library
 /vendor
 
 .env

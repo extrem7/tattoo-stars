@@ -2,10 +2,8 @@
 
 namespace App\Helpers;
 
-use App\Models\Blog\Article;
-use App\Models\Company;
+use App\Models\Post;
 use App\Models\User;
-use App\Models\Volunteers\Volunteer;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\MediaLibrary\Support\PathGenerator\PathGenerator;
 
@@ -20,15 +18,21 @@ class TattooStarsPathGenerator implements PathGenerator
     protected function getBasePath(Media $media): string
     {
         $folder = '';
+        $useKey = true;
         $collection = $media->collection_name;
 
         switch ($media->model_type) {
+            case Post::class:
+                if ($collection === 'video') {
+                    $useKey = false;
+                }
+                $folder = 'posts';
+                break;
             case User::class:
                 return "users/" . $media->model_id . "/$collection";
-                break;
         }
 
-        return "$folder/" . $media->model_id . "/$collection/" . $media->getKey();
+        return "$folder/" . $media->model_id . "/$collection" . ($useKey ? "/{$media->getKey()}" : '');
     }
 
     public function getPathForConversions(Media $media): string

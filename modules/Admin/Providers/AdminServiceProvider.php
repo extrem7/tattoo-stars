@@ -18,10 +18,6 @@ class AdminServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->loadMigrationsFrom(module_path($this->moduleName, 'database/migrations'));
-
-        Validator::extend('string255', function ($attribute, $value, $parameters, $validator) {
-            return is_string($value) && mb_strlen($value) <= 255;
-        });
     }
 
     public function registerTranslations(): void

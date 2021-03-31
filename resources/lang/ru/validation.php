@@ -27,7 +27,7 @@ return [
     'different' => 'Поля :attribute и :other должны различаться.',
     'digits' => 'Длина цифрового поля :attribute должна быть :digits.',
     'digits_between' => 'Длина цифрового поля :attribute должна быть между :min и :max.',
-    'dimensions' => 'Поле :attribute имеет недопустимые размеры изображения.',
+    'dimensions' => ':attribute имеет недопустимые размеры.',
     'distinct' => 'Поле :attribute содержит повторяющееся значение.',
     'email' => 'Поле :attribute должно быть действительным электронным адресом.',
     'ends_with' => 'Поле :attribute должно заканчиваться одним из следующих значений: :values',
@@ -116,11 +116,12 @@ return [
     'symbols' => 'Поле :attribute должно содержать по меньшей мере один символ, например @.',
     //custom rules
     'string255' => 'Поле :attribute не может быть более 255 символов.',
+    'video_duration' => ':attribute не может быть длиннее :seconds секунд.',
 
     'custom' => [
         'email' => [
             'exists' => 'Пользователь с такой почтой не существует.',
-        ],
+        ]
     ],
 
     'attributes' => [
@@ -158,6 +159,10 @@ return [
         'email_or_nickname' => 'Email либо Никнейм',
         'nickname' => 'Никнейм',
         'account_type_id' => 'Тип аккаунта',
-        'device' => 'Устройство'
+        'device' => 'Устройство',
+
+        'images' => 'Изображения',
+        'image' => 'Изображение',
+        'video' => 'Видео'
     ],
 ];
