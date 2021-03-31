@@ -6,6 +6,8 @@ use App\Models\Traits\Searchable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
@@ -33,12 +35,6 @@ class Post extends Model implements HasMedia
     }
 
     // FUNCTIONS
-
-    public function user(): HasOne
-    {
-        return $this->hasOne(User::class);
-    }
-
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('images')->registerMediaConversions(function (Media $media) {
@@ -58,5 +54,21 @@ class Post extends Model implements HasMedia
                     ->performOnCollections('video')
                     ->nonQueued();
             });
+    }
+
+    //RELATIONS
+    public function user(): HasOne
+    {
+        return $this->hasOne(User::class);
+    }
+
+    public function imagesMedia(): MorphMany
+    {
+        return $this->morphMany(Media::class, 'model')->where('collection_name', 'images');
+    }
+
+    public function videoMedia(): MorphOne
+    {
+        return $this->morphOne(Media::class, 'model')->where('collection_name', 'video');
     }
 }

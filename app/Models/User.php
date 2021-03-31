@@ -142,6 +142,20 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
         return $this->hasMany(Post::class);
     }
 
+    public function subscriptions(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            self::class, 'subscriptions', 'subscriber_id', 'user_id'
+        )->withPivot('subscribed_at');
+    }
+
+    public function subscribers(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            self::class, 'subscriptions', 'user_id', 'subscriber_id'
+        )->withPivot('subscribed_at');
+    }
+
     // ACCESSORS
     public function getAvatarAttribute(): string
     {

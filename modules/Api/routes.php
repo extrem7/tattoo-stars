@@ -8,7 +8,9 @@ use Modules\Api\Http\Controllers\{CitiesController,
     Profile\AvatarController,
     Profile\ProfileController,
     Auth\AuthController,
-    Auth\EmailVerificationController
+    Auth\EmailVerificationController,
+    Users\SubscriptionController,
+    Users\UserController
 };
 
 $versions = ['', 'v1'];
@@ -63,6 +65,15 @@ foreach ($versions as $version) {
                 Route::prefix('posts')->group(function () {
                     Route::post('create', [PostController::class, 'store']);
                     Route::delete('{post}', [PostController::class, 'destroy']);
+                });
+
+                Route::prefix('users')->group(function () {
+                    Route::get('self', [UserController::class, 'self']);
+
+                    Route::prefix('{user}')->group(function () {
+                        Route::get('', [UserController::class, 'show']);
+                        Route::post('subscribe', SubscriptionController::class);
+                    });
                 });
             });
         });
