@@ -15,7 +15,7 @@ class SubscriptionController extends Controller
     protected int $limit = 18;
 
     /**
-     * @api {post} /users/:id/subscribers User subscribers.
+     * @api {get} /users/:id/subscribers User subscribers.
      * @apiName UserSubscribers
      * @apiGroup Users
      *
@@ -38,11 +38,11 @@ class SubscriptionController extends Controller
         return response()->json([
             'subscribers' => SubscriberResource::collection($subscribers),
             'hasMorePages' => $subscribers->hasMorePages()
-        ], 201);
+        ]);
     }
 
     /**
-     * @api {post} /users/:id/subscriptions User subscriptions.
+     * @api {get} /users/:id/subscriptions User subscriptions.
      * @apiName UserSubscriptions
      * @apiGroup Users
      *
@@ -65,7 +65,7 @@ class SubscriptionController extends Controller
         return response()->json([
             'subscriptions' => SubscriberResource::collection($subscriptions),
             'hasMorePages' => $subscriptions->hasMorePages()
-        ], 201);
+        ]);
     }
 
     /**

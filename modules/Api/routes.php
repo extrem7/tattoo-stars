@@ -9,6 +9,7 @@ use Modules\Api\Http\Controllers\{CitiesController,
     Profile\ProfileController,
     Auth\AuthController,
     Auth\EmailVerificationController,
+    Users\BlacklistController,
     Users\SubscriptionController,
     Users\UserController
 };
@@ -53,6 +54,8 @@ foreach ($versions as $version) {
                 Route::get('cities/{country}/{query?}', [CitiesController::class, 'cities']);
                 Route::get('geoip', [CitiesController::class, 'geoip']);
 
+                Route::get('blacklist', [BlacklistController::class, 'blacklist']);
+
                 Route::prefix('profile')->group(function () {
                     Route::post('', [ProfileController::class, 'update']);
                     Route::delete('', [ProfileController::class, 'destroy']);
@@ -76,6 +79,8 @@ foreach ($versions as $version) {
                         Route::get('subscribers', [SubscriptionController::class, 'subscribers']);
                         Route::get('subscriptions', [SubscriptionController::class, 'subscriptions']);
                         Route::post('subscribe', [SubscriptionController::class, 'toggle']);
+
+                        Route::post('blacklist', [BlacklistController::class, 'toggle']);
                     });
                 });
             });

@@ -3,26 +3,22 @@
 namespace App\Models;
 
 use App\Models\Traits\Searchable;
-use App\Models\User\AccountType;
-use App\Models\User\Information;
-use App\Models\User\Style;
+use App\Models\User\{AccountType, Information, Style};
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Illuminate\Database\Eloquent\Relations\{BelongsTo, BelongsToMany, HasMany, HasOne, MorphOne};
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Modules\Api\Notifications\VerifyEmail;
-use Spatie\MediaLibrary\HasMedia;
-use Spatie\MediaLibrary\InteractsWithMedia;
-use Spatie\MediaLibrary\MediaCollections\Exceptions\MediaCannotBeDeleted;
-use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Spatie\MediaLibrary\{
+    HasMedia,
+    InteractsWithMedia,
+    MediaCollections\Exceptions\MediaCannotBeDeleted,
+    MediaCollections\Models\Media
+};
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements HasMedia, MustVerifyEmail
@@ -166,6 +162,20 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
         return $this->belongsToMany(
             self::class, 'subscriptions', 'user_id', 'subscriber_id'
         )->withPivot('subscribed_at');
+    }
+
+    public function blacklist(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            self::class, 'blacklist', 'user_id', 'blocked_id'
+        )->withPivot('blocked_at');
+    }
+
+    public function blockers(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            self::class, 'blacklist', 'blocked_id', 'user_id'
+        )->withPivot('blocked_at');
     }
 
     // ACCESSORS
