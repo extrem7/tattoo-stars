@@ -72,7 +72,10 @@ foreach ($versions as $version) {
 
                     Route::prefix('{user}')->group(function () {
                         Route::get('', [UserController::class, 'show']);
-                        Route::post('subscribe', SubscriptionController::class);
+
+                        Route::get('subscribers', [SubscriptionController::class, 'subscribers']);
+                        Route::get('subscriptions', [SubscriptionController::class, 'subscriptions']);
+                        Route::post('subscribe', [SubscriptionController::class, 'toggle']);
                     });
                 });
             });

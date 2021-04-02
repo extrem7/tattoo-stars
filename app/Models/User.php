@@ -42,7 +42,7 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
 
     protected $hidden = ['password', 'remember_token',];
 
-    protected $search = ['id', 'email', 'name'];
+    protected $search = ['id', 'email', 'name', 'nickname'];
 
     // FUNCTIONS
     public static function boot(): void
@@ -70,6 +70,18 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
     {
         $this->addMediaCollection('avatar')->singleFile()
             ->registerMediaConversions(function (Media $media) {
+                $this->addMediaConversion('big')
+                    ->width(225)
+                    ->sharpen(0)
+                    ->nonQueued();
+                $this->addMediaConversion('medium')
+                    ->width(110)
+                    ->sharpen(0)
+                    ->nonQueued();
+                $this->addMediaConversion('small')
+                    ->width(30)
+                    ->sharpen(0)
+                    ->nonQueued();
                 $this->addMediaConversion('icon')
                     ->width(72)
                     ->sharpen(0)

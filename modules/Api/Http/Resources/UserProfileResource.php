@@ -25,7 +25,7 @@ class UserProfileResource extends JsonResource
 
         return [
             'id' => $user->id,
-            'avatar' => $user->avatar,
+            'avatar' => $user->getAvatar('big'),
             'name' => $user->name,
             'location' => $location,
             'bio' => $info->bio,

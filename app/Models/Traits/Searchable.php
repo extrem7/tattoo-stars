@@ -11,7 +11,6 @@ trait Searchable
      * @param Builder|static $query
      * @param string $keyword
      * @param boolean $matchAllFields
-     * @return
      */
     public static function scopeSearch($query, $keyword, $matchAllFields = false)
     {
@@ -46,10 +45,6 @@ trait Searchable
 
             $others[] = $model->getUpdatedAtColumn() ?: 'created_at';
             $others[] = $model->getCreatedAtColumn() ?: 'updated_at';
-            $others[] = 'category_id';
-            $others[] = 'status';
-            $others[] = 'user_id';
-            $others[] = 'views';
 
             $others[] = method_exists($model, 'getDeletedAtColumn')
                 ? $model->getDeletedAtColumn()

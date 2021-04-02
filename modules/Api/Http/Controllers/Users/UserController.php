@@ -24,7 +24,11 @@
  * @apiSuccess {Object} posts.video Post video.
  * @apiSuccess {String} posts.video.thumbnail Video thumbnail.
  * @apiSuccess {String} posts.video.url Video url.
- *
+ */
+
+/**
+ * @apiDefine Pagination
+ * @apiParam {Number} page Page number for pagination.
  * @apiSuccess {Boolean} hasMorePages Indicates whether more posts can be loaded.
  */
 
@@ -43,8 +47,6 @@ class UserController extends Controller
      * @apiName SelfUser
      * @apiGroup Users
      *
-     * @apiParam {Number} page Page number for pagination.
-     *
      * @apiUse Token
      * @apiUse UserProfile
      *
@@ -59,8 +61,6 @@ class UserController extends Controller
      * @api {get} /users/:id Get user information and latest posts
      * @apiName ShowUser
      * @apiGroup Users
-     *
-     * @apiParam {Number} page Page number for pagination.
      *
      * @apiUse Token
      * @apiUse UserProfile
