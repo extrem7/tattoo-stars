@@ -10,6 +10,7 @@ use Modules\Api\Http\Controllers\{CitiesController,
     Auth\AuthController,
     Auth\EmailVerificationController,
     Users\BlacklistController,
+    Users\ReportController,
     Users\SubscriptionController,
     Users\UserController
 };
@@ -81,6 +82,7 @@ foreach ($versions as $version) {
                         Route::post('subscribe', [SubscriptionController::class, 'toggle']);
 
                         Route::post('blacklist', [BlacklistController::class, 'toggle']);
+                        Route::post('report', ReportController::class)->middleware('throttle:1,360');
                     });
                 });
             });

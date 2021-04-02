@@ -14,13 +14,11 @@ class ContactForm extends Mailable// implements ShouldQueue
 
     public $subject = 'Новое обращение в поддержку';
 
-
     private MailMessage $message;
 
     public function __construct($data)
     {
-        $this->message = (new MailMessage)
-            ->salutation(null);
+        $this->message = (new MailMessage)->salutation(null);
         foreach ($data as $field => $text) {
             $field = ucfirst($field);
             if ($text) {
