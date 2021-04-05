@@ -28,7 +28,7 @@
 
 /**
  * @apiDefine Pagination
- * @apiParam {Number} page Page number for pagination.
+ * @apiParam {Number} [page] Page number for pagination.
  * @apiSuccess {Boolean} hasMorePages Indicates whether more posts can be loaded.
  */
 
