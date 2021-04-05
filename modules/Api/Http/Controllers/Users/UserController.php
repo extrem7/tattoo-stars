@@ -51,6 +51,11 @@ class UserController extends Controller
      * @apiName UserIndex
      * @apiGroup Users
      *
+     * @apiParam {Number} account_type_id Users account type.
+     * @apiParam {String} [country_id] Users country.
+     * @apiParam {String} [city_id] Users city.
+     * @apiParam {Integer} [style_id] Users style.
+     *
      * @apiUse Token
      *
      * @apiSuccess {Object[]} users User.
