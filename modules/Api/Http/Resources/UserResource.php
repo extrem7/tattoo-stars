@@ -20,7 +20,7 @@ class UserResource extends JsonResource
             'email' => $user->email,
             'emailVerified' => $user->hasVerifiedEmail(),
             'icon' => $this->whenAppended('icon', $user->icon),
-            'avatar' => $this->whenAppended('avatar', $user->avatar),
+            'avatar' => $this->whenAppended('avatar', $user->getAvatar('big')),
             'accountType' => [
                 'id' => $user->accountType->id,
                 'name' => $user->accountType->name

@@ -37,11 +37,61 @@ namespace Modules\Api\Http\Controllers\Users;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
+use Modules\Api\Http\Requests\Users\IndexRequest;
 use Modules\Api\Http\Resources\PostResource;
+use Modules\Api\Http\Resources\SubscriberResource;
 use Modules\Api\Http\Resources\UserProfileResource;
 
 class UserController extends Controller
 {
+    protected int $limit = 18;
+
+    /**
+     * @api {get} /users Users index.
+     * @apiName UserIndex
+     * @apiGroup Users
+     *
+     * @apiUse Token
+     *
+     * @apiSuccess {Object[]} users User.
+     * @apiSuccess {Integer} users.id User id.
+     * @apiSuccess {String} users.icon User icon.
+     * @apiSuccess {String} users.name User name.
+     * @apiSuccess {String} users.nickname User nickname.
+     * @apiSuccess {String} users.location User location.
+     *
+     * @apiUse Pagination
+     */
+    public function index(IndexRequest $request)
+    {
+        $user = \Auth::user();
+        $validated = $request->validated();
+
+        $users = User::where('account_type_id', '=', $validated['account_type_id'])
+            ->whereNotIn('id', $user->blacklist()->pluck('id'))
+            ->select(['id', 'name', 'nickname'])
+            ->with([
+                'avatarMedia',
+                'information' => fn($q) => $q->select(['user_id', 'city_id']), 'information.city'
+            ])
+            ->whereHas('information', function ($q) use ($validated) {
+                $q->when(isset($validated['country_id']),
+                    fn($q) => $q->whereHas('city',
+                        fn($q) => $q->where('country_id', '=', $validated['country_id']))
+                )->when(isset($validated['city_id']), fn($q) => $q->where('city_id', '=', $validated['city_id']));
+            })
+            ->when(
+                isset($validated['style_id']),
+                fn($q) => $q->whereHas('styles', fn($q) => $q->whereIn('id', [$validated['style_id']]))
+            )
+            ->simplePaginate($this->limit, []);
+
+        return response()->json([
+            'users' => SubscriberResource::collection($users),
+            'hasMorePages' => $users->hasMorePages()
+        ]);
+    }
+
     /**
      * @api {get} /users/self Get current user information and latest posts
      * @apiName SelfUser
@@ -77,6 +127,6 @@ class UserController extends Controller
             'user' => new UserProfileResource($user),
             'posts' => PostResource::collection($posts),
             'hasMorePages' => $posts->hasMorePages()
-        ], 201);
+        ]);
     }
 }

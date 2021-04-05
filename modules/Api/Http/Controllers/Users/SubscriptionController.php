@@ -26,6 +26,7 @@ class SubscriptionController extends Controller
      * @apiSuccess {String} subscribers.icon Subscriber icon.
      * @apiSuccess {String} subscribers.name Subscriber name.
      * @apiSuccess {String} subscribers.nickname Subscriber nickname.
+     * @apiSuccess {String} subscribers.location Subscriber location.
      *
      * @apiUse Pagination
      */
@@ -53,6 +54,7 @@ class SubscriptionController extends Controller
      * @apiSuccess {String} subscriptions.icon Subscription icon.
      * @apiSuccess {String} subscriptions.name Subscription name.
      * @apiSuccess {String} subscriptions.nickname Subscription nickname.
+     * @apiSuccess {String} subscriptions.location Subscription location.
      *
      * @apiUse Pagination
      */

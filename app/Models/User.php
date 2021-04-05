@@ -41,12 +41,6 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
     protected $search = ['id', 'email', 'name', 'nickname'];
 
     // FUNCTIONS
-    public static function boot(): void
-    {
-        parent::boot();
-
-        static::created(fn(self $u) => $u->information()->create());
-    }
 
     public function sendEmailVerificationNotification(): void
     {

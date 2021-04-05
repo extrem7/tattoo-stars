@@ -18,5 +18,16 @@ class UsersSeeder extends Seeder
             $user->save();
             $user->assignRole('admin');
         }
+
+        $this->command->getOutput()->progressStart(10);
+
+        User::factory()->has(User\Information::factory())->count(10)->create()->each(function (User $user) {
+            $user->styles()->sync(User\Style::inRandomOrder()->limit(2)->pluck('id'));
+            $user->addMediaFromUrl('https://i.pravatar.cc/225')->toMediaCollection('avatar');
+
+            $this->command->getOutput()->progressAdvance();
+        });
+
+        $this->command->getOutput()->progressFinish();
     }
 }

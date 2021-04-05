@@ -104,6 +104,8 @@ class AuthController extends Controller
 
         event(new Registered($user));
 
+        $user->information()->create();
+
         return response()->json($this->getUserWithToken($user, $request->device), 201);
     }
 

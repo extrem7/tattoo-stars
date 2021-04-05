@@ -72,6 +72,7 @@ foreach ($versions as $version) {
                 });
 
                 Route::prefix('users')->group(function () {
+                    Route::get('', [UserController::class, 'index']);
                     Route::get('self', [UserController::class, 'self']);
 
                     Route::prefix('{user}')->group(function () {

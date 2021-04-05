@@ -3,11 +3,15 @@
 namespace App\Models\User;
 
 use App\Models\City;
+use App\Models\User;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Information extends Model
 {
+    use HasFactory;
+
     public $timestamps = null;
 
     protected $table = 'users_information';
@@ -23,6 +27,11 @@ class Information extends Model
     protected $hidden = ['user_id'];
 
     protected $dates = ['birthday'];
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public function gender(): BelongsTo
     {

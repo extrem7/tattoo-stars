@@ -72,6 +72,8 @@ class UserController extends Controller
         $user->assignRole($request->roles);
         $user->markEmailAsVerified();
 
+        $user->information()->create();
+
         return redirect()->route('admin.users.edit', $user->id)->with([
             'message' => "Пользователь {$request->name} был создан",
             'type' => 'created'

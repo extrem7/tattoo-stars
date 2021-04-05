@@ -12,7 +12,7 @@ class PostFactory extends Factory
     public function definition(): array
     {
         $tags = [];
-        foreach (explode(' ', $this->faker->words) as $word) {
+        foreach ($this->faker->words as $word) {
             $tags[] = "#$word";
         }
         return [
