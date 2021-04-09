@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Modules\Api\Http\Resources\SubscriberResource;
+use Modules\Api\Repositories\UserRepository;
+use Modules\Api\Services\UserService;
 
 class BlacklistController extends Controller
 {
@@ -23,9 +25,9 @@ class BlacklistController extends Controller
      * @apiSuccess {String} blacklist.nickname Blocked user nickname.
      *
      */
-    public function blacklist(): JsonResponse
+    public function blacklist(UserRepository $repository): JsonResponse
     {
-        $blacklist = \Auth::user()->blacklist()->with(['avatarMedia'])->get(['id', 'name', 'nickname']);
+        $blacklist = $repository->getBlacklist(\Auth::user());
 
         return response()->json(SubscriberResource::collection($blacklist));
     }
@@ -39,16 +41,9 @@ class BlacklistController extends Controller
      *
      * @apiSuccess {String} message Toggle status.
      */
-    public function toggle(User $user): JsonResponse
+    public function toggle(User $user, UserService $service): JsonResponse
     {
-        $blocker = \Auth::user();
-
-        abort_if($user->id === $blocker->id, 403, 'You cannot add self to blacklist.');
-
-        $changes = $blocker->blacklist()->toggle([
-            $user->id => ['blocked_at' => \DB::raw('NOW()')]
-        ]);
-        $action = !empty($changes['attached']) ? 'added to blacklist' : 'removed from blacklist';
+        $action = $service->toggleBlacklist(\Auth::user(), $user) ? 'added to blacklist' : 'removed from blacklist';
 
         return response()->json([
             'message' => ucfirst($user->nickname) . " has been $action."

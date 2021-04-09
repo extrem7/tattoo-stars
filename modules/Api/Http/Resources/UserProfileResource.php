@@ -27,6 +27,7 @@ class UserProfileResource extends JsonResource
             'id' => $user->id,
             'avatar' => $user->getAvatar('big'),
             'name' => $user->name,
+            'nickname' => $user->nickname,
             'location' => $location,
             'bio' => $info->bio,
             'inSubscriptions' => $this->when($inSubscriptions !== null, $inSubscriptions),

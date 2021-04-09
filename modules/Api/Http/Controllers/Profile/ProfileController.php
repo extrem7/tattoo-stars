@@ -2,18 +2,24 @@
 
 namespace Modules\Api\Http\Controllers\Profile;
 
-use App\Models\User\Gender;
-use App\Models\User\Style;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\JsonResponse;
 use Modules\Api\Http\Controllers\Controller;
 use Modules\Api\Http\Requests\Users\ProfileUpdateRequest;
+use Modules\Api\Repositories\ProfileRepository;
 
 /**
  * @group User
  */
 class ProfileController extends Controller
 {
+    protected ProfileRepository $repository;
+
+    public function __construct()
+    {
+        $this->repository = app(ProfileRepository::class);
+    }
+
     /**
      * @api {get} /genders List of genders
      * @apiName GetGenders
@@ -27,9 +33,7 @@ class ProfileController extends Controller
      */
     public function genders(): JsonResponse
     {
-        $genders = Gender::all();
-
-        return response()->json($genders->toArray());
+        return response()->json($this->repository->getGenders());
     }
 
     /**
@@ -45,9 +49,7 @@ class ProfileController extends Controller
      */
     public function styles(): JsonResponse
     {
-        $styles = Style::all();
-
-        return response()->json($styles->toArray());
+        return response()->json($this->repository->getStyles());
     }
 
     /**
@@ -97,19 +99,19 @@ class ProfileController extends Controller
             }
         }
 
-        if ($request->filled('styles') && $styles = $request->input('styles')) {
-            $user->styles()->sync($styles);
-        }
+        $styles = $request->input('styles');
 
-        $additional = $request->only([
+        $information = $request->only([
             'gender_id', 'birthday', 'city_id', 'address', 'bio', 'phone', 'website', 'instagram', 'facebook'
         ]);
 
-        $user->information->update($additional);
+        $this->repository->update($user, $styles, $information);
 
         $user->loadInfo();
 
-        return response()->json($needUpdatePassword ? $this->getUserWithToken($user) : $this->getUser($user));
+        return response()->json(
+            $needUpdatePassword ? $this->repository->getUserWithToken($user) : $this->repository->getUser($user)
+        );
     }
 
     /**
@@ -123,10 +125,7 @@ class ProfileController extends Controller
      */
     public function destroy(): JsonResponse
     {
-        $user = \Auth::user();
-        $user->update(['deleted_self' => true]);
-        $user->delete();
-        //todo soft delete relations
+        $this->repository->destroy();
 
         return response()->json(['message' => 'User profile has been deleted.']);
     }

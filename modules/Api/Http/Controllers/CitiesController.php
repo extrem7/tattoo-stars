@@ -2,15 +2,27 @@
 
 namespace Modules\Api\Http\Controllers;
 
-use App\Models\City;
-use App\Models\Country;
-use Torann\GeoIP\Location;
+use Illuminate\Http\JsonResponse;
+use Modules\Api\Http\Resources\CityResource;
+use Modules\Api\Http\Resources\CountryResource;
+use Modules\Api\Repositories\LocationRepository;
+use Modules\Api\Services\LocationService;
 
 /**
  * @group Cities
  */
 class CitiesController extends Controller
 {
+    protected LocationService $service;
+
+    protected LocationRepository $repository;
+
+    public function __construct()
+    {
+        $this->service = app(LocationService::class);
+        $this->repository = app(LocationRepository::class);
+    }
+
     /**
      * @api {get} /countries List of countries with search like /countries/{query?}
      * @apiName GetCountries
@@ -21,16 +33,11 @@ class CitiesController extends Controller
      * @apiSuccess {String} id Country id.
      * @apiSuccess {String} name Country name.
      */
-    public function countries(string $query = null): array
+    public function countries(string $query = null): JsonResponse
     {
-        $countries = Country::when($query, fn($q) => $q->where('name', 'like', "$query%"))
-            ->get(['id', $this->localizedColumn()])
-            ->sortByDesc(fn(Country $c) => in_array($c->name, [
-                'Ukraine', 'Russia', 'Belarus', 'Украина', 'Россия', 'Беларусь'
-            ]))
-            ->map(fn(Country $c) => $c->only(['id', 'name']));
+        $countries = $this->repository->getCountriesByName($query);
 
-        return $countries->toArray();
+        return response()->json(CountryResource::collection($countries));
     }
 
     /**
@@ -43,18 +50,11 @@ class CitiesController extends Controller
      * @apiSuccess {String} id City id.
      * @apiSuccess {String} name City name.
      */
-    public function cities(string $country, string $query = null): array
+    public function cities(string $country, string $query = null): JsonResponse
     {
-        $translatedColumn = $this->localizedColumn();
+        $cities = $this->repository->getCitiesByCountryAndName($country, $query);
 
-        $countries = City::where('country_id', '=', strtoupper($country))
-            ->when($query, fn($q) => $q->where($translatedColumn, 'like', "$query%"))
-            ->biggest()
-            ->limit(20)
-            ->get(['id', $translatedColumn])
-            ->map(fn(City $c) => $c->only(['id', 'name']));
-
-        return $countries->toArray();
+        return response()->json(CityResource::collection($cities));
     }
 
     /**
@@ -71,34 +71,6 @@ class CitiesController extends Controller
      */
     public function geoip(): array
     {
-        $geoip = [
-            'country' => null,
-            'city' => null
-        ];
-
-        try {
-            $location = config('app.env') === 'local' ? geoip(config('api.local_geoip')) : geoip()->getLocation();
-            if ($location instanceof Location) {
-                $code = $location->iso_code;
-                if ($country = Country::where('id', '=', $code)->first()) {
-                    $geoip['country'] = $country->id;
-                    if ($city = $country->cities()
-                        ->where('name', 'like', "$location->city%")
-                        ->biggest()
-                        ->first(['id', $this->localizedColumn()])) {
-                        $geoip['city'] = $city->only(['id', 'name']);
-                    }
-                }
-            }
-        } catch (\Exception $e) {
-            \Log::error('Error during geoip: ' . $e->getMessage());
-        }
-
-        return $geoip;
-    }
-
-    protected function localizedColumn(): string
-    {
-        return app()->getLocale() === 'ru' ? 'name_ru' : 'name';
+        return $this->service->geolocate();
     }
 }

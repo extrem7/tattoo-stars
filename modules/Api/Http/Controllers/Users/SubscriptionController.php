@@ -4,15 +4,22 @@ namespace Modules\Api\Http\Controllers\Users;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use Illuminate\Contracts\Pagination\Paginator;
-use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\JsonResponse;
 use Modules\Api\Http\Requests\SearchRequest;
 use Modules\Api\Http\Resources\SubscriberResource;
+use Modules\Api\Repositories\UserRepository;
+use Modules\Api\Services\UserService;
 
 class SubscriptionController extends Controller
 {
     protected int $limit = 18;
+
+    protected UserRepository $repository;
+
+    public function __construct()
+    {
+        $this->repository = app(UserRepository::class);
+    }
 
     /**
      * @api {get} /users/:id/subscribers User subscribers.
@@ -32,9 +39,7 @@ class SubscriptionController extends Controller
      */
     public function subscribers(User $user, SearchRequest $request): JsonResponse
     {
-        $query = $request->input('query');
-
-        $subscribers = $this->getSubscriptions($user, 'subscribers', $query);
+        $subscribers = $this->repository->getSubscriptions($user, 'subscribers', $request->input('query'));
 
         return response()->json([
             'subscribers' => SubscriberResource::collection($subscribers),
@@ -60,9 +65,7 @@ class SubscriptionController extends Controller
      */
     public function subscriptions(User $user, SearchRequest $request): JsonResponse
     {
-        $query = $request->input('query');
-
-        $subscriptions = $this->getSubscriptions($user, 'subscriptions', $query);
+        $subscriptions = $this->repository->getSubscriptions($user, 'subscriptions', $request->input('query'));
 
         return response()->json([
             'subscriptions' => SubscriberResource::collection($subscriptions),
@@ -79,40 +82,12 @@ class SubscriptionController extends Controller
      *
      * @apiSuccess {String} message Toggle status.
      */
-    public function toggle(User $user): JsonResponse
+    public function toggle(User $user, UserService $service): JsonResponse
     {
-        $subscriber = \Auth::user();
-
-        abort_if($user->id === $subscriber->id, 403, 'You cannot subscribe to self . ');
-
-        $changes = $subscriber->subscriptions()->toggle([
-            $user->id => ['subscribed_at' => \DB::raw('NOW()')]
-        ]);
-        $action = !empty($changes['attached']) ? 'subscribed to' : 'unsubscribed from';
+        $action = $service->toggleSubscription(\Auth::user(), $user) ? 'subscribed to' : 'unsubscribed from';
 
         return response()->json([
             'message' => "You has been $action $user->nickname."
         ], 201);
-    }
-
-    protected function getSubscriptions(User $user, string $scope, string $query = null): Paginator
-    {
-        if (!in_array($scope, ['subscribers', 'subscriptions'])) {
-            throw new \InvalidArgumentException;
-        }
-
-        /* @var $items User */
-        $items = $user->$scope();
-        $items = $items->select(['id', 'name', 'nickname'])
-            ->with([
-                'avatarMedia',
-                'information' => fn(Relation $q) => $q->select('user_id', 'city_id'), 'information.city'
-            ])
-            ->when($query, fn($q) => $q->where(
-                fn($q) => $q->where('nickname', 'like', "%$query%")->orWhere('name', 'like', "%$query%")
-            ))
-            ->simplePaginate($this->limit, []);
-
-        return $items;
     }
 }

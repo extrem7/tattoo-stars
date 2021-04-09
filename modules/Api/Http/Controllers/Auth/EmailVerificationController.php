@@ -57,7 +57,7 @@ class EmailVerificationController extends Controller
     {
         $user = $request->user();
         if (!$user->hasVerifiedEmail()) {
-            $request->user()->sendEmailVerificationNotification();
+            $user->sendEmailVerificationNotification();
             return response()->json(['message' => __('auth.email_verification_resent')]);
         }
 

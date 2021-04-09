@@ -2,6 +2,7 @@
 
 namespace Modules\Api\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use Modules\Api\Http\Requests\SupportHelpRequest;
 use Modules\Api\Mail\ContactForm;
 
@@ -45,7 +46,7 @@ class HelperController extends Controller
      * @apiSuccess {String} message Response text.
      *
      */
-    public function help(SupportHelpRequest $request)
+    public function help(SupportHelpRequest $request): JsonResponse
     {
         \Mail::to(config('api.support.email'))->send(new ContactForm($request->validated()));
 

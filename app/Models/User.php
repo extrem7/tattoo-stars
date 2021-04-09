@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Traits\Searchable;
 use App\Models\User\{AccountType, Information, Style};
+use Dyrynda\Database\Support\CascadeSoftDeletes;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\{BelongsTo, BelongsToMany, HasMany, HasOne, MorphOne};
@@ -13,8 +14,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Modules\Api\Notifications\VerifyEmail;
-use Spatie\MediaLibrary\{
-    HasMedia,
+use Spatie\MediaLibrary\{HasMedia,
     InteractsWithMedia,
     MediaCollections\Exceptions\MediaCannotBeDeleted,
     MediaCollections\Models\Media
@@ -29,6 +29,7 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
         Notifiable,
         InteractsWithMedia,
         SoftDeletes,
+        CascadeSoftDeletes,
         Searchable;
 
     protected $fillable = [
@@ -37,6 +38,8 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
     ];
 
     protected $hidden = ['password', 'remember_token',];
+
+    protected $cascadeDeletes = ['posts'];
 
     protected $search = ['id', 'email', 'name', 'nickname'];
 

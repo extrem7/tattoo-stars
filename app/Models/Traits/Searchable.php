@@ -20,7 +20,7 @@ trait Searchable
                 if ($matchAllFields) {
                     $query->where($field, 'LIKE', "%$keyword%");
                 } else {
-                    $query->orWhere($field, 'LIKE', "%$keyword%");
+                    $query->orWhere($field, 'LIKE', "%$keyword%")->orWhere($field, 'LIKE', "$keyword%");
                 }
             }
 
