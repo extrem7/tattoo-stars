@@ -18,7 +18,9 @@ class SubscriberResource extends JsonResource
             'avatar' => $user->getAvatar('medium'),
             'name' => $user->name,
             'nickname' => $user->nickname,
-            'location' => $this->when($info->relationLoaded('city') && $info->city, fn() => $info->city->name),
+            $this->mergeWhen($info, fn() => [
+                'location' => $this->when($info->relationLoaded('city') && $info->city, fn() => $info->city->name),
+            ])
         ];
     }
 }

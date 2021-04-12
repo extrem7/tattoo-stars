@@ -13,7 +13,7 @@ class SubscriptionsSeeder extends Seeder
         $this->command->getOutput()->progressStart(count($users));
 
         $users->each(function (User $u) {
-            $u->subscriptions()->sync(User::limit(random_int(20, 40))->pluck('id'));
+            $u->subscriptions()->sync(User::limit(random_int(20, 50))->latest()->pluck('id'));
             $this->command->getOutput()->progressAdvance();
         });
 
