@@ -31,7 +31,7 @@ class PostController extends Controller
     }
 
     /**
-     * @api {get} / All posts
+     * @api {get} /posts All posts
      * @apiDescription Latest posts based on user subscriptions or just latest posts.
      * @apiName IndexPosts
      * @apiGroup Posts
@@ -51,7 +51,7 @@ class PostController extends Controller
     }
 
     /**
-     * @api {get} /search Search posts
+     * @api {get} /posts/search Search posts
      * @apiDescription Use #hashtag to search in tags and regular string to search in description.
      * @apiName SearchPosts
      * @apiGroup Posts
