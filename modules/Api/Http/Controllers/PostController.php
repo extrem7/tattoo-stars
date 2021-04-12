@@ -1,14 +1,78 @@
 <?php
 
+/**
+ * @apiDefine Posts
+ * @apiSuccess {Object[]} posts User's posts.
+ * @apiSuccess {Number} posts.id Post id.
+ * @apiSuccess {String} posts.description Post description.
+ * @apiSuccess {String[]} posts.images Post images.
+ * @apiSuccess {Object} posts.video Post video.
+ * @apiSuccess {String} posts.video.thumbnail Video thumbnail.
+ * @apiSuccess {String} posts.video.url Video url.
+ */
+
 namespace Modules\Api\Http\Controllers;
 
 use App\Models\Post;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Modules\Api\Http\Requests\PostRequest;
+use Modules\Api\Http\Resources\PostResource;
+use Modules\Api\Repositories\PostRepository;
 use Modules\Api\Services\PostService;
 
 class PostController extends Controller
 {
+    protected PostRepository $repository;
+
+    public function __construct()
+    {
+        $this->repository = app(PostRepository::class);
+    }
+
+    /**
+     * @api {get} / All posts
+     * @apiDescription Latest posts based on user subscriptions or just latest posts.
+     * @apiName IndexPosts
+     * @apiGroup Posts
+     *
+     * @apiUse Token
+     * @apiUse Posts
+     * @apiUse Pagination
+     */
+    public function index(): JsonResponse
+    {
+        $posts = $this->repository->getForIndex(\Auth::user());
+
+        return response()->json([
+            'posts' => PostResource::collection($posts),
+            'hasMorePages' => $posts->hasMorePages()
+        ]);
+    }
+
+    /**
+     * @api {get} /search Search posts
+     * @apiDescription Use #hashtag to search in tags and regular string to search in description.
+     * @apiName SearchPosts
+     * @apiGroup Posts
+     *
+     * @apiUse Token
+     * @apiUse Search
+     * @apiUse Posts
+     * @apiUse Pagination
+     */
+    public function search(Request $request): JsonResponse
+    {
+        $request->validate(['query' => ['required', 'string255']]);
+
+        $posts = $this->repository->search($request->input('query'));
+
+        return response()->json([
+            'posts' => PostResource::collection($posts),
+            'hasMorePages' => $posts->hasMorePages()
+        ]);
+    }
+
     /**
      * @api {post} /posts/create Create post
      * @apiName CreatePost

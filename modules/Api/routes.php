@@ -67,6 +67,8 @@ foreach ($versions as $version) {
                 });
 
                 Route::prefix('posts')->group(function () {
+                    Route::get('', [PostController::class, 'index']);
+                    Route::get('search', [PostController::class, 'search']);
                     Route::post('create', [PostController::class, 'store']);
                     Route::delete('{post}', [PostController::class, 'destroy']);
                 });

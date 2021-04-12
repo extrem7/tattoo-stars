@@ -21,6 +21,7 @@ class UserRepository
                 'avatarMedia',
                 'information' => fn($q) => $q->select(['user_id', 'city_id']), 'information.city'
             ])
+            ->withCount(['subscribers'])
             ->whereHas('information', function ($q) use ($params) {
                 $q->when(isset($params['country_id']),
                     fn($q) => $q->whereHas('city',
@@ -31,6 +32,7 @@ class UserRepository
                 isset($params['style_id']),
                 fn($q) => $q->whereHas('styles', fn($q) => $q->whereIn('id', [$params['style_id']]))
             )
+            ->orderByDesc('subscribers_count')
             ->simplePaginate($this->limit, []);
     }
 

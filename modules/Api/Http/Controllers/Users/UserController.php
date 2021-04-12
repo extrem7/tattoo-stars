@@ -105,6 +105,8 @@ class UserController extends Controller
      *
      * @apiUse Token
      * @apiUse UserProfile
+     * @apiUse Posts
+     * @apiUse Pagination
      *
      * @apiSuccess {Boolean} user.inSubscriptions .
      */
@@ -120,6 +122,8 @@ class UserController extends Controller
      *
      * @apiUse Token
      * @apiUse UserProfile
+     * @apiUse Posts
+     * @apiUse Pagination
      */
     public function show(User $user): JsonResponse
     {
