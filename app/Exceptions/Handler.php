@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Exceptions\ThrottleRequestsException;
 use Illuminate\Http\JsonResponse;
@@ -47,10 +48,10 @@ class Handler extends ExceptionHandler
                 ]);
             }
 
-            if ($e instanceof NotFoundHttpException) {
+            if ($e instanceof NotFoundHttpException || $e instanceof ModelNotFoundException) {
                 $jsonResponse->setData([
                     'message' => __('Not Found')
-                ]);
+                ])->setStatusCode(404);
             }
 
             if ($e instanceof AuthenticationException) {
