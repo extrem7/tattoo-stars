@@ -22,7 +22,8 @@ class PostResource extends JsonResource
             'video' => $this->when($post->videoMedia, fn() => [
                 'thumbnail' => $post->videoMedia->getFullUrl('thumbnail'),
                 'url' => $post->videoMedia->getFullUrl()
-            ])
+            ]),
+            'date' => $post->created_at
         ];
     }
 }

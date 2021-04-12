@@ -32,6 +32,11 @@
  * @apiSuccess {Boolean} hasMorePages Indicates whether more posts can be loaded.
  */
 
+/**
+ * @apiDefine Search
+ * @apiParam {String} [query] String for search.
+ */
+
 namespace Modules\Api\Http\Controllers\Users;
 
 use App\Http\Controllers\Controller;

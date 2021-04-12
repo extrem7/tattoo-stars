@@ -27,6 +27,7 @@ class SubscriptionController extends Controller
      * @apiGroup Users
      *
      * @apiUse Token
+     * @apiUse Search
      *
      * @apiSuccess {Object[]} subscribers Subscribers.
      * @apiSuccess {Integer} subscribers.id Subscriber id.
@@ -53,6 +54,7 @@ class SubscriptionController extends Controller
      * @apiGroup Users
      *
      * @apiUse Token
+     * @apiUse Search
      *
      * @apiSuccess {Object[]} subscriptions Subscriptions.
      * @apiSuccess {Integer} subscriptions.id Subscription id.
