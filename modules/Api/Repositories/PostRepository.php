@@ -38,16 +38,30 @@ class PostRepository
 
     public function getPostsByUser(User $user): Paginator
     {
-        return $this->paginate($user->posts());
+        $posts = $this->paginate($user->posts(), false);
+        $posts->transform(function (Post $post) use ($user) {
+            $post->user_id = $user->id;
+            $post->setRelation('user', $user);
+            return $post;
+        });
+        return $posts;
     }
 
     /**
      * @param Builder|Relation|QueryBuilder $builder
      */
-    protected function paginate($builder): Paginator
+    protected function paginate($builder, bool $loadUsers = true): Paginator
     {
-        return $builder->select(['id', 'description', 'created_at'])
-            ->with(['imagesMedia', 'videoMedia'])
+        $select = ['id', 'description', 'created_at'];
+        $with = ['imagesMedia', 'videoMedia'];
+
+        if ($loadUsers) {
+            $select[] = 'user_id';
+            $with[] = 'user';
+        }
+
+        return $builder->select($select)
+            ->with($with)
             ->latest()
             ->simplePaginate(12);
     }
