@@ -18,7 +18,7 @@ class PostResource extends JsonResource
             'user_id' => $post->user_id,
             'user' => $this->when($post->relationLoaded('user'), fn() => [
                 'name' => $post->user->name,
-                'url' => $post->user->getAvatar('icon')
+                'avatar' => $post->user->getAvatar('icon')
             ]),
             'description' => $post->description,
             'images' => $this->when(
