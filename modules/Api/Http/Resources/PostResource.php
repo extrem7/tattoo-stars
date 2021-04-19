@@ -28,7 +28,11 @@ class PostResource extends JsonResource
                 'thumbnail' => $post->videoMedia->getFullUrl('thumbnail'),
                 'url' => $post->videoMedia->getFullUrl()
             ]),
-            'date' => $post->created_at
+            'date' => $post->created_at,
+            $this->mergeWhen($post->relationLoaded('likes'), fn() => [
+                'likes' => $post->likes->count(),
+                'like_status' => $post->likes->where('id', '=', \Auth::id())->first() !== null
+            ])
         ];
     }
 }

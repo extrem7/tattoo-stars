@@ -71,6 +71,10 @@ foreach ($versions as $version) {
                     Route::get('search', [PostController::class, 'search']);
                     Route::post('create', [PostController::class, 'store']);
                     Route::delete('{post}', [PostController::class, 'destroy']);
+
+                    Route::prefix('{post}')->group(function () {
+                        Route::post('like', [PostController::class, 'like']);
+                    });
                 });
 
                 Route::prefix('users')->group(function () {

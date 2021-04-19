@@ -112,6 +112,15 @@ class PostController extends Controller
         ], 201);
     }
 
+    public function like(Post $post): JsonResponse
+    {
+        $changes = \Auth::user()->likes()->toggle($post);
+
+        $action = !empty($changes['attached']) ? 'liked' : 'unliked';
+
+        return response()->json(['message' => "Post has been $action."]);
+    }
+
     /**
      * @api {delete} /posts/:id Delete own post
      * @apiName DeletePost

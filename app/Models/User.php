@@ -161,6 +161,11 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
         )->withPivot('subscribed_at');
     }
 
+    public function likes(): BelongsToMany
+    {
+        return $this->belongsToMany(Post::class, 'post_likes');
+    }
+
     public function blacklist(): BelongsToMany
     {
         return $this->belongsToMany(

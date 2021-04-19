@@ -53,7 +53,7 @@ class PostRepository
     protected function paginate($builder, bool $loadUsers = true): Paginator
     {
         $select = ['id', 'description', 'created_at'];
-        $with = ['imagesMedia', 'videoMedia'];
+        $with = ['imagesMedia', 'videoMedia', 'likes'];
 
         if ($loadUsers) {
             $select[] = 'user_id';
