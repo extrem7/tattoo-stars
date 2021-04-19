@@ -32,7 +32,10 @@ class PostResource extends JsonResource
             $this->mergeWhen($post->relationLoaded('likes'), fn() => [
                 'likes' => $post->likes->count(),
                 'like_status' => $post->likes->where('id', '=', \Auth::id())->first() !== null
-            ])
+            ]),
+            'bookmark_status' => $this->when(
+                $post->relationLoaded('likes'), fn() => $post->bookmarkers->isNotEmpty()
+            ),
         ];
     }
 }

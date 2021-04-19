@@ -112,11 +112,38 @@ class PostController extends Controller
         ], 201);
     }
 
+    /**
+     * @api {post} /posts/:id/like Toggle like
+     * @apiName ToggleLike
+     * @apiGroup Posts
+     *
+     * @apiUse Token
+     *
+     * @apiSuccess {String} message Toggle status.
+     */
     public function like(Post $post): JsonResponse
     {
         $changes = \Auth::user()->likes()->toggle($post);
 
         $action = !empty($changes['attached']) ? 'liked' : 'unliked';
+
+        return response()->json(['message' => "Post has been $action."]);
+    }
+
+    /**
+     * @api {post} /posts/:id/bookmark Toggle bookmark
+     * @apiName ToggleBookmark
+     * @apiGroup Posts
+     *
+     * @apiUse Token
+     *
+     * @apiSuccess {String} message Toggle status.
+     */
+    public function bookmark(Post $post): JsonResponse
+    {
+        $changes = \Auth::user()->bookmarks()->toggle($post);
+
+        $action = !empty($changes['attached']) ? 'saved' : 'removed from bookmarks';
 
         return response()->json(['message' => "Post has been $action."]);
     }

@@ -77,4 +77,9 @@ class Post extends Model implements HasMedia
     {
         return $this->belongsToMany(User::class, 'post_likes');
     }
+
+    public function bookmarkers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'post_likes');
+    }
 }
