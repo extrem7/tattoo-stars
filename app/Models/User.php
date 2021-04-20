@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Post\Comment;
 use App\Models\Traits\Searchable;
 use App\Models\User\{AccountType, Information, Style};
 use Dyrynda\Database\Support\CascadeSoftDeletes;
@@ -39,7 +40,7 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
 
     protected $hidden = ['password', 'remember_token',];
 
-    protected $cascadeDeletes = ['posts'];
+    protected $cascadeDeletes = ['posts', 'comments'];
 
     protected $search = ['id', 'email', 'name', 'nickname'];
 
@@ -145,6 +146,11 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
     public function posts(): HasMany
     {
         return $this->hasMany(Post::class);
+    }
+
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class);
     }
 
     public function subscriptions(): BelongsToMany

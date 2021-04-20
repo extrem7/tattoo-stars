@@ -2,14 +2,56 @@
 
 namespace Modules\Api\Services;
 
+use App\Models\Post;
 use FFMpeg\Format\Video\X264;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Http\UploadedFile;
+use Modules\Api\Repositories\PostRepository;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class PostService
 {
-    public function parseTags(string $description): ?string
+    protected PostRepository $repository;
+
+    public function __construct()
+    {
+        $this->repository = app(PostRepository::class);
+    }
+
+    /* @param UploadedFile[] $images */
+    public function store(string $description, array $images = null, UploadedFile $video = null): Post
+    {
+        $tags = $description ? $this->parseTags($description) : null;
+
+        $post = $this->repository->store(\Auth::id(), $description, $tags);
+
+        if ($images) {
+            foreach ($images as $file) {
+                $this->compressImage($file);
+                $post->addMedia($file)->toMediaCollection('images');
+            }
+        }
+        if ($video) {
+            $media = $post->addMedia($video)->toMediaCollection('video');
+            $this->compressVideo($media);
+        }
+
+        return $post;
+    }
+
+    public function toggleLike(Post $post): bool
+    {
+        $changes = \Auth::user()->likes()->toggle($post);
+        return !empty($changes['attached']);
+    }
+
+    public function toggleBookmark(Post $post): bool
+    {
+        $changes = \Auth::user()->bookmarks()->toggle($post);
+        return !empty($changes['attached']);
+    }
+
+    protected function parseTags(string $description): ?string
     {
         $tags = null;
 
@@ -22,7 +64,7 @@ class PostService
         return $tags;
     }
 
-    public function compressImage(UploadedFile $file): bool
+    protected function compressImage(UploadedFile $file): bool
     {
         $mime = str_replace('image/', '', $file->getMimeType());
         $path = $file->getPathname();
@@ -40,7 +82,7 @@ class PostService
         return false;
     }
 
-    public function compressVideo(Media $media): bool
+    protected function compressVideo(Media $media): bool
     {
         $filesystem = app(Filesystem::class);
         $path = str_replace(storage_path('app/'), '', $media->getPath());

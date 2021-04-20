@@ -23,10 +23,12 @@ use Modules\Api\Services\PostService;
 
 class PostController extends Controller
 {
+    protected PostService $service;
     protected PostRepository $repository;
 
     public function __construct()
     {
+        $this->service = app(PostService::class);
         $this->repository = app(PostRepository::class);
     }
 
@@ -89,22 +91,9 @@ class PostController extends Controller
      */
     public function store(PostRequest $request, PostService $service): JsonResponse
     {
-        $description = $request->input('description');
-        $tags = $description ? $service->parseTags($description) : null;
-        /* @var $post Post */
-        $post = \Auth::user()->posts()->create(compact('description', 'tags'));
-
-        if ($images = $request->file('images')) {
-            foreach ($request->file('images') as $file) {
-                $service->compressImage($file);
-                $post->addMedia($file)->toMediaCollection('images');
-            }
-        }
-
-        if ($video = $request->file('video')) {
-            $media = $post->addMedia($video)->toMediaCollection('video');
-            $service->compressVideo($media);
-        }
+        $post = $service->store(
+            $request->input('description'), $request->file('images'), $request->file('video')
+        );
 
         return response()->json([
             'message' => 'Post has been published.',
@@ -123,11 +112,13 @@ class PostController extends Controller
      */
     public function like(Post $post): JsonResponse
     {
-        $changes = \Auth::user()->likes()->toggle($post);
+        $liked = $this->service->toggleLike($post);
+        $action = $liked ? 'liked' : 'unliked';
 
-        $action = !empty($changes['attached']) ? 'liked' : 'unliked';
-
-        return response()->json(['message' => "Post has been $action."]);
+        return response()->json([
+            'message' => "Post has been $action.",
+            'liked' => $liked
+        ]);
     }
 
     /**
@@ -137,15 +128,18 @@ class PostController extends Controller
      *
      * @apiUse Token
      *
-     * @apiSuccess {String} message Toggle status.
+     * @apiSuccess {String} message Toggle message.
+     * @apiSuccess {Boolean} bookmarked Bookmarked status.
      */
     public function bookmark(Post $post): JsonResponse
     {
-        $changes = \Auth::user()->bookmarks()->toggle($post);
+        $bookmarked = $this->service->toggleBookmark($post);
+        $action = $bookmarked ? 'saved' : 'removed from bookmarks';
 
-        $action = !empty($changes['attached']) ? 'saved' : 'removed from bookmarks';
-
-        return response()->json(['message' => "Post has been $action."]);
+        return response()->json([
+            'message' => "Post has been $action.",
+            'bookmarked' => $bookmarked
+        ]);
     }
 
     /**

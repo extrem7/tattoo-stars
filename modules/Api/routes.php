@@ -1,6 +1,7 @@
 <?php
 
 use Modules\Api\Http\Controllers\{CitiesController,
+    CommentController,
     HelperController,
     PageController,
     PageViewController,
@@ -75,6 +76,12 @@ foreach ($versions as $version) {
                     Route::prefix('{post}')->group(function () {
                         Route::post('like', [PostController::class, 'like']);
                         Route::post('bookmark', [PostController::class, 'bookmark']);
+
+                        Route::prefix('comments')->group(function () {
+                            Route::get('', [CommentController::class, 'index']);
+                            Route::post('', [CommentController::class, 'store']);
+                            Route::delete('{comment}', [CommentController::class, 'destroy']);
+                        });
                     });
                 });
 

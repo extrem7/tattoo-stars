@@ -39,14 +39,17 @@ class BlacklistController extends Controller
      *
      * @apiUse Token
      *
-     * @apiSuccess {String} message Toggle status.
+     * @apiSuccess {String} message Toggle message.
+     * @apiSuccess {Boolean} blocked Blocked status.
      */
     public function toggle(User $user, UserService $service): JsonResponse
     {
-        $action = $service->toggleBlacklist(\Auth::user(), $user) ? 'added to blacklist' : 'removed from blacklist';
+        $blocked = $service->toggleBlacklist(\Auth::user(), $user);
+        $action = $blocked ? 'added to blacklist' : 'removed from blacklist';
 
         return response()->json([
-            'message' => ucfirst($user->nickname) . " has been $action."
-        ], 201);
+            'message' => ucfirst($user->nickname) . " has been $action.",
+            'blocked' => $blocked
+        ]);
     }
 }

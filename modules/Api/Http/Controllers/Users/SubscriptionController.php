@@ -82,14 +82,17 @@ class SubscriptionController extends Controller
      *
      * @apiUse Token
      *
-     * @apiSuccess {String} message Toggle status.
+     * @apiSuccess {String} message Toggle message.
+     * @apiSuccess {Boolean} subscribed Subscribed status.
      */
     public function toggle(User $user, UserService $service): JsonResponse
     {
-        $action = $service->toggleSubscription(\Auth::user(), $user) ? 'subscribed to' : 'unsubscribed from';
+        $subscribed = $service->toggleSubscription(\Auth::user(), $user);
+        $action = $subscribed ? 'subscribed to' : 'unsubscribed from';
 
         return response()->json([
-            'message' => "You has been $action $user->nickname."
-        ], 201);
+            'message' => "You has been $action $user->nickname.",
+            'subscribed' => $subscribed
+        ]);
     }
 }

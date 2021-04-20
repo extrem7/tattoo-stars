@@ -47,6 +47,15 @@ class PostRepository
         return $posts;
     }
 
+    public function store(int $userId, string $description, string $tags = null): Post
+    {
+        return Post::create([
+            'user_id' => $userId,
+            'description' => $description,
+            'tags' => $tags
+        ]);
+    }
+
     /**
      * @param Builder|Relation|QueryBuilder $builder
      */
