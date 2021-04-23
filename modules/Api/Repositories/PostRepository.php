@@ -8,6 +8,7 @@ use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Collection;
 
 class PostRepository
 {
@@ -38,12 +39,13 @@ class PostRepository
 
     public function getBookmarks(User $user): Paginator
     {
-        return $this->paginate($user->bookmarks(), false);
+        return $this->paginate($user->bookmarks()->with('user'), false);
     }
 
     public function getPostsByUser(User $user): Paginator
     {
         $posts = $this->paginate($user->posts(), false);
+        /* @var $posts Collection<Post>|Paginator */
         $posts->transform(function (Post $post) use ($user) {
             $post->user_id = $user->id;
             $post->setRelation('user', $user);
@@ -80,7 +82,7 @@ class PostRepository
         }
 
         return $builder->select($select)
-            ->with($with)
+            ->with(array_merge($with, $builder->getEagerLoads()))
             ->latest()
             ->simplePaginate(12);
     }

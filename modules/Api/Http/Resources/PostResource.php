@@ -34,7 +34,7 @@ class PostResource extends JsonResource
                 'like_status' => $post->likes->where('id', '=', \Auth::id())->first() !== null
             ]),
             'bookmark_status' => $this->when(
-                $post->relationLoaded('likes'), fn() => $post->bookmarkers->isNotEmpty()
+                $post->relationLoaded('bookmarkers'), fn() => $post->bookmarkers->isNotEmpty()
             ),
         ];
     }
