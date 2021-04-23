@@ -29,12 +29,6 @@ class UserService
     {
         abort_if($subscribable->id === $subscriber->id, 403, 'You cannot subscribe to self.');
 
-        abort_if(
-            $subscriber->blockers()->where('id', '=', $subscribable->id)->exists(),
-            403,
-            "You cannot subscribe to user that blocked you."
-        );
-
         $changes = $subscriber->subscriptions()->toggle([
             $subscribable->id => ['subscribed_at' => \DB::raw('NOW()')]
         ]);

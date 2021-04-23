@@ -24,7 +24,7 @@ class BookmarkController extends Controller
      * @api {get} /bookmarks Bookmarks
      * @apiDescription User bookmarks.
      * @apiName IndexBookmarks
-     * @apiGroup Bookmarks
+     * @apiGroup Posts
      *
      * @apiUse Token
      * @apiUse Posts

@@ -13,6 +13,10 @@
  * @apiSuccess {Object} posts.video Post video.
  * @apiSuccess {String} posts.video.thumbnail Video thumbnail.
  * @apiSuccess {String} posts.video.url Video url.
+ * @apiSuccess {String} posts.date Post date.
+ * @apiSuccess {Number} posts.likes Post likes.
+ * @apiSuccess {Boolean} posts.like_status Post like status.
+ * @apiSuccess {Boolean} posts.bookmark_status Post bookmark status.
  */
 
 namespace Modules\Api\Http\Controllers\Posts;
@@ -78,6 +82,34 @@ class PostController extends Controller
             'posts' => PostResource::collection($posts),
             'hasMorePages' => $posts->hasMorePages()
         ]);
+    }
+
+    /**
+     * @api {post} /posts/:id Show post
+     * @apiName ShowPost
+     * @apiGroup Posts
+     *
+     * @apiUse Token
+     *
+     * @apiSuccess {Number} posts.id Post id.
+     * @apiSuccess {Number} posts.user_id Post author id.
+     * @apiSuccess {Object} posts.user Post author.
+     * @apiSuccess {String} posts.user.name Post author name.
+     * @apiSuccess {String} posts.user.avatar Post author avatar.
+     * @apiSuccess {String} posts.description Post description.
+     * @apiSuccess {String[]} posts.images Post images.
+     * @apiSuccess {Object} posts.video Post video.
+     * @apiSuccess {String} posts.video.thumbnail Video thumbnail.
+     * @apiSuccess {String} posts.video.url Video url.
+     * @apiSuccess {String} posts.date Post date.
+     * @apiSuccess {Number} posts.likes Post likes.
+     * @apiSuccess {Boolean} posts.like_status Post like status.
+     * @apiSuccess {Boolean} posts.bookmark_status Post bookmark status.
+     */
+    public function show(Post $post): JsonResponse
+    {
+        $post->load(['user', 'likes', 'bookmarkers']);
+        return response()->json(new PostResource($post));
     }
 
     /**

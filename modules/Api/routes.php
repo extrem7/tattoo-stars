@@ -17,6 +17,7 @@ use Modules\Api\Http\Controllers\{
     Users\SubscriptionController,
     Users\UserController
 };
+use Modules\Api\Http\Middleware\NotBlocked;
 
 $versions = ['', 'v1'];
 
@@ -74,9 +75,11 @@ foreach ($versions as $version) {
                     Route::get('', [PostController::class, 'index']);
                     Route::get('search', [PostController::class, 'search']);
                     Route::post('create', [PostController::class, 'store']);
-                    Route::delete('{post}', [PostController::class, 'destroy']);
 
-                    Route::prefix('{post}')->group(function () {
+                    Route::prefix('{post}')->middleware(NotBlocked::class)->group(function () {
+                        Route::get('', [PostController::class, 'show']);
+                        Route::delete('', [PostController::class, 'destroy']);
+
                         Route::post('like', [PostController::class, 'like']);
                         Route::post('bookmark', [BookmarkController::class, 'toggle']);
 
@@ -92,7 +95,7 @@ foreach ($versions as $version) {
                     Route::get('', [UserController::class, 'index']);
                     Route::get('self', [UserController::class, 'self']);
 
-                    Route::prefix('{user}')->group(function () {
+                    Route::prefix('{user}')->middleware(NotBlocked::class)->group(function () {
                         Route::get('', [UserController::class, 'show']);
 
                         Route::get('subscribers', [SubscriptionController::class, 'subscribers']);
