@@ -4,6 +4,10 @@
  * @apiDefine Posts
  * @apiSuccess {Object[]} posts User's posts.
  * @apiSuccess {Number} posts.id Post id.
+ * @apiSuccess {Number} posts.user_id Post author id.
+ * @apiSuccess {Object} posts.user Post author.
+ * @apiSuccess {String} posts.user.name Post author name.
+ * @apiSuccess {String} posts.user.avatar Post author avatar.
  * @apiSuccess {String} posts.description Post description.
  * @apiSuccess {String[]} posts.images Post images.
  * @apiSuccess {Object} posts.video Post video.
@@ -11,11 +15,12 @@
  * @apiSuccess {String} posts.video.url Video url.
  */
 
-namespace Modules\Api\Http\Controllers;
+namespace Modules\Api\Http\Controllers\Posts;
 
 use App\Models\Post;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Modules\Api\Http\Controllers\Controller;
 use Modules\Api\Http\Requests\PostRequest;
 use Modules\Api\Http\Resources\PostResource;
 use Modules\Api\Repositories\PostRepository;
@@ -118,27 +123,6 @@ class PostController extends Controller
         return response()->json([
             'message' => "Post has been $action.",
             'liked' => $liked
-        ]);
-    }
-
-    /**
-     * @api {post} /posts/:id/bookmark Toggle bookmark
-     * @apiName ToggleBookmark
-     * @apiGroup Posts
-     *
-     * @apiUse Token
-     *
-     * @apiSuccess {String} message Toggle message.
-     * @apiSuccess {Boolean} bookmarked Bookmarked status.
-     */
-    public function bookmark(Post $post): JsonResponse
-    {
-        $bookmarked = $this->service->toggleBookmark($post);
-        $action = $bookmarked ? 'saved' : 'removed from bookmarks';
-
-        return response()->json([
-            'message' => "Post has been $action.",
-            'bookmarked' => $bookmarked
         ]);
     }
 

@@ -1,11 +1,13 @@
 <?php
 
-use Modules\Api\Http\Controllers\{CitiesController,
+use Modules\Api\Http\Controllers\{
+    CitiesController,
     CommentController,
     HelperController,
     PageController,
     PageViewController,
-    PostController,
+    Posts\PostController,
+    Posts\BookmarkController,
     Profile\AvatarController,
     Profile\ProfileController,
     Auth\AuthController,
@@ -57,6 +59,7 @@ foreach ($versions as $version) {
                 Route::get('geoip', [CitiesController::class, 'geoip']);
 
                 Route::get('blacklist', [BlacklistController::class, 'blacklist']);
+                Route::get('bookmarks', [BookmarkController::class, 'index']);
 
                 Route::prefix('profile')->group(function () {
                     Route::post('', [ProfileController::class, 'update']);
@@ -75,7 +78,7 @@ foreach ($versions as $version) {
 
                     Route::prefix('{post}')->group(function () {
                         Route::post('like', [PostController::class, 'like']);
-                        Route::post('bookmark', [PostController::class, 'bookmark']);
+                        Route::post('bookmark', [BookmarkController::class, 'toggle']);
 
                         Route::prefix('comments')->group(function () {
                             Route::get('', [CommentController::class, 'index']);

@@ -36,6 +36,11 @@ class PostRepository
         );
     }
 
+    public function getBookmarks(User $user): Paginator
+    {
+        return $this->paginate($user->bookmarks(), false);
+    }
+
     public function getPostsByUser(User $user): Paginator
     {
         $posts = $this->paginate($user->posts(), false);
