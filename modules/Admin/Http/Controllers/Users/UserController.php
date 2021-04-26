@@ -25,7 +25,7 @@ class UserController extends Controller
         $this->middleware('can:users.delete')->only('destroy');
         $this->middleware('can:users.trash')->only('trash');
         $this->middleware('can:users.restore')->only('restore');
-        $this->middleware('can:users.force-destroy')->only('forceDestroy');
+        $this->middleware('can:users.force-delete')->only('forceDestroy');
     }
 
     public function index(IndexRequest $request): Response

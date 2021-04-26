@@ -44,11 +44,11 @@ Route::middleware(['auth', 'can:admin-panel.access'])->group(function () {
         });
 
     Route::resource('pages', PageController::class)
-        ->except(['show', 'trash', 'restore', 'force-destroy'])
+        ->except(['show', 'trash', 'restore', 'force-delete'])
         ->middleware('can:users.index');
 
     Route::resource('faqs', FaqController::class)
-        ->except(['show', 'trash', 'restore', 'force-destroy'])
+        ->except(['show', 'trash', 'restore', 'force-delete'])
         ->middleware('can:faqs.index');
     Route::post('faqs/sort', [FaqController::class, 'sort'])->name('faqs.sort');
 

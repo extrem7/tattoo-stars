@@ -37,6 +37,7 @@ class UserProfileResource extends JsonResource
             'subscriptionsCount' => $user->subscriptions()->count(),
 
             'phone' => $info->phone,
+            'email' => $user->email,
             'website' => $info->website,
             'instagram' => $info->instagram,
             'facebook' => $info->facebook
