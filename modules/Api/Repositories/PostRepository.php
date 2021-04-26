@@ -83,11 +83,21 @@ class PostRepository
 
         $user = \Auth::user();
 
+        $notIn = [$user->id];
+
+        $blockers = $user->blockers()->pluck('id');
+        $blacklist = $user->blacklist()->pluck('id');
+
+        if ($blockers->isNotEmpty()) {
+            $notIn = [$notIn, ...$blockers];
+        }
+        if ($blacklist->isNotEmpty()) {
+            $notIn = [$notIn, ...$blacklist];
+        }
+
         return $builder->select($select)
             ->with(array_merge($with, $builder->getEagerLoads()))
-            ->whereNotIn('user_id', [
-                ...$user->blockers()->pluck('id'), $user->blacklist()->pluck('id'), $user->id
-            ])
+            ->whereNotIn('user_id', $notIn)
             ->latest()
             ->simplePaginate(12);
     }
