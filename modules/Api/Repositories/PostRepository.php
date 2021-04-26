@@ -39,12 +39,12 @@ class PostRepository
 
     public function getBookmarks(User $user): Paginator
     {
-        return $this->paginate($user->bookmarks()->with('user'), false);
+        return $this->paginate($user->bookmarks()->with('user'), false, false);
     }
 
     public function getPostsByUser(User $user): Paginator
     {
-        $posts = $this->paginate($user->posts(), false);
+        $posts = $this->paginate($user->posts(), false, false);
         /* @var $posts Collection<Post>|Paginator */
         $posts->transform(function (Post $post) use ($user) {
             $post->user_id = $user->id;
@@ -66,7 +66,7 @@ class PostRepository
     /**
      * @param Builder|Relation|QueryBuilder $builder
      */
-    protected function paginate($builder, bool $loadUsers = true): Paginator
+    protected function paginate($builder, bool $loadUsers = true, bool $hidePosts = true): Paginator
     {
         $select = ['id', 'description', 'created_at'];
         $with = [
@@ -83,16 +83,21 @@ class PostRepository
 
         $user = \Auth::user();
 
-        $notIn = [$user->id];
 
-        $blockers = $user->blockers()->pluck('id');
-        $blacklist = $user->blacklist()->pluck('id');
+        $notIn = [];
 
-        if ($blockers->isNotEmpty()) {
-            $notIn = [$notIn, ...$blockers];
-        }
-        if ($blacklist->isNotEmpty()) {
-            $notIn = [$notIn, ...$blacklist];
+        if ($hidePosts) {
+            $notIn[] = $user->id;
+
+            $blockers = $user->blockers()->pluck('id');
+            $blacklist = $user->blacklist()->pluck('id');
+
+            if ($blockers->isNotEmpty()) {
+                $notIn = [$notIn, ...$blockers];
+            }
+            if ($blacklist->isNotEmpty()) {
+                $notIn = [$notIn, ...$blacklist];
+            }
         }
 
         return $builder->select($select)
