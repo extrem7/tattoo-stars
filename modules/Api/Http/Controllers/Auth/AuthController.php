@@ -126,7 +126,7 @@ class AuthController extends Controller
     }
 
     /**
-     * @api {get} /users/self Get user data
+     * @api {get} /profile/self Full user data
      * @apiName GetSelf
      * @apiGroup User
      *

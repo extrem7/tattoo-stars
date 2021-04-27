@@ -49,8 +49,6 @@ foreach ($versions as $version) {
                     ->middleware('throttle:1,1');
             });
 
-            Route::get('users/self', [AuthController::class, 'self']);
-
             Route::middleware('verified')->group(function () {
                 Route::get('genders', [ProfileController::class, 'genders']);
                 Route::get('styles', [ProfileController::class, 'styles']);
@@ -63,8 +61,10 @@ foreach ($versions as $version) {
                 Route::get('bookmarks', [BookmarkController::class, 'index']);
 
                 Route::prefix('profile')->group(function () {
+                    Route::get('self', [AuthController::class, 'self']);
                     Route::post('', [ProfileController::class, 'update']);
                     Route::delete('', [ProfileController::class, 'destroy']);
+
                     Route::prefix('avatar')->group(function () {
                         Route::post('', [AvatarController::class, 'store']);
                         Route::delete('', [AvatarController::class, 'destroy']);
