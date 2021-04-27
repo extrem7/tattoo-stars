@@ -26,7 +26,7 @@ class ReportController extends Controller
         $service->sendReport($reporter, $user, $request->input('reason'));
 
         return response()->json([
-            'message' => 'Your report has been sent.'
+            'message' => __('tattoo.report.sent')
         ], 201);
     }
 }

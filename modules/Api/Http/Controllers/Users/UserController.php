@@ -13,6 +13,7 @@
  * @apiSuccess {Number} user.subscribersCount User's subscribers count.
  * @apiSuccess {Number} user.subscriptionsCount User's subscriptions count.
  * @apiSuccess {String} user.phone User phone.
+ * @apiSuccess {String} user.email User email.
  * @apiSuccess {String} user.website User website.
  * @apiSuccess {String} user.instagram User instagram.
  * @apiSuccess {String} user.facebook User facebook.

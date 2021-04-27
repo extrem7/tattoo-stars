@@ -49,5 +49,11 @@ return [
         'chicano' => 'Chicano',
         'japanese' => 'Japanese',
         '3d' => '3D'
+    ],
+    'support' => [
+        'help_message' => 'Your message has been sent.'
+    ],
+    'report' => [
+        'sent' => 'Your report has been sent.'
     ]
 ];

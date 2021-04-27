@@ -87,8 +87,6 @@ class PostRepository
         $notIn = [];
 
         if ($hidePosts) {
-            $notIn[] = $user->id;
-
             $blockers = $user->blockers()->pluck('id');
             $blacklist = $user->blacklist()->pluck('id');
 

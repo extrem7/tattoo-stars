@@ -50,6 +50,6 @@ class HelperController extends Controller
     {
         \Mail::to(config('api.support.email'))->send(new ContactForm($request->validated()));
 
-        return response()->json(['message' => 'Your message has been sent.']);
+        return response()->json(['message' => __('tattoo.support.help_message')]);
     }
 }

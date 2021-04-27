@@ -71,7 +71,7 @@ class PostService
 
         if ($mime === 'jpeg') {
             $image = imagecreatefromjpeg($path);
-            return imagejpeg($image, $path, 30);
+            return imagejpeg($image, $path);
         }
 
         if ($mime === 'png') {
