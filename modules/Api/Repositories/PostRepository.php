@@ -91,10 +91,10 @@ class PostRepository
             $blacklist = $user->blacklist()->pluck('id');
 
             if ($blockers->isNotEmpty()) {
-                $notIn = [$notIn, ...$blockers];
+                $notIn = [...$notIn, ...$blockers];
             }
             if ($blacklist->isNotEmpty()) {
-                $notIn = [$notIn, ...$blacklist];
+                $notIn = [...$notIn, ...$blacklist];
             }
         }
 
