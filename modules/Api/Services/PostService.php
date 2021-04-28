@@ -33,7 +33,7 @@ class PostService
         }
         if ($video) {
             $media = $post->addMedia($video)->toMediaCollection('video');
-            $this->compressVideo($media);
+            //$this->compressVideo($media);
         }
 
         return $post;

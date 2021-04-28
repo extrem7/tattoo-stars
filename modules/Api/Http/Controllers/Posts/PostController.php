@@ -120,7 +120,7 @@ class PostController extends Controller
      * @apiUse Token
      *
      * @apiParam {File} images[] Array of images 500x500 less 2mb. May contains to 6 files.
-     * @apiParam {File} Video no longer that 30 second and less 10mb.
+     * @apiParam {File} video Video no longer that 30 second and less 10mb.
      * @apiParam {String} [description] Post description.
      *
      * @apiSuccess {String} message Is post published message.
