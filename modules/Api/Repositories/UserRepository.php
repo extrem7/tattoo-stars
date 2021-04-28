@@ -38,7 +38,7 @@ class UserRepository
 
     public function getBlacklist(User $user): Collection
     {
-        return $user->blacklist()->with(['avatarMedia'])->get(['id', 'name', 'nickname']);
+        return $user->blacklist()->with(['avatarMedia', 'information.city'])->get(['id', 'name', 'nickname']);
     }
 
     public function getSubscriptions(User $user, string $scope, string $query = null): Paginator

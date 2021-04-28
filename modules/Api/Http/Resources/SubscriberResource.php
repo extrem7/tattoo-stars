@@ -13,14 +13,17 @@ class SubscriberResource extends JsonResource
         $user = $this->resource;
         $info = $user->information;
 
+        $location = null;
+        if ($info && $info->relationLoaded('city') && $city = $info->city) {
+            $location = "$city->name, {$city->country->name}";
+        }
+
         return [
             'id' => $user->id,
             'avatar' => $user->getAvatar('medium'),
             'name' => $user->name,
             'nickname' => $user->nickname,
-            $this->mergeWhen($info, fn() => [
-                'location' => $this->when($info->relationLoaded('city') && $info->city, fn() => $info->city->name),
-            ])
+            'location' => $this->when($location, $location)
         ];
     }
 }
