@@ -12,6 +12,7 @@ class UserProfileResource extends JsonResource
         /* @var $user User */
         $user = $this->resource;
         $info = $user->information;
+        $authUser = \Auth::user();
 
         $location = null;
         if ($city = $info->city) {
@@ -19,8 +20,13 @@ class UserProfileResource extends JsonResource
         }
 
         $inSubscriptions = null;
-        if (\Auth::id() !== $user->id) {
-            $inSubscriptions = \Auth::user()->subscriptions()->where('user_id', '=', $user->id)->exists();
+        $inBlacklist = null;
+
+        $selfView = $authUser->id === $user->id;
+
+        if (!$selfView) {
+            $inSubscriptions = $authUser->subscriptions()->where('user_id', '=', $user->id)->exists();
+            $inBlacklist = $authUser->blacklist()->where('blocked_id', '=', $user->id)->exists();
         }
 
         return [
@@ -30,7 +36,11 @@ class UserProfileResource extends JsonResource
             'nickname' => $user->nickname,
             'location' => $location,
             'bio' => $info->bio,
-            'inSubscriptions' => $this->when($inSubscriptions !== null, $inSubscriptions),
+            $this->mergeWhen(!$selfView, [
+                'inSubscriptions' => $inSubscriptions,
+                'inBlacklist' => $inBlacklist,
+            ]),
+
 
             'postsCount' => $user->posts()->count(),
             'subscribersCount' => $user->subscribers()->count(),

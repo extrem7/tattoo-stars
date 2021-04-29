@@ -9,6 +9,7 @@
  * @apiSuccess {String} user.location User location.
  * @apiSuccess {String} user.bio User bio.
  * @apiSuccess {Boolean} user.inSubscriptions User in current user's subscriptions.
+ * @apiSuccess {Boolean} user.inBlacklist User in current user's blacklist.
  * @apiSuccess {Number} user.postsCount User's posts count.
  * @apiSuccess {Number} user.subscribersCount User's subscribers count.
  * @apiSuccess {Number} user.subscriptionsCount User's subscriptions count.
@@ -129,6 +130,8 @@ class UserController extends Controller
     public function show(User $user): JsonResponse
     {
         $posts = $this->postRepository->getPostsByUser($user);
+
+        \Auth::user()->load(['subscriptions', 'blacklist']);
 
         return response()->json([
             'user' => new UserProfileResource($user),
