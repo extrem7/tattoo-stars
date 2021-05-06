@@ -22,12 +22,23 @@ class UserService
 
         $changes = $blocker->blacklist()->toggle([$blockable->id => ['blocked_at' => \DB::raw('NOW()')]]);
 
-        return !empty($changes['attached']);
+        if ($blocked = !empty($changes['attached'])) {
+            $blocker->subscribers()->detach($blockable->id);
+            $blocker->subscriptions()->detach($blockable->id);
+        }
+
+        return $blocked;
     }
 
     public function toggleSubscription(User $subscriber, User $subscribable): bool
     {
         abort_if($subscribable->id === $subscriber->id, 403, 'You cannot subscribe to self.');
+
+        abort_if(
+            $subscriber->blacklist()->where('blocked_id', '=', $subscribable->id)->exists(),
+            403,
+            'You cannot subscribe to blocked user.'
+        );
 
         $changes = $subscriber->subscriptions()->toggle([
             $subscribable->id => ['subscribed_at' => \DB::raw('NOW()')]

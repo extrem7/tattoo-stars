@@ -32,7 +32,13 @@ class PostService
             }
         }
         if ($video) {
-            $media = $post->addMedia($video)->toMediaCollection('video');
+            try {
+                $media = $post->addMedia($video)->toMediaCollection('video');
+            } catch (\Exception $e) {
+                $post->clearMediaCollection('images');
+                $post->forceDelete();
+                throw $e;
+            }
             //$this->compressVideo($media);
         }
 
