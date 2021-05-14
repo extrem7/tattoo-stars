@@ -23,7 +23,7 @@ class PostRequest extends FormRequest
                 'max:10240',
                 'video_duration:30'
             ],
-            'description' => ['nullable', 'string255']
+            'description' => ['nullable', 'string', 'max:500']
         ];
     }
 

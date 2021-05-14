@@ -50,7 +50,7 @@
       @context-changed="update">
       <template #cell(icon)="{item:{icon}}">
         <div class="avatar avatar-sm rounded-circle">
-          <img :src="icon" alt="Image placeholder">
+          <img :src="icon">
         </div>
       </template>
       <template #cell(emailVerified)="{item:{emailVerified}}">

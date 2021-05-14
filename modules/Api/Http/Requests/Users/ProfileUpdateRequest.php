@@ -24,9 +24,9 @@ class ProfileUpdateRequest extends FormRequest
             'city_id' => ['nullable', 'exists:cities,id'],
             'address' => ['nullable', 'string255'],
 
-            'styles' => ['nullable', 'array', 'max:5'],
+            'styles' => ['nullable', 'array', 'max:15'],
             'styles.*' => ['exists:user_styles,id'],
-            'bio' => ['nullable', 'string', 'max:120'],
+            'bio' => ['nullable', 'string', 'max:500'],
 
             'phone' => ['nullable', 'string', 'regex:/\(?([0-9]{3})\)?([ .-]?)([0-9]{3})\2([0-9]{4})/'],
             'email' => ['nullable', 'email', 'unique:users,email,' . $this->user()->id],
