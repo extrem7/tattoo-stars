@@ -21,7 +21,7 @@ class PostRequest extends FormRequest
                 'file',
                 'mimes:mp4',
                 'max:10240',
-                'video_duration:30'
+                'video_duration:35'
             ],
             'description' => ['nullable', 'string', 'max:500']
         ];
