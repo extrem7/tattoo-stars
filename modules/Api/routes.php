@@ -1,17 +1,16 @@
 <?php
 
-use Modules\Api\Http\Controllers\{
+use Modules\Api\Http\Controllers\{Auth\AuthController,
+    Auth\EmailVerificationController,
     CitiesController,
     CommentController,
     HelperController,
     PageController,
     PageViewController,
-    Posts\PostController,
     Posts\BookmarkController,
+    Posts\PostController,
     Profile\AvatarController,
     Profile\ProfileController,
-    Auth\AuthController,
-    Auth\EmailVerificationController,
     Users\BlacklistController,
     Users\ReportController,
     Users\SubscriptionController,
@@ -84,8 +83,8 @@ foreach ($versions as $version) {
                         Route::post('bookmark', [BookmarkController::class, 'toggle']);
 
                         Route::prefix('comments')->group(function () {
-                            Route::get('', [CommentController::class, 'index']);
-                            Route::post('', [CommentController::class, 'store']);
+                            Route::get('{comment?}', [CommentController::class, 'index']);
+                            Route::post('{parent?}', [CommentController::class, 'store']);
                             Route::delete('{comment}', [CommentController::class, 'destroy']);
                         });
                     });

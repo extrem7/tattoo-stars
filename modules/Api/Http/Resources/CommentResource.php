@@ -20,7 +20,8 @@ class CommentResource extends JsonResource
                 'avatar' => $comment->user->getAvatar('icon')
             ]),
             'text' => $comment->text,
-            'date' => $comment->created_at
+            'date' => $comment->created_at,
+            'hasReplies' => (bool)$comment->replies_count
         ];
     }
 }

@@ -30,7 +30,7 @@ class CommentController extends Controller
     }
 
     /**
-     * @api {get} /posts/:id/comments Post comments
+     * @api {get} /posts/:id/comments/:parent Post comments
      * @apiDescription List of comments related to post.
      * @apiName IndexComments
      * @apiGroup Comments
@@ -43,11 +43,17 @@ class CommentController extends Controller
      * @apiSuccess {String} comments.user.name Comment author name.
      * @apiSuccess {String} comments.user.avatar Comment author avatar.
      * @apiSuccess {String} comments.text Comment description.
+     * @apiSuccess {String} comments.date Comment date.
+     * @apiSuccess {Boolean} comments.hasReplies Indicates that comment has replies.
      * @apiUse Pagination
      */
-    public function index(Post $post): JsonResponse
+    public function index(Post $post, Comment $comment = null): JsonResponse
     {
-        $comments = $this->repository->getForPost($post);
+        if ($comment) {
+            $comments = $this->repository->getForComment($comment);
+        } else {
+            $comments = $this->repository->getForPost($post);
+        }
 
         return response()->json([
             'comments' => CommentResource::collection($comments),
@@ -56,7 +62,7 @@ class CommentController extends Controller
     }
 
     /**
-     * @api {post} /posts/:id/comments Create post
+     * @api {post} /posts/:id/comments/:parent Create post
      * @apiName CreateComment
      * @apiGroup Comments
      *
@@ -67,9 +73,9 @@ class CommentController extends Controller
      * @apiSuccess {String} message Is comment published message.
      * @apiSuccess {Number} id Created comment id.
      */
-    public function store(Post $post, CommentRequest $request): JsonResponse
+    public function store(Post $post, Comment $parent = null, CommentRequest $request): JsonResponse
     {
-        $comment = $this->repository->store($post, \Auth::id(), $request->input('text'));
+        $comment = $this->repository->store($post, \Auth::id(), $request->input('text'), $parent);
 
         return response()->json([
             'message' => 'Comment has been created.',
