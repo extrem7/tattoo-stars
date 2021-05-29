@@ -9,7 +9,7 @@ class AddCommentIdColumnToPostComments extends Migration
     public function up(): void
     {
         Schema::table('post_comments', function (Blueprint $table) {
-            $table->foreignId('comment_id')->nullable()->after('id');
+            $table->foreignId('comment_id')->nullable()->after('id')->constrained('post_comments')->onDelete('cascade');
         });
     }
 

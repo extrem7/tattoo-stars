@@ -8,7 +8,7 @@ use App\Models\User\{AccountType, Information, Style};
 use Dyrynda\Database\Support\CascadeSoftDeletes;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\{BelongsTo, BelongsToMany, HasMany, HasOne, MorphOne};
+use Illuminate\Database\Eloquent\Relations\{BelongsTo, BelongsToMany, HasMany, HasManyThrough, HasOne, MorphOne};
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Http\UploadedFile;
@@ -153,6 +153,11 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
         return $this->hasMany(Comment::class);
     }
 
+    public function stories(): HasManyThrough
+    {
+        return $this->hasManyThrough(Story::class, Post::class);
+    }
+
     public function subscriptions(): BelongsToMany
     {
         return $this->belongsToMany(
@@ -170,6 +175,17 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
     public function likes(): BelongsToMany
     {
         return $this->belongsToMany(Post::class, 'post_likes');
+    }
+
+    public function marks(): BelongsToMany
+    {
+        return $this->belongsToMany(Story::class, 'story_marks');
+    }
+
+    /* @return BelongsToMany<Story> */
+    public function views(): BelongsToMany
+    {
+        return $this->belongsToMany(Story::class, 'story_views');
     }
 
     public function bookmarks(): BelongsToMany

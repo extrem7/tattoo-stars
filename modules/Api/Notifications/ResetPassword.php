@@ -27,7 +27,7 @@ class ResetPassword extends Notification implements ShouldQueue
     {
         return (new MailMessage)
             ->subject(__('Reset Password Notification'))
-            ->line(__("Your new password: **:password**", ['password' => $this->password]))
+            ->line(__('Your new password: **:password**', ['password' => $this->password]))
             ->line(__('You could change it in your profile settings.'));
     }
 }

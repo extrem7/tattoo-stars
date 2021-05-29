@@ -89,4 +89,9 @@ class Post extends Model implements HasMedia
     {
         return $this->hasMany(Comment::class);
     }
+
+    public function stories(): HasMany
+    {
+        return $this->hasMany(Story::class);
+    }
 }

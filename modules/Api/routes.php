@@ -11,6 +11,7 @@ use Modules\Api\Http\Controllers\{Auth\AuthController,
     Posts\PostController,
     Profile\AvatarController,
     Profile\ProfileController,
+    StoryController,
     Users\BlacklistController,
     Users\ReportController,
     Users\SubscriptionController,
@@ -103,6 +104,16 @@ foreach ($versions as $version) {
 
                         Route::post('blacklist', [BlacklistController::class, 'toggle']);
                         Route::post('report', ReportController::class)->middleware('throttle:1,360');
+                    });
+                });
+
+                Route::prefix('stories')->group(function () {
+                    Route::get('', [StoryController::class, 'index']);
+                    Route::post('{post}', [StoryController::class, 'store']);
+                    Route::prefix('{story}')->group(function () {
+                        Route::post('view', [StoryController::class, 'view']);
+                        Route::post('like', [StoryController::class, 'like']);
+                        Route::post('dislike', [StoryController::class, 'dislike']);
                     });
                 });
             });

@@ -55,5 +55,8 @@ return [
     ],
     'report' => [
         'sent' => 'Your report has been sent.'
+    ],
+    'stories' => [
+        'daily_limit' => 'You cannot add more posts today.'
     ]
 ];

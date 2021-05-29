@@ -2,7 +2,7 @@
 
 /**
  * @apiDefine Posts
- * @apiSuccess {Object[]} posts User's posts.
+ * @apiSuccess {Object[]} posts Posts collection.
  * @apiSuccess {Number} posts.id Post id.
  * @apiSuccess {Number} posts.user_id Post author id.
  * @apiSuccess {Object} posts.user Post author.
@@ -145,7 +145,8 @@ class PostController extends Controller
      *
      * @apiUse Token
      *
-     * @apiSuccess {String} message Toggle status.
+     * @apiSuccess {String} message Toggle status message.
+     * @apiSuccess {Boolean} liked Like status.
      */
     public function like(Post $post): JsonResponse
     {
