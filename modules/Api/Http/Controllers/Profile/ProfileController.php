@@ -11,13 +11,13 @@ use Modules\Api\Repositories\ProfileRepository;
 /**
  * @group User
  */
-class ProfileController extends Controller
+final class ProfileController extends Controller
 {
     protected ProfileRepository $repository;
 
-    public function __construct()
+    public function __construct(ProfileRepository $repository)
     {
-        $this->repository = app(ProfileRepository::class);
+        $this->repository = $repository;
     }
 
     /**

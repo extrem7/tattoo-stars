@@ -52,18 +52,18 @@ use Modules\Api\Repositories\PostRepository;
 use Modules\Api\Repositories\UserRepository;
 use Modules\Api\Services\UserService;
 
-class UserController extends Controller
+final class UserController extends Controller
 {
     protected UserService $service;
 
     protected UserRepository $repository;
     protected PostRepository $postRepository;
 
-    public function __construct()
+    public function __construct(UserService $service, UserRepository $repository, PostRepository $postRepository)
     {
-        $this->service = app(UserService::class);
-        $this->repository = app(UserRepository::class);
-        $this->postRepository = app(PostRepository::class);
+        $this->service = $service;
+        $this->repository = $repository;
+        $this->postRepository = $postRepository;
     }
 
     /**

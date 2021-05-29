@@ -5,13 +5,13 @@ namespace Modules\Api\Http\Controllers;
 use Illuminate\Contracts\View\View;
 use Modules\Api\Repositories\PageRepository;
 
-class PageViewController extends Controller
+final class PageViewController extends Controller
 {
     protected PageRepository $repository;
 
-    public function __construct()
+    public function __construct(PageRepository $repository)
     {
-        $this->repository = app(PageRepository::class);
+        $this->repository = $repository;
     }
 
     public function reference(): View

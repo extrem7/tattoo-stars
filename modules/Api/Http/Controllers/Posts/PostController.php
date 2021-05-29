@@ -24,21 +24,22 @@ namespace Modules\Api\Http\Controllers\Posts;
 use App\Models\Post;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Modules\Api\Http\Controllers\Controller;
 use Modules\Api\Http\Requests\PostRequest;
 use Modules\Api\Http\Resources\PostResource;
 use Modules\Api\Repositories\PostRepository;
 use Modules\Api\Services\PostService;
 
-class PostController extends Controller
+final class PostController extends Controller
 {
     protected PostService $service;
     protected PostRepository $repository;
 
-    public function __construct()
+    public function __construct(PostService $service, PostRepository $repository)
     {
-        $this->service = app(PostService::class);
-        $this->repository = app(PostRepository::class);
+        $this->service = $service;
+        $this->repository = $repository;
     }
 
     /**
@@ -171,7 +172,7 @@ class PostController extends Controller
     public function destroy(Post $post): JsonResponse
     {
         abort_unless(
-            $post->user_id === \Auth::id(), 403, __('Your are not allowed to delete this post.')
+            $post->user_id === \Auth::id(), Response::HTTP_FORBIDDEN, __('Your are not allowed to delete this post.')
         );
 
         $post->forceDelete();

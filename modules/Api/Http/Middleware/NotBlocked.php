@@ -3,6 +3,7 @@
 namespace Modules\Api\Http\Middleware;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class NotBlocked
 {
@@ -15,8 +16,8 @@ class NotBlocked
 
         abort_if(
             \Auth::user()->blockers()->where('id', '=', $id)->exists(),
-            403,
-            "This user blocked you."
+            Response::HTTP_FORBIDDEN,
+            'This user blocked you.'
         );
 
         return $next($request);

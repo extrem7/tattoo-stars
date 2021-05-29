@@ -57,15 +57,15 @@ use Modules\Api\Services\AuthService;
 /**
  * @group User
  */
-class AuthController extends Controller
+final class AuthController extends Controller
 {
     protected AuthService $service;
     protected ProfileRepository $repository;
 
-    public function __construct()
+    public function __construct(AuthService $service, ProfileRepository $repository)
     {
-        $this->service = app(AuthService::class);
-        $this->repository = app(ProfileRepository::class);
+        $this->service = $service;
+        $this->repository = $repository;
     }
 
     /**

@@ -9,15 +9,15 @@ use Modules\Api\Http\Resources\PostResource;
 use Modules\Api\Repositories\PostRepository;
 use Modules\Api\Services\PostService;
 
-class BookmarkController extends Controller
+final class BookmarkController extends Controller
 {
     protected PostService $service;
     protected PostRepository $repository;
 
-    public function __construct()
+    public function __construct(PostService $service, PostRepository $repository)
     {
-        $this->service = app(PostService::class);
-        $this->repository = app(PostRepository::class);
+        $this->service = $service;
+        $this->repository = $repository;
     }
 
     /**

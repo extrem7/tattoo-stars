@@ -9,7 +9,7 @@ use Modules\Api\Http\Resources\SubscriberResource;
 use Modules\Api\Repositories\UserRepository;
 use Modules\Api\Services\UserService;
 
-class BlacklistController extends Controller
+final class BlacklistController extends Controller
 {
     /**
      * @api {get} /blacklist User blacklist.

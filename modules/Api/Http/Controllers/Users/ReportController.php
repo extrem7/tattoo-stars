@@ -8,7 +8,7 @@ use Illuminate\Http\JsonResponse;
 use Modules\Api\Http\Requests\ReportRequest;
 use Modules\Api\Services\UserService;
 
-class ReportController extends Controller
+final class ReportController extends Controller
 {
     /**
      * @api {post} /users/:id/report Send report

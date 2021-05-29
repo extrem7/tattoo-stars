@@ -4,10 +4,11 @@ namespace Modules\Api\Http\Controllers\Auth;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Validation\ValidationException;
 use Modules\Api\Http\Controllers\Controller;
 
-class EmailVerificationController extends Controller
+final class EmailVerificationController extends Controller
 {
     /**
      * @api {post} /verify-email Verify email
@@ -29,7 +30,7 @@ class EmailVerificationController extends Controller
         $user = $request->user();
 
         if ($user->hasVerifiedEmail()) {
-            abort(403, 'Already verified.');
+            abort(Response::HTTP_FORBIDDEN, 'Already verified.');
         }
 
         if ($user->email_verification_code === $request->code) {
@@ -61,6 +62,6 @@ class EmailVerificationController extends Controller
             return response()->json(['message' => __('auth.email_verification_resent')]);
         }
 
-        abort(403, 'Already verified.');
+        abort(Response::HTTP_FORBIDDEN, 'Already verified.');
     }
 }

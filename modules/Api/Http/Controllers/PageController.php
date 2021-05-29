@@ -4,13 +4,13 @@ namespace Modules\Api\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
 
-class PageController extends Controller
+final class PageController extends Controller
 {
     protected PageViewController $viewController;
 
-    public function __construct()
+    public function __construct(PageViewController $viewController)
     {
-        $this->viewController = app(PageViewController::class);
+        $this->viewController = $viewController;
     }
 
     /**

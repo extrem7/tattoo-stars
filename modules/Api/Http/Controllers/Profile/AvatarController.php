@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Modules\Api\Http\Requests\Users\AvatarRequest;
 
-class AvatarController extends Controller
+final class AvatarController extends Controller
 {
     /**
      * @api {post} /profile/avatar Upload user's avatar

@@ -10,15 +10,15 @@ use Modules\Api\Http\Resources\SubscriberResource;
 use Modules\Api\Repositories\UserRepository;
 use Modules\Api\Services\UserService;
 
-class SubscriptionController extends Controller
+final class SubscriptionController extends Controller
 {
     protected int $limit = 18;
 
     protected UserRepository $repository;
 
-    public function __construct()
+    public function __construct(UserRepository $repository)
     {
-        $this->repository = app(UserRepository::class);
+        $this->repository = $repository;
     }
 
     /**

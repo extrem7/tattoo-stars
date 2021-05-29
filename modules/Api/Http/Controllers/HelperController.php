@@ -6,7 +6,7 @@ use Illuminate\Http\JsonResponse;
 use Modules\Api\Http\Requests\SupportHelpRequest;
 use Modules\Api\Mail\ContactForm;
 
-class HelperController extends Controller
+final class HelperController extends Controller
 {
     public function root(): array
     {

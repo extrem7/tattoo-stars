@@ -16,17 +16,18 @@ namespace Modules\Api\Http\Controllers;
 use App\Models\Post;
 use App\Models\Post\Comment;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 use Modules\Api\Http\Requests\CommentRequest;
 use Modules\Api\Http\Resources\CommentResource;
 use Modules\Api\Repositories\CommentRepository;
 
-class CommentController extends Controller
+final class CommentController extends Controller
 {
     protected CommentRepository $repository;
 
-    public function __construct()
+    public function __construct(CommentRepository $repository)
     {
-        $this->repository = app(CommentRepository::class);
+        $this->repository = $repository;
     }
 
     /**
@@ -95,7 +96,7 @@ class CommentController extends Controller
     public function destroy(Post $post, Comment $comment): JsonResponse
     {
         abort_unless(
-            $comment->user_id === \Auth::id(), 403, __('Your are not allowed to delete this comment.')
+            $comment->user_id === \Auth::id(), Response::HTTP_FORBIDDEN, __('Your are not allowed to delete this comment.')
         );
 
         $comment->forceDelete();

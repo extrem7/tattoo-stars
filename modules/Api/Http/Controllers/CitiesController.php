@@ -11,16 +11,15 @@ use Modules\Api\Services\LocationService;
 /**
  * @group Cities
  */
-class CitiesController extends Controller
+final class CitiesController extends Controller
 {
     protected LocationService $service;
-
     protected LocationRepository $repository;
 
-    public function __construct()
+    public function __construct(LocationService $service, LocationRepository $repository)
     {
-        $this->service = app(LocationService::class);
-        $this->repository = app(LocationRepository::class);
+        $this->service = $service;
+        $this->repository = $repository;
     }
 
     /**
