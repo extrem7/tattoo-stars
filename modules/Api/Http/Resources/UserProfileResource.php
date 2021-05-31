@@ -25,8 +25,8 @@ class UserProfileResource extends JsonResource
         $selfView = $authUser->id === $user->id;
 
         if (!$selfView) {
-            $inSubscriptions = $authUser->subscriptions()->where('user_id', '=', $user->id)->exists();
-            $inBlacklist = $authUser->blacklist()->where('blocked_id', '=', $user->id)->exists();
+            $inSubscriptions = (bool)$authUser->subscriptions()->find($user->id, ['id']);
+            $inBlacklist = (bool)$authUser->blacklist()->find($user->id, ['id']);
         }
 
         return [

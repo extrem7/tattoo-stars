@@ -2,8 +2,8 @@
 
 namespace Modules\Api\Http\Resources;
 
-use Illuminate\Http\Resources\Json\JsonResource;
 use App\Models\Post;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class PostResource extends JsonResource
@@ -12,13 +12,15 @@ class PostResource extends JsonResource
     {
         /* @var $post Post */
         $post = $this->resource;
+        $authUser = \Auth::user();
 
         return [
             'id' => $post->id,
             'user_id' => $post->user_id,
             'user' => $this->when($post->relationLoaded('user'), fn() => [
                 'name' => $post->user->name,
-                'avatar' => $post->user->getAvatar('icon')
+                'avatar' => $post->user->getAvatar('icon'),
+                'inSubscriptions' => (bool)$authUser->subscriptions()->find($post->user->id, ['id'])
             ]),
             'description' => $post->description,
             'images' => $this->when(
