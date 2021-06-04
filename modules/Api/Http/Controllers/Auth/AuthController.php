@@ -48,6 +48,7 @@ namespace Modules\Api\Http\Controllers\Auth;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Modules\Api\Http\Controllers\Controller;
 use Modules\Api\Http\Requests\Users\LoginRequest;
 use Modules\Api\Http\Requests\Users\RegistrationRequest;
@@ -85,7 +86,7 @@ final class AuthController extends Controller
     /**
      * @api {post} /users/register Register a new user
      * @apiName RegisterUser
-     * @apiGroup User
+     * @apiGroup Auth
      *
      * @apiParam {Number} account_type_id User account type.
      * @apiParam {String} nickname User nickname.
@@ -103,13 +104,13 @@ final class AuthController extends Controller
             $request->only(['account_type_id', 'nickname', 'email']), $request->input('password')
         );
 
-        return response()->json($this->repository->getUserWithToken($user, $request->input('device')), 201);
+        return response()->json($this->repository->getUserWithToken($user, $request->input('device')), Response::HTTP_CREATED);
     }
 
     /**
      * @api {post} /users/login Login
      * @apiName LoginUser
-     * @apiGroup User
+     * @apiGroup Auth
      *
      * @apiParam {String} email_or_nickname User email or nickname.
      * @apiParam {String} password User password.
@@ -128,7 +129,7 @@ final class AuthController extends Controller
     /**
      * @api {get} /profile/self Full user data
      * @apiName GetSelf
-     * @apiGroup User
+     * @apiGroup Auth
      *
      * @apiUse Token
      *
@@ -143,7 +144,7 @@ final class AuthController extends Controller
     /**
      * @api {post} /users/reset-password Reset passwords
      * @apiName ResetPassword
-     * @apiGroup User
+     * @apiGroup Auth
      *
      * @apiParam {String} email User email.
      */

@@ -58,5 +58,11 @@ return [
     ],
     'stories' => [
         'daily_limit' => 'You cannot add more posts today.'
+    ],
+    'chats' => [
+        'blacklist' => [
+            'you' => 'This user has blacklisted you.',
+            'participant' => 'You have blacklisted this user.'
+        ]
     ]
 ];

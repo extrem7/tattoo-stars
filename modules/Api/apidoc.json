@@ -7,8 +7,12 @@
   "order": [
     "General",
     "Auth",
-    "User",
+    "Users",
     "Profile",
+    "Posts",
+    "Comments",
+    "Chats",
+    "Stories",
     "Cities"
   ],
   "template": {

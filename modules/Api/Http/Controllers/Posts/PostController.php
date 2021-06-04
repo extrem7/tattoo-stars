@@ -136,7 +136,7 @@ final class PostController extends Controller
         return response()->json([
             'message' => 'Post has been published.',
             'id' => $post->id
-        ], 201);
+        ], Response::HTTP_CREATED);
     }
 
     /**

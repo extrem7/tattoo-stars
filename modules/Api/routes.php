@@ -2,6 +2,7 @@
 
 use Modules\Api\Http\Controllers\{Auth\AuthController,
     Auth\EmailVerificationController,
+    ChatController,
     CitiesController,
     CommentController,
     HelperController,
@@ -17,6 +18,7 @@ use Modules\Api\Http\Controllers\{Auth\AuthController,
     Users\SubscriptionController,
     Users\UserController
 };
+use Modules\Api\Http\Middleware\IsChatParticipant;
 use Modules\Api\Http\Middleware\NotBlocked;
 
 $versions = ['', 'v1'];
@@ -104,6 +106,8 @@ foreach ($versions as $version) {
 
                         Route::post('blacklist', [BlacklistController::class, 'toggle']);
                         Route::post('report', ReportController::class)->middleware('throttle:1,360');
+
+                        Route::post('chat', [ChatController::class, 'start']);
                     });
                 });
 
@@ -114,6 +118,16 @@ foreach ($versions as $version) {
                         Route::post('view', [StoryController::class, 'view']);
                         Route::post('like', [StoryController::class, 'like']);
                         Route::post('dislike', [StoryController::class, 'dislike']);
+                    });
+                });
+
+                Route::prefix('chats')->group(function () {
+                    Route::get('', [ChatController::class, 'index']);
+                    Route::prefix('{chat}')->middleware(IsChatParticipant::class)->group(function () {
+                        Route::get('', [ChatController::class, 'show']);
+                        Route::post('', [ChatController::class, 'storeMessage']);
+                        Route::post('mark', [ChatController::class, 'toggleMark']);
+                        Route::delete('', [ChatController::class, 'destroy']);
                     });
                 });
             });

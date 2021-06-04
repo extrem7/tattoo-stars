@@ -81,7 +81,7 @@ final class CommentController extends Controller
         return response()->json([
             'message' => 'Comment has been created.',
             'id' => $comment->id
-        ], 201);
+        ], Response::HTTP_CREATED);
     }
 
     /**

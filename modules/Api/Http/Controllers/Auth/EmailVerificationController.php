@@ -13,7 +13,7 @@ final class EmailVerificationController extends Controller
     /**
      * @api {post} /verify-email Verify email
      * @apiName VerifyEmail
-     * @apiGroup User
+     * @apiGroup Auth
      *
      * @apiUse Token
      *
@@ -48,7 +48,7 @@ final class EmailVerificationController extends Controller
     /**
      * @api {get} /verify-email/resend Resend email verification
      * @apiName VerifyEmailResend
-     * @apiGroup User
+     * @apiGroup Auth
      *
      * @apiUse Token
      *

@@ -70,7 +70,7 @@ final class StoryController extends Controller
 
         $this->repository->store($post);
 
-        return response()->json(['message' => 'Story has been published.'], 201);
+        return response()->json(['message' => 'Story has been published.'], Response::HTTP_CREATED);
     }
 
     /**

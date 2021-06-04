@@ -27,6 +27,7 @@
       "nwidart/laravel-modules": "^8.2",
       "pbmedia/laravel-ffmpeg": "^7.5",
       "php-ffmpeg/php-ffmpeg": "^0.17.0",
+      "pusher/pusher-php-server": "^4.1",
       "schuppo/password-strength": "^2.3",
       "spatie/eloquent-sortable": "^3.11",
       "spatie/laravel-medialibrary": "^9.0.0",

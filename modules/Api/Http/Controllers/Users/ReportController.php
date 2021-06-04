@@ -5,6 +5,7 @@ namespace Modules\Api\Http\Controllers\Users;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 use Modules\Api\Http\Requests\ReportRequest;
 use Modules\Api\Services\UserService;
 
@@ -27,6 +28,6 @@ final class ReportController extends Controller
 
         return response()->json([
             'message' => __('tattoo.report.sent')
-        ], 201);
+        ], Response::HTTP_CREATED);
     }
 }

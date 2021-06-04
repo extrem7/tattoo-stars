@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Chat\Chat;
+use App\Models\Chat\Message;
 use App\Models\Post\Comment;
 use App\Models\Traits\Searchable;
 use App\Models\User\{AccountType, Information, Style};
@@ -123,41 +125,50 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
     }
 
     // RELATIONS
+
+    /* @return BelongsTo<AccountType> */
     public function accountType(): BelongsTo
     {
         return $this->belongsTo(AccountType::class);
     }
 
+    /* @return HasOne<Information> */
     public function information(): HasOne
     {
         return $this->hasOne(Information::class);
     }
 
+    /* @return BelongsToMany<Style> */
     public function styles(): BelongsToMany
     {
         return $this->belongsToMany(Style::class, 'user_has_styles');
     }
 
+    /* @return MorphOne<Media> */
     public function avatarMedia(): MorphOne
     {
         return $this->morphOne(Media::class, 'model')->where('collection_name', 'avatar');
     }
 
+    /* @return HasMany<Post> */
     public function posts(): HasMany
     {
         return $this->hasMany(Post::class);
     }
 
+    /* @return HasMany<Comment> */
     public function comments(): HasMany
     {
         return $this->hasMany(Comment::class);
     }
 
+    /* @return HasManyThrough<Story> */
     public function stories(): HasManyThrough
     {
         return $this->hasManyThrough(Story::class, Post::class);
     }
 
+    /* @return BelongsToMany<self> */
     public function subscriptions(): BelongsToMany
     {
         return $this->belongsToMany(
@@ -165,6 +176,7 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
         )->withPivot('subscribed_at');
     }
 
+    /* @return BelongsToMany<self> */
     public function subscribers(): BelongsToMany
     {
         return $this->belongsToMany(
@@ -172,11 +184,13 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
         )->withPivot('subscribed_at');
     }
 
+    /* @return BelongsToMany<Post> */
     public function likes(): BelongsToMany
     {
         return $this->belongsToMany(Post::class, 'post_likes');
     }
 
+    /* @return BelongsToMany<Story> */
     public function marks(): BelongsToMany
     {
         return $this->belongsToMany(Story::class, 'story_marks');
@@ -188,11 +202,13 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
         return $this->belongsToMany(Story::class, 'story_views');
     }
 
+    /* @return BelongsToMany<Post> */
     public function bookmarks(): BelongsToMany
     {
         return $this->belongsToMany(Post::class, 'post_bookmarks');
     }
 
+    /* @return BelongsToMany<self> */
     public function blacklist(): BelongsToMany
     {
         return $this->belongsToMany(
@@ -200,11 +216,30 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
         )->withPivot('blocked_at');
     }
 
+    /* @return BelongsToMany<self> */
     public function blockers(): BelongsToMany
     {
         return $this->belongsToMany(
             self::class, 'blacklist', 'blocked_id', 'user_id'
         )->withPivot('blocked_at');
+    }
+
+    /* @return HasMany<Chat> */
+    public function chats(): HasMany
+    {
+        return $this->hasMany(Chat::class);
+    }
+
+    /* @return HasMany<Message> */
+    public function messages(): HasMany
+    {
+        return $this->hasMany(Message::class);
+    }
+
+    /* @return HasManyThrough<Message> */
+    public function incomeMessages(): HasManyThrough
+    {
+        return $this->hasManyThrough(Message::class, Chat::class)->where('user_id', '!=', $this->id);
     }
 
     // ACCESSORS
