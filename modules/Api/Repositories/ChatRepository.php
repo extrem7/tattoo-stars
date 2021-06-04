@@ -7,7 +7,9 @@ use App\Models\Chat\Message;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
+use Modules\Api\Services\PostService;
 
 class ChatRepository
 {
@@ -17,7 +19,10 @@ class ChatRepository
         $user = \Auth::user();
 
         return $user->chats()
-            ->with(['participants' => fn(BelongsToMany $q) => $q->withPivot('marked')->with('avatarMedia'), 'lastMessage'])
+            ->with([
+                'participants' => fn(BelongsToMany $q) => $q->withPivot('marked')->with('avatarMedia'),
+                'lastMessage.imageMedia'
+            ])
             ->withCount('messages')
             ->get()
             ->filter(fn(Chat $c) => $c->messages_count || $c->user_id === $user->id)
@@ -32,7 +37,7 @@ class ChatRepository
     {
         $chat->load(['participants' => fn(BelongsToMany $q) => $q->withPivot('marked')->with('avatarMedia')]);
 
-        $messages = $chat->messages()->latest()->simplePaginate(50);
+        $messages = $chat->messages()->with('imageMedia')->latest()->simplePaginate(50);
         $chat->setRelation('messages', $messages);
 
         return $chat;
@@ -54,11 +59,23 @@ class ChatRepository
         return $chat;
     }
 
-    public function createMessage(Chat $chat, string $message): Message
+    public function createMessage(Chat $chat, string $text = null, UploadedFile $image = null): Message
     {
-        return $chat->messages()->create([
-            'user_id' => \Auth::id(),
-            'text' => $message
-        ]);
+        return \DB::transaction(function () use ($chat, $text, $image): Message {
+            /* @var $message Message */
+            $message = $chat->messages()->create([
+                'user_id' => \Auth::id(),
+                'text' => $text
+            ]);
+
+            if ($image) {
+                $service = app(PostService::class);
+                $service->compressImage($image);
+                $media = $message->addMedia($image)->toMediaCollection('image');
+                $message->setRelation('imageMedia', $media);
+            }
+
+            return $message;
+        });
     }
 }

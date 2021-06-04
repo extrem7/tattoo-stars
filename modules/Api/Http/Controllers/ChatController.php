@@ -31,15 +31,16 @@ final class ChatController extends Controller
      * @apiUse Token
      * @apiSuccess {Number} id Chat id.
      * @apiSuccess {Object} user Chat participant.
-     * @apiSuccess {Number} user.id chats Chat participant's id.
-     * @apiSuccess {String} user.name chats Chat participant's name.
-     * @apiSuccess {String} user.avatar chats Chat participant's avatar.
+     * @apiSuccess {Number} user.i Chat participant's id.
+     * @apiSuccess {String} user.nam Chat participant's name.
+     * @apiSuccess {String} user.avatar Chat participant's avatar.
      * @apiSuccess {Object} lastMessage Chat last message.
-     * @apiSuccess {Number} lastMessage.id chats Chat last message's id.
-     * @apiSuccess {Number} lastMessage.userId chats Chat last message's author id.
-     * @apiSuccess {String} lastMessage.text chats Chat last message's text.
-     * @apiSuccess {Date} lastMessage.createdAt chats Chat last message's datetime.
-     * @apiSuccess {Boolean} lastMessage.viewed chats Chat last message's viewed status.
+     * @apiSuccess {Number} lastMessage.i Chat last message's id.
+     * @apiSuccess {Number} lastMessage.userI Chat last message's author id.
+     * @apiSuccess {String} lastMessage.tex Chat last message's text.
+     * @apiSuccess {String} lastMessage.image Chat last message's image.
+     * @apiSuccess {Date} lastMessage.createdA Chat last message's datetime.
+     * @apiSuccess {Boolean} lastMessage.viewed Chat last message's viewed status.
      * @apiSuccess {Boolean} marked Chat is marked.
      */
     public function index(): JsonResponse
@@ -55,15 +56,16 @@ final class ChatController extends Controller
      * @apiUse Token
      * @apiSuccess {Number} id Chat id.
      * @apiSuccess {Object} user Chat participant.
-     * @apiSuccess {Number} user.id chats Chat participant's id.
-     * @apiSuccess {String} user.name chats Chat participant's name.
-     * @apiSuccess {String} user.avatar chats Chat participant's avatar.
-     * @apiSuccess {Object[]} messages Chat last message.
-     * @apiSuccess {Number} messages.id chats Chat last message's id.
-     * @apiSuccess {Number} messages.userId chats Chat last message's author id.
-     * @apiSuccess {String} messages.text chats Chat last message's text.
-     * @apiSuccess {Date} messages.createdAt chats Chat last message's datetime.
-     * @apiSuccess {Boolean} messages.viewed chats Chat last message's viewed status.
+     * @apiSuccess {Number} user.id Chat participant's id.
+     * @apiSuccess {String} user.name Chat participant's name.
+     * @apiSuccess {String} user.avatar Chat participant's avatar.
+     * @apiSuccess {Object[]} messages Chat messages.
+     * @apiSuccess {Number} messages.id Message id.
+     * @apiSuccess {Number} messages.userId Message author id.
+     * @apiSuccess {String} messages.text Message text.
+     * @apiSuccess {String} messages.image Message image.
+     * @apiSuccess {Date} messages.createdAt Message datetime.
+     * @apiSuccess {Boolean} messages.viewed Message viewed status.
      * @apiSuccess {Boolean} marked Chat is marked.
      * @apiUse Pagination
      */
@@ -117,7 +119,7 @@ final class ChatController extends Controller
             __('tattoo.chats.blacklist.participant')
         );
 
-        $message = $this->repository->createMessage($chat, $request->input('message'));
+        $message = $this->repository->createMessage($chat, $request->input('message'), $request->file('media'));
 
         broadcast(new NewMessage($message, $participant));
 

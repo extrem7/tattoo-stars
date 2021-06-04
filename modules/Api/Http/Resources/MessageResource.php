@@ -16,6 +16,9 @@ class MessageResource extends JsonResource
             'id' => $message->id,
             'userId' => $message->user_id,
             'text' => $message->text,
+            'image' => $this->when(
+                $message->relationLoaded('imageMedia') && $message->imageMedia, fn() => $message->imageMedia->getFullUrl()
+            ),
             'createdAt' => $message->created_at,
             'viewed' => $message->viewed
         ];

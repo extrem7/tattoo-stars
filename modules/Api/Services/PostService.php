@@ -61,7 +61,7 @@ class PostService
     {
         $tags = null;
 
-        preg_match_all("/(#\w+)/u", $description, $matches);
+        preg_match_all('/(#\w+)/u', $description, $matches);
         if ($matches) {
             $hashtagsArray = array_count_values($matches[0]);
             $tags = implode('', array_keys($hashtagsArray));
@@ -70,7 +70,7 @@ class PostService
         return $tags;
     }
 
-    protected function compressImage(UploadedFile $file): bool
+    public function compressImage(UploadedFile $file): bool
     {
         $mime = str_replace('image/', '', $file->getMimeType());
         $path = $file->getPathname();
