@@ -30,8 +30,9 @@ class CommentRepository
         $parentId = $parent->id ?? null;
         if ($parentId && $parent->comment_id) {
             $parentId = $parent->comment_id;
-            $data['comment_id'] = $parentId;
         }
+
+        $data['comment_id'] = $parentId;
 
         return $post->comments()->create($data);
     }
