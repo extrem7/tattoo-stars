@@ -6,8 +6,8 @@ use App\Models\Post;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Collection;
 
 class PostRepository
@@ -17,7 +17,7 @@ class PostRepository
         if ($user->subscriptions()->exists()) {
             $builder = Post::whereIn('user_id', $user->subscriptions()->pluck('id'));
 
-            if (($posts = $this->paginate($builder)) && $posts->hasPages()) {
+            if (($posts = $this->paginate($builder)) && $posts->isNotEmpty()) {
                 return $posts;
             }
         }
