@@ -37,7 +37,7 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
 
     protected $fillable = [
         'account_type_id', 'name', 'nickname', 'email', 'email_verification_code', 'email_verified_at', 'password',
-        'deleted_self'
+        'fcm_token', 'deleted_self'
     ];
 
     protected $hidden = ['password', 'remember_token',];
@@ -122,6 +122,11 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
     public function isSuperAdmin(): bool
     {
         return $this->id === 1 || $this->email === config('admin.initial_user_email');
+    }
+
+    public function routeNotificationForFcm(): string
+    {
+        return $this->fcm_token;
     }
 
     // RELATIONS

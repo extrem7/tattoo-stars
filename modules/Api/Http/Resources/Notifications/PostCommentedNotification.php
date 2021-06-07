@@ -20,7 +20,7 @@ class PostCommentedNotification extends NotificationResource
         return array_merge(parent::toArray(), ['comment' => $this->comment]);
     }
 
-    protected function generateMessage()
+    protected function generateMessage(): string
     {
         return __($this->getTranslationKey(), [
             'nickname' => $this->user['nickname'],

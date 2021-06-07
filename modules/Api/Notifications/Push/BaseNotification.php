@@ -4,22 +4,31 @@ namespace Modules\Api\Notifications\Push;
 
 use App\Models\User;
 use Illuminate\Notifications\Notification;
-use Modules\Api\Http\Resources\Notifications\BasicNotificationResource;
+use Modules\Api\Http\Resources\Notifications\NotificationResource;
+use NotificationChannels\Fcm\FcmChannel;
+use NotificationChannels\Fcm\FcmMessage;
+use NotificationChannels\Fcm\Resources\Notification as FcmNotification;
 
 abstract class BaseNotification extends Notification
 {
     protected User $user;
 
-    protected string $resourceClass = BasicNotificationResource::class;
+    protected string $resourceClass = NotificationResource::class;
 
     public function __construct(User $user)
     {
         $this->user = $user;
     }
 
-    public function via(): array
+    public function via(User $user): array
     {
-        return ['database'];
+        $drivers = ['database'];
+
+        if ($user->fcm_token) {
+            $drivers[] = FcmChannel::class;
+        }
+
+        return $drivers;
     }
 
     public function toDatabase(User $notifiable): array
@@ -30,5 +39,26 @@ abstract class BaseNotification extends Notification
     public function toArray(User $notifiable): array
     {
         return ['user' => $this->user->append('avatar')];
+    }
+
+    public function toFcm(User $user): FcmMessage
+    {
+        return FcmMessage::create()->setNotification(
+            FcmNotification::create()
+                ->setTitle(config('app.name'))
+                ->setBody($this->generateMessage())
+                ->setImage($this->user->avatar)
+        );
+    }
+
+    protected function generateMessage(): string
+    {
+        return __($this->getTranslationKey(), ['nickname' => $this->user->nickname]);
+    }
+
+    protected function getTranslationKey(): string
+    {
+        $type = (new \ReflectionClass($this))->getShortName();
+        return 'tattoo.notifications.' . NotificationResource::$typesMessages[$type];
     }
 }

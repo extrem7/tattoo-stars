@@ -5,14 +5,14 @@ namespace Modules\Api\Http\Resources\Notifications;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Notifications\DatabaseNotification;
 
-abstract class NotificationResource extends JsonResource
+class NotificationResource extends JsonResource
 {
     /* @var DatabaseNotification */
     public $resource;
 
     protected string $notificationsNamespace = 'Modules\Api\Notifications\Push';
 
-    protected array $typesMessages = [
+    public static array $typesMessages = [
         'PostLiked' => 'post_liked',
         'PostCommented' => 'post_commented',
         'UserSubscribed' => 'user_subscribed',
@@ -37,7 +37,7 @@ abstract class NotificationResource extends JsonResource
         $user = $notification->data['user'];
         $post = $notification->data['post'] ?? null;
 
-        return [
+        $data = [
             'type' => $this->type,
             'text' => $this->generateMessage(),
             'date' => $notification->created_at,
@@ -47,17 +47,25 @@ abstract class NotificationResource extends JsonResource
                 'nickname' => $user['nickname'],
                 'avatar' => $user['avatar'],
             ],
-            'post' => $this->mergeWhen($post, fn() => [
+        ];
+
+        if ($post) {
+            $data['post'] = [
                 'id' => $post['id'],
                 'thumbnail' => $post['thumbnail'],
-            ])
-        ];
+            ];
+        }
+
+        return $data;
     }
 
-    abstract protected function generateMessage();
+    protected function generateMessage(): string
+    {
+        return __($this->getTranslationKey(), ['nickname' => $this->user['nickname']]);
+    }
 
     protected function getTranslationKey(): string
     {
-        return 'tattoo.notifications.' . $this->typesMessages[$this->type];
+        return 'tattoo.notifications.' . self::$typesMessages[$this->type];
     }
 }

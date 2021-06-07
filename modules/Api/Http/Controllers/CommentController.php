@@ -41,10 +41,10 @@ final class CommentController extends Controller
      * @apiSuccess {Object[]} comments Post comments.
      * @apiSuccess {Number} comments.id Comment id.
      * @apiSuccess {Number} comments.user_id Comment author id.
-     * @apiSuccess {Object[]} comments.user Post author.
+     * @apiSuccess {Object[]} comments.user Comment author.
      * @apiSuccess {String} comments.user.name Comment author name.
      * @apiSuccess {String} comments.user.avatar Comment author avatar.
-     * @apiSuccess {String} comments.text Comment description.
+     * @apiSuccess {String} comments.text Comment text.
      * @apiSuccess {String} comments.date Comment date.
      * @apiSuccess {Boolean} comments.hasReplies Indicates that comment has replies.
      * @apiUse Pagination
@@ -79,8 +79,9 @@ final class CommentController extends Controller
     {
         $comment = $this->repository->store($post, \Auth::id(), $request->input('text'), $parent);
 
-        if ($comment) {
-            $post->user->notify(new PostCommented(\Auth::user(), $post, $comment));
+        $user = \Auth::user();
+        if ($comment && $post->user_id !== $user->id) {
+            $post->user->notify(new PostCommented($user, $post, $comment));
         }
 
         return response()->json([

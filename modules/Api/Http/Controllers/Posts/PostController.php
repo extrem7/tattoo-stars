@@ -155,7 +155,8 @@ final class PostController extends Controller
         $liked = $this->service->toggleLike($post);
         $action = $liked ? 'liked' : 'unliked';
 
-        if ($liked) {
+        $user = \Auth::user();
+        if ($liked && $post->user_id !== $user->id) {
             $post->user->notify(new PostLiked(\Auth::user(), $post));
         }
 

@@ -68,6 +68,8 @@ foreach ($versions as $version) {
                     Route::post('', [ProfileController::class, 'update']);
                     Route::delete('', [ProfileController::class, 'destroy']);
 
+                    Route::post('fcm', [NotificationController::class, 'fcm']);
+
                     Route::prefix('avatar')->group(function () {
                         Route::post('', [AvatarController::class, 'store']);
                         Route::delete('', [AvatarController::class, 'destroy']);
