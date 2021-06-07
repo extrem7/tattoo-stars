@@ -64,5 +64,10 @@ return [
             'you' => 'This user has blacklisted you.',
             'participant' => 'You have blacklisted this user.'
         ]
+    ],
+    'notifications' => [
+        'post_liked' => ':nickname like your post.',
+        'post_commented' => ':nickname commented: :comment',
+        'user_subscribed' => ':nickname subscribed to your updates.',
     ]
 ];

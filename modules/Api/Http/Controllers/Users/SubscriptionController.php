@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Modules\Api\Http\Requests\SearchRequest;
 use Modules\Api\Http\Resources\SubscriberResource;
+use Modules\Api\Notifications\Push\UserSubscribed;
 use Modules\Api\Repositories\UserRepository;
 use Modules\Api\Services\UserService;
 
@@ -89,6 +90,10 @@ final class SubscriptionController extends Controller
     {
         $subscribed = $service->toggleSubscription(\Auth::user(), $user);
         $action = $subscribed ? 'subscribed to' : 'unsubscribed from';
+
+        if ($subscribed) {
+            $user->notify(new UserSubscribed(\Auth::user()));
+        }
 
         return response()->json([
             'message' => "You has been $action $user->nickname.",

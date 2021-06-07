@@ -28,6 +28,7 @@ use Illuminate\Http\Response;
 use Modules\Api\Http\Controllers\Controller;
 use Modules\Api\Http\Requests\PostRequest;
 use Modules\Api\Http\Resources\PostResource;
+use Modules\Api\Notifications\Push\PostLiked;
 use Modules\Api\Repositories\PostRepository;
 use Modules\Api\Services\PostService;
 
@@ -153,6 +154,10 @@ final class PostController extends Controller
     {
         $liked = $this->service->toggleLike($post);
         $action = $liked ? 'liked' : 'unliked';
+
+        if ($liked) {
+            $post->user->notify(new PostLiked(\Auth::user(), $post));
+        }
 
         return response()->json([
             'message' => "Post has been $action.",

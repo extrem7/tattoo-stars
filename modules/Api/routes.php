@@ -6,6 +6,7 @@ use Modules\Api\Http\Controllers\{Auth\AuthController,
     CitiesController,
     CommentController,
     HelperController,
+    NotificationController,
     PageController,
     PageViewController,
     Posts\BookmarkController,
@@ -129,6 +130,10 @@ foreach ($versions as $version) {
                         Route::post('mark', [ChatController::class, 'toggleMark']);
                         Route::delete('', [ChatController::class, 'destroy']);
                     });
+                });
+
+                Route::prefix('notifications')->group(function () {
+                    Route::get('', [NotificationController::class, 'index']);
                 });
             });
         });

@@ -19,6 +19,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Modules\Api\Http\Requests\CommentRequest;
 use Modules\Api\Http\Resources\CommentResource;
+use Modules\Api\Notifications\Push\PostCommented;
 use Modules\Api\Repositories\CommentRepository;
 
 final class CommentController extends Controller
@@ -77,6 +78,10 @@ final class CommentController extends Controller
     public function store(Post $post, Comment $parent = null, CommentRequest $request): JsonResponse
     {
         $comment = $this->repository->store($post, \Auth::id(), $request->input('text'), $parent);
+
+        if ($comment) {
+            $post->user->notify(new PostCommented(\Auth::user(), $post, $comment));
+        }
 
         return response()->json([
             'message' => 'Comment has been created.',

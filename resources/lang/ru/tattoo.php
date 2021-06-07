@@ -64,5 +64,10 @@ return [
             'you' => 'Этот пользователь внес вас в черный список.',
             'participant' => 'Вы внесли этого пользователя в черный спиок.'
         ]
+    ],
+    'notifications' => [
+        'post_liked' => ':nickname нравится ваша публикация.',
+        'post_commented' => ':nickname прокомментировал(-а): :comment',
+        'user_subscribed' => ':nickname подписался(-ась) на ваши обновления.',
     ]
 ];

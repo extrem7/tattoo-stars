@@ -29,7 +29,7 @@ class Comment extends Model
     /* @return HasMany<self> */
     public function replies(): HasMany
     {
-        return $this->hasMany(Comment::class);
+        return $this->hasMany(self::class);
     }
 
     /* @return BelongsTo<User> */

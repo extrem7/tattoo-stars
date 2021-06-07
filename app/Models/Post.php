@@ -65,6 +65,7 @@ class Post extends Model implements HasMedia
         return $this->belongsTo(User::class);
     }
 
+    /* @return  MorphMany<Media> */
     public function imagesMedia(): MorphMany
     {
         return $this->morphMany(Media::class, 'model')->where('collection_name', 'images');
