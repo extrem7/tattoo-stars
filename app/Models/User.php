@@ -9,6 +9,7 @@ use App\Models\Traits\Searchable;
 use App\Models\User\{AccountType, Information, Style};
 use Dyrynda\Database\Support\CascadeSoftDeletes;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\{BelongsTo, BelongsToMany, HasMany, HasManyThrough, HasOne, MorphOne};
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -131,49 +132,49 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
 
     // RELATIONS
 
-    /* @return BelongsTo<AccountType> */
+    /* @return BelongsTo<AccountType>|AccountType */
     public function accountType(): BelongsTo
     {
         return $this->belongsTo(AccountType::class);
     }
 
-    /* @return HasOne<Information> */
+    /* @return HasOne<Information>|Information */
     public function information(): HasOne
     {
         return $this->hasOne(Information::class);
     }
 
-    /* @return BelongsToMany<Style> */
+    /* @return BelongsToMany<Style>|Style */
     public function styles(): BelongsToMany
     {
         return $this->belongsToMany(Style::class, 'user_has_styles');
     }
 
-    /* @return MorphOne<Media> */
+    /* @return MorphOne<Media>|Media */
     public function avatarMedia(): MorphOne
     {
         return $this->morphOne(Media::class, 'model')->where('collection_name', 'avatar');
     }
 
-    /* @return HasMany<Post> */
+    /* @return HasMany<Post>|Post */
     public function posts(): HasMany
     {
         return $this->hasMany(Post::class);
     }
 
-    /* @return HasMany<Comment> */
+    /* @return HasMany<Comment>|Comment */
     public function comments(): HasMany
     {
         return $this->hasMany(Comment::class);
     }
 
-    /* @return HasManyThrough<Story> */
+    /* @return HasManyThrough<Story>|Story */
     public function stories(): HasManyThrough
     {
         return $this->hasManyThrough(Story::class, Post::class);
     }
 
-    /* @return BelongsToMany<self> */
+    /* @return BelongsToMany<self>|self */
     public function subscriptions(): BelongsToMany
     {
         return $this->belongsToMany(
@@ -181,7 +182,7 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
         )->withPivot('subscribed_at');
     }
 
-    /* @return BelongsToMany<self> */
+    /* @return BelongsToMany<self>|self */
     public function subscribers(): BelongsToMany
     {
         return $this->belongsToMany(
@@ -189,31 +190,31 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
         )->withPivot('subscribed_at');
     }
 
-    /* @return BelongsToMany<Post> */
+    /* @return BelongsToMany<Post>|Post */
     public function likes(): BelongsToMany
     {
         return $this->belongsToMany(Post::class, 'post_likes');
     }
 
-    /* @return BelongsToMany<Story> */
+    /* @return BelongsToMany<Story>|Story */
     public function marks(): BelongsToMany
     {
         return $this->belongsToMany(Story::class, 'story_marks');
     }
 
-    /* @return BelongsToMany<Story> */
+    /* @return BelongsToMany<Story>|Story */
     public function views(): BelongsToMany
     {
         return $this->belongsToMany(Story::class, 'story_views');
     }
 
-    /* @return BelongsToMany<Post> */
+    /* @return BelongsToMany<Post>|Post */
     public function bookmarks(): BelongsToMany
     {
         return $this->belongsToMany(Post::class, 'post_bookmarks');
     }
 
-    /* @return BelongsToMany<self> */
+    /* @return BelongsToMany<self>|self */
     public function blacklist(): BelongsToMany
     {
         return $this->belongsToMany(
@@ -221,7 +222,7 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
         )->withPivot('blocked_at');
     }
 
-    /* @return BelongsToMany<self> */
+    /* @return BelongsToMany<self>|self */
     public function blockers(): BelongsToMany
     {
         return $this->belongsToMany(
@@ -229,22 +230,22 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
         )->withPivot('blocked_at');
     }
 
-    /* @return HasMany<Chat> */
-    public function chats(): HasMany
+    /* @return BelongsToMany<Chat>|Chat */
+    public function chats(): BelongsToMany
     {
-        return $this->hasMany(Chat::class);
+        return $this->belongsToMany(Chat::class, 'chat_participants');
     }
 
-    /* @return HasMany<Message> */
+    /* @return HasMany<Message>|Message */
     public function messages(): HasMany
     {
         return $this->hasMany(Message::class);
     }
 
-    /* @return HasManyThrough<Message> */
-    public function incomeMessages(): HasManyThrough
+    /* @return Builder<Message>|Message */
+    public function incomeMessages(): Builder
     {
-        return $this->hasManyThrough(Message::class, Chat::class)->where('user_id', '!=', $this->id);
+        return Message::whereIn('chat_id', $this->chats()->pluck('id'))->where('user_id', '!=', $this->id);
     }
 
     // ACCESSORS

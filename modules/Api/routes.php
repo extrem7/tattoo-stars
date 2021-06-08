@@ -134,9 +134,8 @@ foreach ($versions as $version) {
                     });
                 });
 
-                Route::prefix('notifications')->group(function () {
-                    Route::get('', [NotificationController::class, 'index']);
-                });
+                Route::get('notifications', [NotificationController::class, 'index']);
+                Route::get('informer', [HelperController::class, 'informer']);
             });
         });
     });

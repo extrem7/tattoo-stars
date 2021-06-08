@@ -13,7 +13,7 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class Message extends Model implements HasMedia
 {
-    use   InteractsWithMedia;
+    use InteractsWithMedia;
 
     public const UPDATED_AT = null;
 
@@ -44,7 +44,7 @@ class Message extends Model implements HasMedia
     }
 
     //SCOPES
-    public function scopeNotViewed(Builder $builder): Builder
+    public function scopeUnread(Builder $builder): Builder
     {
         return $builder->where('viewed', '=', false);
     }

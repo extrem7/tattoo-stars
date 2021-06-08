@@ -52,4 +52,29 @@ final class HelperController extends Controller
 
         return response()->json(['message' => __('tattoo.support.help_message')]);
     }
+
+    /**
+     * @api {get} /informer Informer
+     * @apiName GetInformer
+     * @apiGroup General
+     *
+     * @apiUse Token
+     * @apiSuccess {String} hasMessages Is user have unread messages.
+     * @apiSuccess {String} dontVote Is user don't vote today.
+     * @apiSuccess {String} hasNotifications Is user have notifications.
+     */
+    public function informer(): JsonResponse
+    {
+        $user = \Auth::user();
+
+        $hasMessages = $user->incomeMessages()->unread()->exists();
+        $dontVote = !$user->marks()->daily()->exists();
+        $hasNotifications = $user->notifications()->unread()->exists();
+
+        return response()->json([
+            'hasUnreadMessages' => $hasMessages,
+            'dontVote' => $dontVote,
+            'hasNotifications' => $hasNotifications
+        ]);
+    }
 }
