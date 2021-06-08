@@ -52,7 +52,7 @@ class ChatRepository
 
         if ($chat === null) {
             /* @var $chat Chat */
-            $chat = $authUser->chats()->create();
+            $chat = $authUser->chats()->create(['user_id' => $authUser->id]);
             $chat->participants()->sync([$authUser->id, $user->id]);
         }
 
