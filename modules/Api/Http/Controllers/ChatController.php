@@ -159,4 +159,15 @@ final class ChatController extends Controller
 
         return response()->json(['message' => 'Chat has been deleted.']);
     }
+
+    /**
+     * @api {post} /broadcasting/auth Auth private channel
+     * @apiName AuthBroadcasting
+     * @apiGroup Chats
+     *
+     * @apiUse Token
+     * @apiParam {String} channel_name Private channel name like `messages.${participantId}`.
+     *
+     * @apiSuccess {String} auth Auth token for Pusher.
+     */
 }
