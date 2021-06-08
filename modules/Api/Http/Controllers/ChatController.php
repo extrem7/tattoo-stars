@@ -121,7 +121,7 @@ final class ChatController extends Controller
 
         $message = $this->repository->createMessage($chat, $request->input('message'), $request->file('media'));
 
-        broadcast(new NewMessage($message, $participant));
+        event(new NewMessage($message, $participant));
 
         return response()->json(['message' => 'Message has been sent.'], Response::HTTP_CREATED);
     }

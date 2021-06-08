@@ -69,5 +69,6 @@ return [
         'post_liked' => ':nickname нравится ваша публикация.',
         'post_commented' => ':nickname прокомментировал(-а): :comment',
         'user_subscribed' => ':nickname подписался(-ась) на ваши обновления.',
+        'new_message' => ':nickname отправил вам сообщение.'
     ]
 ];

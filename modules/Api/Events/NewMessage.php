@@ -7,16 +7,17 @@ use App\Models\User;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use Modules\Api\Http\Resources\MessageResource;
 
-class NewMessage implements ShouldBroadcast
+class NewMessage implements ShouldBroadcast, ShouldQueue
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    protected Message $message;
-    protected User $participant;
+    public Message $message;
+    public User $participant;
 
     public function __construct(Message $message, User $participant)
     {
