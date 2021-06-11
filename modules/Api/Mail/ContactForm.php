@@ -8,7 +8,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Queue\SerializesModels;
 
-class ContactForm extends Mailable// implements ShouldQueue
+class ContactForm extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 

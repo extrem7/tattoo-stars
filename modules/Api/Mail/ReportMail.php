@@ -3,10 +3,11 @@
 namespace Modules\Api\Mail;
 
 use App\Models\User;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class ReportMail extends Mailable
+class ReportMail extends Mailable implements ShouldQueue
 {
     public $subject = 'Новая жалоба';
 
