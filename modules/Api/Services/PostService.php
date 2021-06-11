@@ -6,6 +6,7 @@ use App\Models\Post;
 use FFMpeg\Format\Video\X264;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Http\UploadedFile;
+use Modules\Api\Jobs\CompressVideo;
 use Modules\Api\Repositories\PostRepository;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
@@ -39,7 +40,7 @@ class PostService
                 $post->forceDelete();
                 throw $e;
             }
-            //$this->compressVideo($media);
+            dispatch(new CompressVideo($media));
         }
 
         return $post;
@@ -77,7 +78,7 @@ class PostService
 
         if ($mime === 'jpeg') {
             $image = imagecreatefromjpeg($path);
-            return imagejpeg($image, $path);
+            return imagejpeg($image, $path, 80);
         }
 
         if ($mime === 'png') {
@@ -88,21 +89,18 @@ class PostService
         return false;
     }
 
-    protected function compressVideo(Media $media): bool
+    public function compressVideo(Media $media): bool
     {
         $filesystem = app(Filesystem::class);
         $path = str_replace(storage_path('app/'), '', $media->getPath());
         $tmpPath = str_replace('mp4', '.tmp.mp4', $path);
-        try {
-            $format = new X264('libmp3lame', 'libx264');
-            $format->setKiloBitrate(1600)->setAudioChannels(2)->setAudioKiloBitrate(64);
 
-            \FFMpeg::open($path)->export()->inFormat($format)->save($tmpPath);
+        $format = new X264('libmp3lame', 'libx264');
+        $format->setKiloBitrate(1600)->setAudioChannels(2)->setAudioKiloBitrate(64);
 
-            $filesystem->delete($path);
-            return $filesystem->move($tmpPath, $path);
-        } catch (\Exception $e) {
-            return false;
-        }
+        \FFMpeg::open($path)->export()->inFormat($format)->save($tmpPath);
+
+        $filesystem->delete($path);
+        return $filesystem->move($tmpPath, $path);
     }
 }
