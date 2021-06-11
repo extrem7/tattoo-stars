@@ -60,37 +60,43 @@ class Post extends Model implements HasMedia
     }
 
     //RELATIONS
+    /* @return BelongsTo<User>|User */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    /* @return  MorphMany<Media> */
+    /* @return MorphMany<Media>|Media */
     public function imagesMedia(): MorphMany
     {
         return $this->morphMany(Media::class, 'model')->where('collection_name', 'images');
     }
 
+    /* @return MorphOne<Media>|Media */
     public function videoMedia(): MorphOne
     {
         return $this->morphOne(Media::class, 'model')->where('collection_name', 'video');
     }
 
+    /* @return BelongsToMany<User>|User */
     public function likes(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'post_likes');
     }
 
+    /* @return BelongsToMany<User>|User */
     public function bookmarkers(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'post_bookmarks');
     }
 
+    /* @return HasMany<Comment>|Comment */
     public function comments(): HasMany
     {
         return $this->hasMany(Comment::class);
     }
 
+    /* @return HasMany<Comment>|Comment */
     public function stories(): HasMany
     {
         return $this->hasMany(Story::class);

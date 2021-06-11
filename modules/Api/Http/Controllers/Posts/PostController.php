@@ -16,6 +16,8 @@
  * @apiSuccess {String} posts.date Post date.
  * @apiSuccess {Number} posts.likes Post likes.
  * @apiSuccess {Boolean} posts.like_status Post like status.
+ * @apiSuccess {Boolean} comments.hasComments Indicates that post has comments.
+ * @apiSuccess {Number} comments.commentsCount Post comments count.
  * @apiSuccess {Boolean} posts.bookmark_status Post bookmark status.
  */
 

@@ -21,7 +21,8 @@ class CommentResource extends JsonResource
             ]),
             'text' => $comment->text,
             'date' => $comment->created_at,
-            'hasReplies' => (bool)$comment->replies_count
+            'hasReplies' => $this->when(!$comment->comment_id, (bool)$comment->replies_count),
+            'repliesCount' => $this->when($comment->replies_count, $comment->replies_count)
         ];
     }
 }

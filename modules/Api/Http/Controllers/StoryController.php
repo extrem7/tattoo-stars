@@ -32,9 +32,11 @@ final class StoryController extends Controller
      * @apiSuccess {Object[]} stories Stories collection.
      * @apiSuccess {Number} stories.id Story id.
      * @apiSuccess {Object} stories.post Story post (see IndexPosts).
-     * @apiSuccess {Number} stories.rating stories current rating.
-     * @apiSuccess {Number} stories.likes stories likes count.
-     * @apiSuccess {Number} stories.dislikes stories dislikes count.
+     * @apiSuccess {Number} stories.rating Story current rating.
+     * @apiSuccess {Number} stories.likes Story likes count.
+     * @apiSuccess {Number} stories.dislikes Story dislikes count.
+     * @apiSuccess {Enum} stories.likeStatus Story like status: {like|dislike|null}.
+     * @apiSuccess {Boolean} stories.viewed Is story was viewed.
      * @apiUse Pagination
      */
     public function index(): JsonResponse
@@ -61,7 +63,8 @@ final class StoryController extends Controller
         $user = \Auth::user();
 
         if ($user->stories()->whereDate('stories.created_at', '=', today())->exists()) {
-            abort(Response::HTTP_PAYMENT_REQUIRED, __('tattoo.stories.daily_limit'));
+            /* todo | temporary disabled limit  */
+            // abort(Response::HTTP_PAYMENT_REQUIRED, __('tattoo.stories.daily_limit'));
         }
 
         if ($post->user_id !== $user->id) {

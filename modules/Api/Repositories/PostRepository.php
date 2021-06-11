@@ -83,7 +83,6 @@ class PostRepository
 
         $user = \Auth::user();
 
-
         $notIn = [];
 
         if ($hidePosts) {
@@ -102,6 +101,7 @@ class PostRepository
 
         return $builder->select($select)
             ->with(array_merge($with, $builder->getEagerLoads()))
+            ->withCount('comments')
             ->whereNotIn('user_id', $notIn)
             ->latest()
             ->simplePaginate(12);

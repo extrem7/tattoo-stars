@@ -47,6 +47,7 @@ final class CommentController extends Controller
      * @apiSuccess {String} comments.text Comment text.
      * @apiSuccess {String} comments.date Comment date.
      * @apiSuccess {Boolean} comments.hasReplies Indicates that comment has replies.
+     * @apiSuccess {Number} comments.repliesCount Comment replies count.
      * @apiUse Pagination
      */
     public function index(Post $post, Comment $comment = null): JsonResponse

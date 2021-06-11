@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Notifications\DatabaseNotification;
+use Modules\Api\Http\Resources\Notifications\NotificationResource;
 use Modules\Api\Notifications\Push\UserSubscribed;
 
 class NotificationController extends Controller
@@ -60,7 +61,17 @@ class NotificationController extends Controller
                         && $duplicate->created_at > $n->created_at
                     );
                 })
-                    ->map(fn(DatabaseNotification $n) => new $n->data['resourceClass']($n))
+                    ->map(function (DatabaseNotification $n): NotificationResource {
+                        $className = $n->data['resourceClass'];
+                        $basicClass = NotificationResource::class;
+                        if (
+                            class_exists($className)
+                            && ($resource = new $className($n))
+                            && ($className === $basicClass || is_subclass_of($resource, $basicClass))
+                        ) {
+                            return $resource;
+                        }
+                    })
                     ->toArray()
             ),
             'hasMorePages' => $notifications->hasMorePages()
