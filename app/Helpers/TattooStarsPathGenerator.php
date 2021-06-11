@@ -2,6 +2,7 @@
 
 namespace App\Helpers;
 
+use App\Models\Chat\Message;
 use App\Models\Post;
 use App\Models\User;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -29,7 +30,9 @@ class TattooStarsPathGenerator implements PathGenerator
                 $folder = 'posts';
                 break;
             case User::class:
-                return "users/" . $media->model_id . "/$collection";
+                return 'users/' . $media->model_id . "/$collection";
+            case Message::class:
+                return 'messages/' . $media->model_id . "/$collection";
         }
 
         return "$folder/" . $media->model_id . "/$collection" . ($useKey ? "/{$media->getKey()}" : '');
