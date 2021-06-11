@@ -3,14 +3,18 @@
 namespace Modules\Api\Notifications\Push;
 
 use App\Models\User;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 use Modules\Api\Http\Resources\Notifications\NotificationResource;
 use NotificationChannels\Fcm\FcmChannel;
 use NotificationChannels\Fcm\FcmMessage;
 use NotificationChannels\Fcm\Resources\Notification as FcmNotification;
 
-abstract class BaseNotification extends Notification
+abstract class BaseNotification extends Notification implements ShouldQueue
 {
+    use Queueable;
+
     protected User $user;
 
     protected string $resourceClass = NotificationResource::class;
