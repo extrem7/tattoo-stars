@@ -14,9 +14,9 @@ class MessageRequest extends FormRequest
                 Rule::requiredIf($this->file('image') === null && $this->file('video') === null),
                 'string'
             ],
-            'image' => [Rule::requiredIf(!$this->filled('message') && !$this->file('video')), 'image', 'max:2048',],
+            'image' => [Rule::requiredIf(!($this->filled('message') || $this->file('video'))), 'image', 'max:2048',],
             'video' => [
-                Rule::requiredIf(!$this->filled('message')),
+                Rule::requiredIf(!($this->filled('message') || $this->file('image'))),
                 'file',
                 'mimes:mp4',
                 'max:10240',
