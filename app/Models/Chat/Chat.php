@@ -15,7 +15,7 @@ class Chat extends Model
     protected $fillable = ['user_id'];
 
     //FUNCTIONS
-    public function getLastMessage(): Message
+    public function getLastMessage(): ?Message
     {
         return $this->messages()->latest()->first();
     }

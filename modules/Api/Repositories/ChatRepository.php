@@ -26,7 +26,10 @@ class ChatRepository
             ->withCount('messages')
             ->get()
             ->map(function (Chat $chat) use ($user): Chat {
-                $chat->lastMessage = $chat->getLastMessage();
+                if ($lastMessage = $chat->getLastMessage()) {
+                    $chat->lastMessage = $lastMessage;
+                }
+
                 $chat->unreadCount = $chat->messages()->unread()->where('user_id', '!=', $user->id)->count();
 
                 return $chat;
