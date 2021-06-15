@@ -31,16 +31,20 @@ final class ChatController extends Controller
      * @apiUse Token
      * @apiSuccess {Number} id Chat id.
      * @apiSuccess {Object} user Chat participant.
-     * @apiSuccess {Number} user.i Chat participant's id.
+     * @apiSuccess {Number} user.id Chat participant's id.
      * @apiSuccess {String} user.nam Chat participant's name.
      * @apiSuccess {String} user.avatar Chat participant's avatar.
      * @apiSuccess {Object} lastMessage Chat last message.
-     * @apiSuccess {Number} lastMessage.i Chat last message's id.
-     * @apiSuccess {Number} lastMessage.userI Chat last message's author id.
-     * @apiSuccess {String} lastMessage.tex Chat last message's text.
+     * @apiSuccess {Number} lastMessage.id Chat last message's id.
+     * @apiSuccess {Number} lastMessage.userId Chat last message's author id.
+     * @apiSuccess {String} lastMessage.text Chat last message's text.
      * @apiSuccess {String} lastMessage.image Chat last message's image.
+     * @apiSuccess {Object} lastMessage.video Post video.
+     * @apiSuccess {String} lastMessage.video.thumbnail Video thumbnail.
+     * @apiSuccess {String} lastMessage.video.url Video url.
      * @apiSuccess {Date} lastMessage.createdA Chat last message's datetime.
      * @apiSuccess {Boolean} lastMessage.viewed Chat last message's viewed status.
+     * @apiSuccess {Number} unreadCount Chat unread messages count.
      * @apiSuccess {Boolean} marked Chat is marked.
      */
     public function index(): JsonResponse
@@ -64,6 +68,9 @@ final class ChatController extends Controller
      * @apiSuccess {Number} messages.userId Message author id.
      * @apiSuccess {String} messages.text Message text.
      * @apiSuccess {String} messages.image Message image.
+     * @apiSuccess {Object} messages.video Message video.
+     * @apiSuccess {String} messages.video.thumbnail Video thumbnail.
+     * @apiSuccess {String} messages.video.url Video url.
      * @apiSuccess {Date} messages.createdAt Message datetime.
      * @apiSuccess {Boolean} messages.viewed Message viewed status.
      * @apiSuccess {Boolean} marked Chat is marked.
@@ -100,6 +107,8 @@ final class ChatController extends Controller
      *
      * @apiUse Token
      * @apiParam {String} message Message text.
+     * @apiParam {File} [image] Image less 2mb.
+     * @apiParam {File} [video] Video no longer that 30 second and less 10mb.
      *
      * @apiSuccess {String} message Sending status.
      */
