@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
+use Modules\Api\Jobs\CompressVideo;
 use Modules\Api\Services\PostService;
 
 class ChatRepository
@@ -64,20 +65,29 @@ class ChatRepository
         return $chat;
     }
 
-    public function createMessage(Chat $chat, string $text = null, UploadedFile $image = null): Message
+    public function createMessage(
+        Chat $chat, string $text = null, UploadedFile $image = null, UploadedFile $video = null
+    ): Message
     {
-        return \DB::transaction(function () use ($chat, $text, $image): Message {
+        return \DB::transaction(function () use ($chat, $text, $image, $video): Message {
             /* @var $message Message */
             $message = $chat->messages()->create([
                 'user_id' => \Auth::id(),
                 'text' => $text
             ]);
 
+            $service = app(PostService::class);
+
             if ($image) {
-                $service = app(PostService::class);
                 $service->compressImage($image);
+
                 $media = $message->addMedia($image)->toMediaCollection('image');
                 $message->setRelation('imageMedia', $media);
+            } else if ($video) {
+                $media = $message->addMedia($video)->toMediaCollection('video');
+                $message->setRelation('videoMedia', $media);
+
+                dispatch(new CompressVideo($media));
             }
 
             return $message;

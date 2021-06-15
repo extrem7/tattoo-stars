@@ -119,7 +119,9 @@ final class ChatController extends Controller
             __('tattoo.chats.blacklist.participant')
         );
 
-        $message = $this->repository->createMessage($chat, $request->input('message'), $request->file('media'));
+        $message = $this->repository->createMessage(
+            $chat, $request->input('message'), $request->file('image'), $request->file('video')
+        );
 
         event(new NewMessage($message, $participant));
 

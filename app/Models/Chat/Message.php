@@ -27,20 +27,37 @@ class Message extends Model implements HasMedia
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('image')->singleFile();
+
+        $this->addMediaCollection('video')
+            ->singleFile()
+            ->acceptsMimeTypes(['video/mp4'])
+            ->registerMediaConversions(function (Media $media) {
+                $this->addMediaConversion('thumbnail')
+                    ->extractVideoFrameAtSecond(2)
+                    ->crop('crop-center', 500, 500)
+                    ->performOnCollections('video')
+                    ->nonQueued();
+            });
     }
 
     //RELATIONS
 
-    /* @return BelongsTo<User> */
+    /* @return BelongsTo<User>|User */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    /* @return MorphOne<Media> */
+    /* @return MorphOne<Media>|Media */
     public function imageMedia(): MorphOne
     {
         return $this->morphOne(Media::class, 'model')->where('collection_name', 'image');
+    }
+
+    /* @return MorphOne<Media>|Media */
+    public function videoMedia(): MorphOne
+    {
+        return $this->morphOne(Media::class, 'model')->where('collection_name', 'video');
     }
 
     //SCOPES
