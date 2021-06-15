@@ -41,6 +41,7 @@ class ChatResource extends JsonResource
                 'hasMorePages' => $chat->messages->hasMorePages()
             ]),
             'lastMessage' => $this->when(!$this->listMessages && $lastMessage, fn() => new MessageResource($lastMessage)),
+            'unreadCount' => $this->when(isset($this->unreadCount), $this->unreadCount),
             'marked' => $chat->relationLoaded('participants') && $owner->pivot->marked
         ];
     }

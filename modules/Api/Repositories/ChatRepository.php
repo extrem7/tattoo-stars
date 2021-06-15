@@ -20,14 +20,19 @@ class ChatRepository
 
         return $user->chats()
             ->with([
-                'participants' => fn(BelongsToMany $q) => $q->withPivot('marked')->with('avatarMedia'),
-                'lastMessage.imageMedia'
+                'participants' => fn(BelongsToMany $q) => $q->withPivot('marked')->with('avatarMedia')
             ])
             ->withCount('messages')
             ->get()
-            ->filter(fn(Chat $c) => $c->messages_count || $c->user_id === $user->id)
+            ->map(function (Chat $chat) use ($user): Chat {
+                $chat->lastMessage = $chat->getLastMessage();
+                $chat->unreadCount = $chat->messages()->unread()->where('user_id', '!=', $user->id)->count();
+
+                return $chat;
+            })
+            ->filter(fn(Chat $c): bool => $c->messages_count || $c->user_id === $user->id)
             ->sort(
-                fn(Chat $a, Chat $b) => in_array(null, [$a->lastMessage, $b->lastMessage], true)
+                fn(Chat $a, Chat $b): int => in_array(null, [$a->lastMessage, $b->lastMessage], true)
                     ? $a->created_at < $b->created_at
                     : $a->lastMessage->created_at < $b->lastMessage->created_at
             );
