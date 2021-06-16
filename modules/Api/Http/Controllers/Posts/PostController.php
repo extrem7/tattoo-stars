@@ -29,6 +29,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Modules\Api\Http\Controllers\Controller;
 use Modules\Api\Http\Requests\PostRequest;
+use Modules\Api\Http\Requests\PostUpdateRequest;
 use Modules\Api\Http\Resources\PostResource;
 use Modules\Api\Notifications\Push\PostLiked;
 use Modules\Api\Repositories\PostRepository;
@@ -130,9 +131,9 @@ final class PostController extends Controller
      * @apiSuccess {String} message Is post published message.
      * @apiSuccess {Number} id Created post id.
      */
-    public function store(PostRequest $request, PostService $service): JsonResponse
+    public function store(PostRequest $request): JsonResponse
     {
-        $post = $service->store(
+        $post = $this->service->store(
             $request->input('description'), $request->file('images'), $request->file('video')
         );
 
@@ -140,6 +141,30 @@ final class PostController extends Controller
             'message' => 'Post has been published.',
             'id' => $post->id
         ], Response::HTTP_CREATED);
+    }
+
+    /**
+     * @api {patch} /posts/:id Update post
+     * @apiName UpdatePost
+     * @apiGroup Posts
+     *
+     * @apiUse Token
+     *
+     * @apiParam {String} [description] Post description.
+     *
+     * @apiSuccess {String} message Is post updated message.
+     */
+    public function update(Post $post, PostUpdateRequest $request): JsonResponse
+    {
+        abort_unless(
+            $post->user_id === \Auth::id(), Response::HTTP_FORBIDDEN, __('Your are not allowed to update this post.')
+        );
+
+        if ($description = $request->input('description')) {
+            $this->repository->update($post, $description);
+        }
+
+        return response()->json(['message' => 'Post has been updated.'], Response::HTTP_OK);
     }
 
     /**

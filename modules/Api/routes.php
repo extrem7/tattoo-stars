@@ -83,6 +83,7 @@ foreach ($versions as $version) {
 
                     Route::prefix('{post}')->middleware(NotBlocked::class)->group(function () {
                         Route::get('', [PostController::class, 'show']);
+                        Route::patch('', [PostController::class, 'update']);
                         Route::delete('', [PostController::class, 'destroy']);
 
                         Route::post('like', [PostController::class, 'like']);

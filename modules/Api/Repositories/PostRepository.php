@@ -63,6 +63,11 @@ class PostRepository
         ]);
     }
 
+    public function update(Post $post, string $description = null): bool
+    {
+        return $post->update(['description' => $description]);
+    }
+
     /**
      * @param Builder|Relation|QueryBuilder $builder
      */
