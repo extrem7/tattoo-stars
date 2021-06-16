@@ -4,14 +4,16 @@
     </a>
 </p>
 
-##Realtime chat
+## Realtime chat
 
 Backend send events to **private** channel named like `private-messages.${participantId}`.
 New message event name is `chat.message.created`.
 Event structure:
+
 ````json
 {
-  "id": "Number",
+  "id": "Number", 
+  "chatId": "Number",  
   "userId": "Number",
   "text": "String",
   "image": "String",
@@ -38,5 +40,30 @@ new Echo({
           'Authorization': 'Bearer $token'
       }
     }
+})
+````
+
+Example in JS:
+
+````js
+import Echo from 'laravel-echo'
+
+window.Pusher = require('pusher-js')
+
+const echo = new Echo({
+    broadcaster: 'pusher',
+    authEndpoint: 'https://api.tattoostars.pro/broadcasting/auth',
+    auth: {
+        headers: {
+            Authorization: 'Bearer TOKEN',
+        }
+    },
+    key: 'PUSHER_APP_KEY',
+    cluster: 'eu',
+    forceTLS: true
+})
+
+echo.private('messages.USER_ID').listen('.chat.message.created', e => {
+    console.log(e)
 })
 ````

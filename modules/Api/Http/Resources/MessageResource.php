@@ -14,6 +14,7 @@ class MessageResource extends JsonResource
 
         return [
             'id' => $message->id,
+            'chatId' => $message->chat_id,
             'userId' => $message->user_id,
             'text' => $message->text,
             'image' => $this->when(
