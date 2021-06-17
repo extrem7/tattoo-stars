@@ -62,16 +62,12 @@ final class StoryController extends Controller
     {
         $user = \Auth::user();
 
-        if ($user->stories()->whereDate('stories.created_at', '=', today())->exists()) {
-            /* todo | temporary disabled limit  */
-            // abort(Response::HTTP_PAYMENT_REQUIRED, __('tattoo.stories.daily_limit'));
-        }
+        abort_unless($post->user_id === $user->id, Response::HTTP_FORBIDDEN, 'Вы не можете добавлять чужие публикации.');
+        abort_if($user->story_balance < 1, Response::HTTP_PAYMENT_REQUIRED, __('tattoo.stories.daily_limit'));
 
-        if ($post->user_id !== $user->id) {
-            abort(Response::HTTP_FORBIDDEN, 'Вы не можете добавлять чужие публикации.');
+        if ($this->repository->store($post) !== null) {
+            $this->service->makeTranslation($user, -1);
         }
-
-        $this->repository->store($post);
 
         return response()->json(['message' => 'Story has been published.'], Response::HTTP_CREATED);
     }

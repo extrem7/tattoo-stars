@@ -67,3 +67,4 @@ echo.private('messages.USER_ID').listen('.chat.message.created', e => {
     console.log(e)
 })
 ````
+Scheduler: `/php_path/php /project_path/artisan schedule:run`

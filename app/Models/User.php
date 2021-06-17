@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Chat\Chat;
 use App\Models\Chat\Message;
 use App\Models\Post\Comment;
+use App\Models\Story\Transaction;
 use App\Models\Traits\Searchable;
 use App\Models\User\{AccountType, Information, Style};
 use Dyrynda\Database\Support\CascadeSoftDeletes;
@@ -172,6 +173,12 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
     public function stories(): HasManyThrough
     {
         return $this->hasManyThrough(Story::class, Post::class);
+    }
+
+    /* @return HasMany<Transaction>|Transaction */
+    public function storyTransitions(): HasMany
+    {
+        return $this->hasMany(Transaction::class);
     }
 
     /* @return BelongsToMany<self>|self */
