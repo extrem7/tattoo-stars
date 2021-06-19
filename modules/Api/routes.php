@@ -5,6 +5,7 @@ use Modules\Api\Http\Controllers\{Auth\AuthController,
     ChatController,
     CitiesController,
     CommentController,
+    ContestController,
     HelperController,
     NotificationController,
     PageController,
@@ -133,6 +134,11 @@ foreach ($versions as $version) {
                         Route::post('mark', [ChatController::class, 'toggleMark']);
                         Route::delete('', [ChatController::class, 'destroy']);
                     });
+                });
+
+                Route::prefix('contest')->group(function () {
+                    Route::get('', [ContestController::class, 'index']);
+                    Route::post('{work}/vote', [ContestController::class, 'vote']);
                 });
 
                 Route::get('notifications', [NotificationController::class, 'index']);

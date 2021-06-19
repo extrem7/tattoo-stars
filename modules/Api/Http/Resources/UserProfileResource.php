@@ -41,7 +41,7 @@ class UserProfileResource extends JsonResource
                 'inBlacklist' => $inBlacklist,
             ]),
 
-
+            'winner' => $user->contestWorks->isNotEmpty(),
             'postsCount' => $user->posts()->count(),
             'subscribersCount' => $user->subscribers()->count(),
             'subscriptionsCount' => $user->subscriptions()->count(),

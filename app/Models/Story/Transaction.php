@@ -10,7 +10,9 @@ class Transaction extends Model
 {
     public const CREATED_AT = 'date';
     public const UPDATED_AT = null;
+
     protected $table = 'story_transactions';
+
     protected $fillable = ['amount', 'balance', 'daily'];
 
     protected $casts = ['daily' => 'boolean'];

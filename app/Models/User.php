@@ -121,6 +121,11 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
         return $this;
     }
 
+    public function hasVotedToday(): bool
+    {
+        return $this->votes()->whereDate('date', '=', today())->exists();
+    }
+
     public function isSuperAdmin(): bool
     {
         return $this->id === 1 || $this->email === config('admin.initial_user_email');
@@ -179,6 +184,18 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
     public function storyTransitions(): HasMany
     {
         return $this->hasMany(Transaction::class);
+    }
+
+    /* @return HasManyThrough<ContestWork>|ContestWork */
+    public function contestWorks(): HasManyThrough
+    {
+        return $this->hasManyThrough(ContestWork::class, Post::class);
+    }
+
+    /* @return BelongsToMany<ContestWork>|ContestWork */
+    public function votes(): BelongsToMany
+    {
+        return $this->belongsToMany(ContestWork::class, 'contest_votes', null, 'work_id');
     }
 
     /* @return BelongsToMany<self>|self */
