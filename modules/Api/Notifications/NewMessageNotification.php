@@ -41,7 +41,6 @@ class NewMessageNotification extends Notification implements ShouldQueue
             FcmNotification::create()
                 ->setTitle(config('app.name'))
                 ->setBody(__('tattoo.notifications.new_message', ['nickname' => $author->nickname]))
-                ->setImage($author->avatar)
         );
     }
 

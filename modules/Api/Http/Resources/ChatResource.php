@@ -22,7 +22,7 @@ class ChatResource extends JsonResource
 
         if ($chat->relationLoaded('participants')) {
             $participant = $chat->participants->where('id', '!=', \Auth::id())->first();
-            $owner = $chat->participants->where('id', '=', $chat->user_id)->first();
+            $owner = $chat->participants->where('id', '!=', $chat->user_id)->first();
         }
 
         if (!$this->listMessages) {

@@ -51,7 +51,6 @@ abstract class BaseNotification extends Notification implements ShouldQueue
             FcmNotification::create()
                 ->setTitle(config('app.name'))
                 ->setBody($this->generateMessage())
-                ->setImage($this->user->avatar)
         );
     }
 
