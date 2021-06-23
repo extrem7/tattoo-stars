@@ -9,8 +9,8 @@ class AddContestColumnsToStories extends Migration
     public function up(): void
     {
         Schema::table('stories', function (Blueprint $table) {
-            $table->boolean('excluded')->nullable()->after('rating');
-            $table->boolean('included')->nullable()->after('excluded');
+            $table->boolean('included')->nullable()->after('rating');
+            $table->boolean('excluded')->nullable()->after('included');
         });
     }
 

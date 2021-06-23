@@ -5,17 +5,16 @@
  * @routePrefix("admin.")
  */
 
-use Modules\Admin\Http\Controllers\{
-    AuthController,
+use Modules\Admin\Http\Controllers\{AuthController,
     DashboardController,
     FaqController,
     MediaController,
     PageController,
+    StoryController,
     Users\AvatarController,
     Users\ProfileController,
     Users\UserController
 };
-
 use Modules\Admin\Http\Middleware\RedirectIfAuthenticated;
 
 Route::middleware(RedirectIfAuthenticated::class)->group(function () {
@@ -34,6 +33,20 @@ Route::middleware(['auth', 'can:admin-panel.access'])->group(function () {
         ->parameter('user', 'id')
         ->except(['show'])
         ->middleware('can:users.index');
+
+    Route::resource('stories', StoryController::class)
+        ->parameter('story', 'id')
+        ->except(['show', 'edit', 'update'])
+        ->middleware('can:stories.index');
+    Route::prefix('{story}')->name('stories.')->group(function () {
+        Route::post('include', [StoryController::class, 'include'])
+            ->name('include')
+            ->middleware('can:stories.include');
+        Route::post('exclude', [StoryController::class, 'exclude'])
+            ->name('exclude')
+            ->middleware('can:stories.exclude');
+    });
+
 
     Route::prefix('users/{user}/avatar')
         ->as('users.avatar.')

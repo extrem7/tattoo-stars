@@ -23,7 +23,10 @@ class ContestSeeder extends Seeder
         });
 
         $stories->each(function (Story $story) use ($users) {
-            $story->likes()->sync($users->slice(0, random_int(1, $users->count())));
+            $rating = random_int(1, $users->count());
+            $story->likes()->sync($users->slice(0, $rating));
+            $story->views()->sync($users->slice(0, $rating + random_int(1, $users->count() - $rating + 1)));
+            $story->update(['rating' => $rating]);
         });
 
         $service = app(ContestService::class);

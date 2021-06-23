@@ -15,9 +15,9 @@
     </BaseButton>
     <BaseButton
       v-if="can(`${resource}.${!isTrash?'delete':'force-delete'}`)"
-      @click.prevent="$emit('delete')"
+      class="ml-2"
       type="danger"
-      class="ml-2">
+      @click.prevent="$emit('delete')">
       Удалить {{ isTrash ? 'окончательно' : '' }}
     </BaseButton>
   </div>

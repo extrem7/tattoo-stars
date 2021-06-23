@@ -1,26 +1,19 @@
 import Vue from 'vue'
-
 import VueCompositionAPI from '@vue/composition-api'
+import {InertiaApp, plugin} from '@inertiajs/inertia-vue'
+import './plugins'
+import DashboardPlugin from './argon/plugins/dashboard-plugin'
+import {InertiaProgress} from '@inertiajs/progress'
+import DashboardLayout from '@/argon/views/Layout/DashboardLayout'
 
 Vue.use(VueCompositionAPI)
-
-import {InertiaApp, plugin} from '@inertiajs/inertia-vue'
-
 Vue.use(plugin)
-
-import './plugins'
-
-import DashboardPlugin from './argon/plugins/dashboard-plugin'
-
 Vue.use(DashboardPlugin)
-
-import {InertiaProgress} from '@inertiajs/progress'
-
 InertiaProgress.init()
 
 const el = document.getElementById('app')
 
-import DashboardLayout from '@/argon/views/Layout/DashboardLayout'
+Vue.config.productionTip = false
 
 new Vue({
   mounted() {

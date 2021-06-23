@@ -38,7 +38,11 @@ class PermissionsSeeder extends Seeder
             'users' => [
                 'name' => 'Пользователи',
                 'permissions' => [...$crudPermissions, ...$trashPermissions],
-            ]
+            ],
+            'stories' => [
+                'name' => 'Stories',
+                'permissions' => ['index', 'delete', 'include', 'exclude'],
+            ],
         ];
 
         foreach ($sections as $key => $section) {

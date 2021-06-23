@@ -4,12 +4,13 @@
       <!-- Card stats -->
       <b-row>
         <b-col md="6" xl="3">
-          <stats-card class="mb-4"
-                      icon="ni ni-active-40"
-                      sub-title="350,897"
-                      title="Total traffic"
-                      type="gradient-red">
-
+          <stats-card
+            class="mb-4"
+            icon="ni ni-active-40"
+            sub-title="350,897"
+            title="Total traffic"
+            type="gradient-red"
+          >
             <template slot="footer">
               <span class="text-success mr-2">3.48%</span>
               <span class="text-nowrap">Since last month</span>
@@ -17,12 +18,13 @@
           </stats-card>
         </b-col>
         <b-col md="6" xl="3">
-          <stats-card class="mb-4"
-                      icon="ni ni-chart-pie-35"
-                      sub-title="2,356"
-                      title="Total traffic"
-                      type="gradient-orange">
-
+          <stats-card
+            class="mb-4"
+            icon="ni ni-chart-pie-35"
+            sub-title="2,356"
+            title="Total traffic"
+            type="gradient-orange"
+          >
             <template slot="footer">
               <span class="text-success mr-2">12.18%</span>
               <span class="text-nowrap">Since last month</span>
@@ -30,26 +32,27 @@
           </stats-card>
         </b-col>
         <b-col md="6" xl="3">
-          <stats-card class="mb-4"
-                      icon="ni ni-money-coins"
-                      sub-title="924"
-                      title="Sales"
-                      type="gradient-green">
-
+          <stats-card
+            class="mb-4"
+            icon="ni ni-money-coins"
+            sub-title="924"
+            title="Sales"
+            type="gradient-green"
+          >
             <template slot="footer">
               <span class="text-danger mr-2">5.72%</span>
               <span class="text-nowrap">Since last month</span>
             </template>
           </stats-card>
-
         </b-col>
         <b-col md="6" xl="3">
-          <stats-card class="mb-4"
-                      icon="ni ni-chart-bar-32"
-                      sub-title="49,65%"
-                      title="Performance"
-                      type="gradient-info">
-
+          <stats-card
+            class="mb-4"
+            icon="ni ni-chart-bar-32"
+            sub-title="49,65%"
+            title="Performance"
+            type="gradient-info"
+          >
             <template slot="footer">
               <span class="text-success mr-2">54.8%</span>
               <span class="text-nowrap">Since last month</span>
@@ -188,6 +191,9 @@ export default {
     */
     }
   },
+  mounted() {
+    this.initBigChart(0)
+  },
   methods: {
     initBigChart(/*index*/) {
       /*let chartData = {
@@ -202,9 +208,6 @@ export default {
       this.bigLineChart.chartData = chartData
       this.bigLineChart.activeIndex = index*/
     }
-  },
-  mounted() {
-    this.initBigChart(0)
   }
 }
 </script>

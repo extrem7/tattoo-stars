@@ -4,12 +4,16 @@
       <BInputGroup class="input-group-alternative input-group-merge border border-primary">
         <BFormInput
           :value="value"
-          @input="$emit('input',$event)"
           :placeholder="placeholder"
           class="bg-transparent"
-          type="search"/>
-        <div class="input-group-append "><span class="input-group-text bg-transparent"><i
-          class="fas fa-search"></i></span></div>
+          type="search"
+          @input="$emit('input',$event)"
+        />
+        <div class="input-group-append">
+          <span class="input-group-text bg-transparent">
+            <i class="fas fa-search"></i>
+          </span>
+        </div>
       </BInputGroup>
     </BFormGroup>
     <BaseButton

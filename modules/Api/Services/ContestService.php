@@ -9,13 +9,25 @@ class ContestService
 {
     public function startDailyContest(): void
     {
-        Story::whereDate('created_at', '=', today()->addDays(-1))
+        $stories = Story::yesterday()
             ->groupBy('post_id')
             ->whereNull('excluded')
             ->orderByDesc('total')
             ->limit(10)
-            ->get(['post_id', \DB::raw('sum(rating) as total')])
-            ->each(fn(Story $item) => ContestWork::create(['post_id' => $item->post_id, 'rating' => $item->total]));
+            ->get(['post_id', \DB::raw('sum(rating) as total')]);
+
+        $included = Story::yesterday()
+            ->whereNotNull('included')
+            ->groupBy('post_id')
+            ->orderByDesc('total')
+            ->get(['post_id', \DB::raw('sum(rating) as total')]);
+
+        if (($overflow = $stories->count() - 10 + $included->count()) && $overflow > 0) {
+            $stories = $stories->slice(0, -$overflow);
+        }
+        $stories = $stories->concat($included);
+
+        $stories->each(fn(Story $item) => ContestWork::create(['post_id' => $item->post_id, 'rating' => $item->total]));
     }
 
     public function calculateResults(): void

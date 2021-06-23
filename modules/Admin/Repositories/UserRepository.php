@@ -2,6 +2,7 @@
 
 namespace Modules\Admin\Repositories;
 
+use App\Models\Traits\Searchable;
 use App\Models\User;
 use App\Models\User\AccountType;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -20,9 +21,8 @@ class UserRepository
     {
         return User::with(['avatarMedia', 'accountType', 'roles'])
             ->select(['id', 'account_type_id', 'email', 'email_verified_at', 'name', 'created_at'])
-            ->when(isset($search['searchQuery']), fn($q) => $q->search($search['searchQuery']))
-            ->when(isset($search['sortBy']), fn(Builder $q) => $q->orderBy($search['sortBy']))
-            ->when(isset($search['sortDesc']), fn(Builder $q) => $q->latest())
+            ->when($search['searchQuery'] ?? false, fn(Searchable $q) => $q->search($search['searchQuery']))
+            ->when($search['sortBy'] ?? false, fn(Builder $q) => $q->orderBy($search['sortBy'], $search['sortDesc'] ?? false ? 'desc' : 'asc'))
             ->when($scope, fn($q) => $scope($q))
             ->paginate(10);
     }
