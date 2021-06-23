@@ -3,6 +3,7 @@
 namespace Modules\Api\Http\Resources;
 
 use App\Models\Chat\Chat;
+use App\Models\User;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ChatResource extends JsonResource
@@ -21,6 +22,7 @@ class ChatResource extends JsonResource
         $chat = $this->resource;
 
         if ($chat->relationLoaded('participants')) {
+            /* @var $participant User */
             $participant = $chat->participants->where('id', '!=', \Auth::id())->first();
             $owner = $chat->participants->where('id', '!=', $chat->user_id)->first();
         }
@@ -29,12 +31,16 @@ class ChatResource extends JsonResource
             $lastMessage = $chat->lastMessage;
         }
 
+        $id = \Auth::id();
+
         return [
             'id' => $chat->id,
             'user' => $this->when($chat->relationLoaded('participants'), fn() => [
                 'id' => $participant->id,
                 'name' => $participant->name,
-                'avatar' => $participant->getAvatar('icon')
+                'avatar' => $participant->getAvatar('icon'),
+                'inBlacklist' => $participant->blockers()->where('id', '=', $id)->exists(),
+                'inBlockers' => $participant->blacklist()->where('id', '=', $id)->exists(),
             ]),
             $this->mergeWhen($this->listMessages, fn() => [
                 'messages' => MessageResource::collection($chat->messages),

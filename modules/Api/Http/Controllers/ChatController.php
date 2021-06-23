@@ -34,6 +34,8 @@ final class ChatController extends Controller
      * @apiSuccess {Number} user.id Chat participant's id.
      * @apiSuccess {String} user.nam Chat participant's name.
      * @apiSuccess {String} user.avatar Chat participant's avatar.
+     * @apiSuccess {Boolean} user.inBlacklist Is user in current user blacklist.
+     * @apiSuccess {Boolean} user.inBlockers Is user blocked current user.
      * @apiSuccess {Object} lastMessage Chat last message.
      * @apiSuccess {Number} lastMessage.id Chat last message's id.
      * @apiSuccess {Number} lastMessage.userId Chat last message's author id.

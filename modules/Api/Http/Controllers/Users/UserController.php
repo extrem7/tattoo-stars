@@ -8,6 +8,9 @@
  * @apiSuccess {String} user.name User name.
  * @apiSuccess {String} user.location User location.
  * @apiSuccess {String} user.bio User bio.
+ * @apiSuccess {Object} user.accountType User account type.
+ * @apiSuccess {Number} user.accountType.id Account type id.
+ * @apiSuccess {String} user.name.id Account type name.
  * @apiSuccess {Boolean} user.inSubscriptions User in current user's subscriptions.
  * @apiSuccess {Boolean} user.inBlacklist User in current user's blacklist.
  * @apiSuccess {Number} user.postsCount User's posts count.

@@ -36,11 +36,16 @@ class UserProfileResource extends JsonResource
             'nickname' => $user->nickname,
             'location' => $location,
             'bio' => $info->bio,
+
+            'accountType' => [
+                'id' => $user->accountType->id,
+                'name' => $user->accountType->name
+            ],
+
             $this->mergeWhen(!$selfView, [
                 'inSubscriptions' => $inSubscriptions,
                 'inBlacklist' => $inBlacklist,
             ]),
-
 
             'postsCount' => $user->posts()->count(),
             'subscribersCount' => $user->subscribers()->count(),

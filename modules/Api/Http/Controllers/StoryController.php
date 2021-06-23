@@ -62,6 +62,8 @@ final class StoryController extends Controller
     {
         $user = \Auth::user();
 
+        abort_unless(in_array($user->account_type_id, [3, 4], true), 403, 'Вашему типу аккаунта запрещена публикация.');
+
         if ($user->stories()->whereDate('stories.created_at', '=', today())->exists()) {
             /* todo | temporary disabled limit  */
             // abort(Response::HTTP_PAYMENT_REQUIRED, __('tattoo.stories.daily_limit'));
