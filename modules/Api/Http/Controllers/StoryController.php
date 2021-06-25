@@ -29,6 +29,8 @@ final class StoryController extends Controller
      * @apiGroup Stories
      *
      * @apiUse Token
+     *
+     * @apiSuccess {Number} storyBalance Story publications balance.
      * @apiSuccess {Object[]} stories Stories collection.
      * @apiSuccess {Number} stories.id Story id.
      * @apiSuccess {Object} stories.post Story post (see IndexPosts).
@@ -44,6 +46,7 @@ final class StoryController extends Controller
         $stories = $this->repository->getForIndex();
 
         return response()->json([
+            'storyBalance' => \Auth::user()->story_balance,
             'stories' => StoryResource::collection($stories),
             'hasMorePages' => $stories->hasMorePages()
         ]);
