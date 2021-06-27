@@ -12,8 +12,8 @@ class UserService
     {
         abort_if($reportable->id === $reporter->id, Response::HTTP_FORBIDDEN, 'You cannot report about self.');
 
-        \Mail::to(config('api.support.email'))->send(
-            new ReportMail($reporter, $reportable, $reason)
+        \Mail::to(config('tattoo.mail_system_receivers'))->send(
+            (new ReportMail($reporter, $reportable, $reason))->to(config('tattoo.mail_system_receivers'))
         );
     }
 

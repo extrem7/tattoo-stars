@@ -48,7 +48,7 @@ final class HelperController extends Controller
      */
     public function help(SupportHelpRequest $request): JsonResponse
     {
-        \Mail::to(config('api.support.email'))->send(new ContactForm($request->validated()));
+        \Mail::to(config('tattoo.mail_system_receivers'))->send(new ContactForm($request->validated()));
 
         return response()->json(['message' => __('tattoo.support.help_message')]);
     }

@@ -1,5 +1,6 @@
 <?php
 return [
+    'mail_system_receivers' => explode(',', env('MAIL_SYSTEM_RECEIVERS')),
     'languages' => [
         'ru' => [
             'name' => 'Русский',
