@@ -13,13 +13,13 @@ class CommentRepository
     /* @return Paginator<Comment> */
     public function getForPost(Post $post): Paginator
     {
-        return $post->comments()->whereNull('comment_id')->with(['user'])->withCount('replies')->simplePaginate(12);
+        return $post->comments()->whereNull('comment_id')->with(['user'])->withCount('replies')->latest()->simplePaginate(12);
     }
 
     /* @return Paginator<Comment> */
     public function getForComment(Comment $comment): Paginator
     {
-        return $comment->replies()->with(['user'])->simplePaginate(12);
+        return $comment->replies()->with(['user'])->latest()->simplePaginate(12);
     }
 
     /* @return Comment|Model */
