@@ -3,11 +3,13 @@
 namespace Modules\Api\Http\Controllers;
 
 use App\Models\Chat\Chat;
+use App\Models\Chat\Message;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Modules\Api\Events\NewMessage;
 use Modules\Api\Http\Requests\MessageRequest;
+use Modules\Api\Http\Requests\MessageUpdateRequest;
 use Modules\Api\Http\Resources\ChatResource;
 use Modules\Api\Repositories\ChatRepository;
 use Modules\Api\Services\ChatService;
@@ -140,6 +142,40 @@ final class ChatController extends Controller
     }
 
     /**
+     * @api {patch} /chats/:chatId/:id Update message
+     * @apiName UpdateMessage
+     * @apiGroup Chats
+     *
+     * @apiUse Token
+     * @apiParam {String} message Message text.
+     *
+     * @apiSuccess {String} message Update status.
+     */
+    public function updateMessage(Chat $chat, Message $message, MessageUpdateRequest $request): JsonResponse
+    {
+        $message->update(['text' => $request->input('message')]);
+
+        return response()->json(['message' => 'Message has been updated.']);
+    }
+
+    /**
+     * @api {delete} /chats/:chatId/:id Delete message
+     * @apiName DeleteMessage
+     * @apiGroup Chats
+     *
+     * @apiUse Token
+     * @apiParam {String} message Message text.
+     *
+     * @apiSuccess {String} message Update status.
+     */
+    public function destroyMessage(Chat $chat, Message $message): JsonResponse
+    {
+        $message->delete();
+
+        return response()->json(['message' => 'Message has been deleted.']);
+    }
+
+    /**
      * @api {post} /chats/:id/mark Mark chat
      * @apiName MarkChat
      * @apiGroup Chats
@@ -159,7 +195,7 @@ final class ChatController extends Controller
     }
 
     /**
-     * @api {post} /chats/:id Delete chat
+     * @api {delete} /chats/:id Delete chat
      * @apiName DeleteChat
      * @apiGroup Chats
      *

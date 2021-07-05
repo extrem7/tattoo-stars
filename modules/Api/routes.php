@@ -20,6 +20,7 @@ use Modules\Api\Http\Controllers\{Auth\AuthController,
     Users\UserController
 };
 use Modules\Api\Http\Middleware\IsChatParticipant;
+use Modules\Api\Http\Middleware\IsMessageSender;
 use Modules\Api\Http\Middleware\NotBlocked;
 
 $versions = ['', 'v1'];
@@ -132,6 +133,11 @@ foreach ($versions as $version) {
                         Route::post('', [ChatController::class, 'storeMessage']);
                         Route::post('mark', [ChatController::class, 'toggleMark']);
                         Route::delete('', [ChatController::class, 'destroy']);
+
+                        Route::prefix('{message}')->middleware(IsMessageSender::class)->group(function () {
+                            Route::patch('', [ChatController::class, 'updateMessage']);
+                            Route::delete('', [ChatController::class, 'destroyMessage']);
+                        });
                     });
                 });
 
