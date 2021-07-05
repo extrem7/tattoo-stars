@@ -102,9 +102,10 @@ final class CommentController extends Controller
      */
     public function destroy(Post $post, Comment $comment): JsonResponse
     {
-        abort_unless(
-            $comment->user_id === \Auth::id(), Response::HTTP_FORBIDDEN, __('Your are not allowed to delete this comment.')
-        );
+        $user = \Auth::user();
+        $canDelete = $comment->user_id === $user->id || $user->posts()->where('id', '=', $comment->post_id)->exists();
+
+        abort_unless($canDelete, Response::HTTP_FORBIDDEN, __('Your are not allowed to delete this comment.'));
 
         $comment->forceDelete();
 
