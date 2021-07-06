@@ -46,6 +46,7 @@ namespace Modules\Api\Http\Controllers\Users;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Http\JsonResponse;
 use Modules\Api\Http\Requests\Users\IndexRequest;
 use Modules\Api\Http\Resources\PostResource;
@@ -90,7 +91,7 @@ final class UserController extends Controller
      *
      * @apiUse Pagination
      */
-    public function index(IndexRequest $request)
+    public function index(IndexRequest $request): JsonResponse
     {
         $params = $request->validated();
         $params['blacklist'] = \Auth::user()->blacklist()->pluck('id');
@@ -134,7 +135,12 @@ final class UserController extends Controller
     {
         $posts = $this->postRepository->getPostsByUser($user);
 
-        \Auth::user()->load(['subscriptions', 'blacklist']);
+        \Auth::user()->load([
+            'subscriptions',
+            'blacklist'
+        ]);
+
+        $user->load(['contestWorks' => fn(HasManyThrough $q) => $q->whereNotNull('winner')]);
 
         return response()->json([
             'user' => new UserProfileResource($user),

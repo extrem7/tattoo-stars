@@ -21,7 +21,7 @@
     "eslint-plugin-disable": "^2.0.1",
     "eslint-plugin-unused-imports": "^1.1.0",
     "eslint-plugin-vue": "^7.6.0",
-    "laravel-mix": "^6.0.6",
+    "laravel-mix": "^6.0",
     "laravel-mix-merge-manifest": "^0.1.2",
     "postcss": "^8.1.14",
     "sass": "^1.32.5",

@@ -29,6 +29,8 @@ final class StoryController extends Controller
      * @apiGroup Stories
      *
      * @apiUse Token
+     *
+     * @apiSuccess {Number} storyBalance Story publications balance.
      * @apiSuccess {Object[]} stories Stories collection.
      * @apiSuccess {Number} stories.id Story id.
      * @apiSuccess {Object} stories.post Story post (see IndexPosts).
@@ -44,6 +46,7 @@ final class StoryController extends Controller
         $stories = $this->repository->getForIndex();
 
         return response()->json([
+            'storyBalance' => \Auth::user()->story_balance,
             'stories' => StoryResource::collection($stories),
             'hasMorePages' => $stories->hasMorePages()
         ]);
@@ -63,17 +66,12 @@ final class StoryController extends Controller
         $user = \Auth::user();
 
         abort_unless(in_array($user->account_type_id, [3, 4], true), 403, 'Вашему типу аккаунта запрещена публикация.');
+        abort_unless($post->user_id === $user->id, Response::HTTP_FORBIDDEN, 'Вы не можете добавлять чужие публикации.');
+        abort_if($user->story_balance < 1, Response::HTTP_PAYMENT_REQUIRED, __('tattoo.stories.daily_limit'));
 
-        if ($user->stories()->whereDate('stories.created_at', '=', today())->exists()) {
-            /* todo | temporary disabled limit  */
-            // abort(Response::HTTP_PAYMENT_REQUIRED, __('tattoo.stories.daily_limit'));
+        if ($this->repository->store($post) !== null) {
+            $this->service->makeTranslation($user, -1);
         }
-
-        if ($post->user_id !== $user->id) {
-            abort(Response::HTTP_FORBIDDEN, 'Вы не можете добавлять чужие публикации.');
-        }
-
-        $this->repository->store($post);
 
         return response()->json(['message' => 'Story has been published.'], Response::HTTP_CREATED);
     }

@@ -47,23 +47,33 @@ Example in JS:
 
 ````js
 import Echo from 'laravel-echo'
+import Pusher from 'pusher-js'
 
-window.Pusher = require('pusher-js')
-
-const echo = new Echo({
-    broadcaster: 'pusher',
+const client = new Pusher('PUSHER_APP_KEY', {
+    cluster: 'eu',
     authEndpoint: 'https://api.tattoostars.pro/broadcasting/auth',
     auth: {
         headers: {
             Authorization: 'Bearer TOKEN',
         }
-    },
-    key: 'PUSHER_APP_KEY',
-    cluster: 'eu',
-    forceTLS: true
+    }
 })
 
-echo.private('messages.USER_ID').listen('.chat.message.created', e => {
+const echo = new Echo({
+    broadcaster: 'pusher',
+    client
+})
+
+const channel = echo.private('messages.247')
+
+channel.listen('.chat.message.created', e => {
     console.log(e)
+}).listenForWhisper('typing', (e) => {
+    console.log(e.name)
+})
+
+document.addEventListener('keydown', () => {
+    channel.whisper('typing', {name: 'yuri'})
 })
 ````
+Scheduler: `/php_path/php /project_path/artisan schedule:run`

@@ -32,7 +32,9 @@ export default {
 
       searchQuery: null,
       sortBy: null,
-      sortDesc: null
+      sortDesc: null,
+
+      actionsClass: 'actions-column'
     }
   },
   created() {
@@ -40,7 +42,7 @@ export default {
       this.fillData()
     }
     if (this.can([`${this.resource}.edit`, `${this.resource}.delete`])) {
-      this.fields.push({key: 'actions', label: '', thClass: 'actions-column'})
+      this.fields.push({key: 'actions', label: '', thClass: this.actionsClass})
     }
   },
   methods: {

@@ -21,6 +21,15 @@
           }"
         />
         <SideBarItem
+          v-if="can('stories.index')"
+          :link="{
+            name: 'Stories',
+            path: route('stories.index'),
+            icon: 'ni ni-image text-primary',
+            active:routeIncludes(['stories'])
+          }"
+        />
+        <SideBarItem
           v-if="can('pages.index')"
           :link="{
             name: 'Страницы приложения',
@@ -71,6 +80,10 @@
 <script>
 import PerfectScrollbar from 'perfect-scrollbar'
 import 'perfect-scrollbar/css/perfect-scrollbar.css'
+import DashboardNavbar from './DashboardNavbar.vue'
+import ContentFooter from './ContentFooter.vue'
+//import DashboardContent from './Content.vue'
+import {FadeTransition} from 'vue2-transitions'
 
 function hasElement(className) {
   return document.getElementsByClassName(className).length > 0
@@ -86,11 +99,6 @@ function initScrollbar(className) {
     }, 100)
   }
 }
-
-import DashboardNavbar from './DashboardNavbar.vue'
-import ContentFooter from './ContentFooter.vue'
-//import DashboardContent from './Content.vue'
-import {FadeTransition} from 'vue2-transitions'
 
 export default {
   components: {

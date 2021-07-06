@@ -6,9 +6,13 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Znck\Eloquent\Relations\BelongsToThrough as BelongsToThroughRelation;
+use Znck\Eloquent\Traits\BelongsToThrough;
 
 class Story extends Model
 {
+    use BelongsToThrough;
+
     public const UPDATED_AT = null;
 
     protected $fillable = ['post_id', 'rating'];
@@ -19,6 +23,11 @@ class Story extends Model
     public function post(): BelongsTo
     {
         return $this->belongsTo(Post::class);
+    }
+
+    public function user(): BelongsToThroughRelation
+    {
+        return $this->belongsToThrough(User::class, Post::class);
     }
 
     /* @return BelongsToMany<User> */
@@ -48,6 +57,11 @@ class Story extends Model
     //SCOPES
     public function scopeDaily(Builder $query): Builder
     {
-        return $query->whereDate('created_at', today());
+        return $query->whereDate('created_at', '=', today());
+    }
+
+    public function scopeYesterday(Builder $query): Builder
+    {
+        return $query->whereDate('created_at', '=', today()->addDays(-1));
     }
 }

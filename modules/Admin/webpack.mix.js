@@ -1,7 +1,8 @@
 const mix = require('laravel-mix')
 const ChunkRenamePlugin = require('webpack-chunk-rename-plugin')
 const config = require('./intelij.webpack.js')
-mix.browserSync('admin.tattoostars.loc')
+
+//mix.browserSync('admin.tattoostars.loc')
 
 mix.webpackConfig({
   module: {
@@ -48,9 +49,11 @@ mix.sass(`${__dirname}/resources/scss/argon.scss`, 'css/app.css')
 mix.copyDirectory(`${__dirname}/resources/assets/img`, '../../public/admin/dist/img')
 mix.copyDirectory(`${__dirname}/resources/assets/vendor`, '../../public/admin/dist/vendor')
 
-mix.version(['../../public/admin/dist/js/app.js', '../../public/admin/dist/css/app.css'])
-
-mix.sourceMaps()
+if (mix.inProduction()) {
+  mix.version(['../../public/admin/dist/js/app.js', '../../public/admin/dist/css/app.css'])
+} else {
+  mix.sourceMaps()
+}
 
 mix.disableNotifications()
 

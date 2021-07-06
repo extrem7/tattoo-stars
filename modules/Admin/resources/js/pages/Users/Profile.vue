@@ -134,9 +134,11 @@
                 <BLink :href="user.website" target="_blank">{{ user.website }}</BLink>
               </BFormGroup>
               <BFormGroup label="Instagram">
-                <BLink :href="`https://www.instagram.com/${user.instagram}`" target="_blank">{{
-                    user.instagram
-                  }}
+                <BLink
+                  :href="`https://www.instagram.com/${user.instagram}`"
+                  target="_blank"
+                >
+                  {{ user.instagram }}
                 </BLink>
               </BFormGroup>
               <BFormGroup label="Facebook">
