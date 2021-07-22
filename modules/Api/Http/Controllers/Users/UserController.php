@@ -13,6 +13,7 @@
  * @apiSuccess {String} user.name.id Account type name.
  * @apiSuccess {Boolean} user.inSubscriptions User in current user's subscriptions.
  * @apiSuccess {Boolean} user.inBlacklist User in current user's blacklist.
+ * @apiSuccess {Boolean} user.winner User was a winner in daily contest.
  * @apiSuccess {Number} user.postsCount User's posts count.
  * @apiSuccess {Number} user.subscribersCount User's subscribers count.
  * @apiSuccess {Number} user.subscriptionsCount User's subscriptions count.
@@ -51,6 +52,7 @@ use Illuminate\Http\JsonResponse;
 use Modules\Api\Http\Requests\Users\IndexRequest;
 use Modules\Api\Http\Resources\PostResource;
 use Modules\Api\Http\Resources\SubscriberResource;
+use Modules\Api\Http\Resources\TopUserResource;
 use Modules\Api\Http\Resources\UserProfileResource;
 use Modules\Api\Repositories\PostRepository;
 use Modules\Api\Repositories\UserRepository;
@@ -82,6 +84,18 @@ final class UserController extends Controller
      *
      * @apiUse Token
      *
+     * @apiSuccess {Object[]} topUsers Top users.
+     * @apiSuccess {Integer} topUsers.id User id.
+     * @apiSuccess {String} topUsers.icon User icon.
+     * @apiSuccess {String} topUsers.name User name.
+     * @apiSuccess {String} topUsers.nickname User nickname.
+     * @apiSuccess {String} topUsers.location User location.
+     * @apiSuccess {Boolean} topUsers.winner User was a winner in daily contest.
+     * @apiSuccess {Object[]} topUsers.styles User styles.
+     * @apiSuccess {Integer} topUsers.id Styles id.
+     * @apiSuccess {String} topUsers.name Styles name.
+     * @apiSuccess {String[]} topUsers.posts User posts thumbnails.
+     *
      * @apiSuccess {Object[]} users User.
      * @apiSuccess {Integer} users.id User id.
      * @apiSuccess {String} users.icon User icon.
@@ -96,9 +110,11 @@ final class UserController extends Controller
         $params = $request->validated();
         $params['blacklist'] = \Auth::user()->blacklist()->pluck('id');
 
+        $topUsers = $this->repository->getTopUsers($params);
         $users = $this->repository->getUsers($params);
 
         return response()->json([
+            'topUsers' => TopUserResource::collection($topUsers),
             'users' => SubscriberResource::collection($users),
             'hasMorePages' => $users->hasMorePages()
         ]);

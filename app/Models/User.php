@@ -281,8 +281,8 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
 
     public function scopeActiveTop(Builder $builder): Builder
     {
-        /* @var $q HasMany<Top>|Top */
-        return $builder->whereHas('tops', fn(HasMany $q) => $q->active());
+        /* @var $q Builder<Top>|Top */
+        return $builder->whereHas('tops', fn(Builder $q) => $q->active());
     }
 
     // ACCESSORS

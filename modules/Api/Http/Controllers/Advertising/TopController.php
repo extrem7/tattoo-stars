@@ -28,9 +28,15 @@ class TopController extends Controller
     {
         $user = \Auth::user();
 
-        if ($user->tops()->active()->exists()) {
-            abort(Response::HTTP_CONFLICT, 'You are already have top account.');
-        }
+        abort_unless(
+            in_array($user->account_type_id, [3, 4], true),
+            Response::HTTP_FORBIDDEN,
+            'Pin to top is now allowed for your account type.'
+        );
+
+        abort_if(
+            $user->tops()->active()->exists(), Response::HTTP_CONFLICT, 'You are already have top account.'
+        );
 
         $days = $request->input('days');
 

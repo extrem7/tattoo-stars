@@ -19,7 +19,8 @@ class UserRepository
             ->select(['id', 'name', 'nickname'])
             ->with([
                 'avatarMedia',
-                'information' => fn($q) => $q->select(['user_id', 'city_id']), 'information.city'
+                'information' => fn($q) => $q->select(['user_id', 'city_id']),
+                'information.city', 'information.city.country',
             ])
             ->withCount(['subscribers'])
             ->whereHas('information', function ($q) use ($params) {
@@ -34,6 +35,36 @@ class UserRepository
             )
             ->orderByDesc('subscribers_count')
             ->simplePaginate($this->limit, []);
+    }
+
+    public function getTopUsers(array $params): Collection
+    {
+        return User::activeTop()
+            ->where('account_type_id', '=', $params['account_type_id'])
+            ->whereNotIn('id', $params['blacklist'])
+            ->select(['id', 'name', 'nickname'])
+            ->with([
+                'avatarMedia',
+                'information' => fn($q) => $q->select(['user_id', 'city_id']),
+                'information.city', 'information.city.country',
+                'styles',
+                'posts' => fn($q) => $q->with(['imagesMedia', 'videoMedia'])->limit(5)->latest(),
+                'contestWorks' => fn($q) => $q->whereNotNull('winner')
+            ])
+            ->withCount(['subscribers'])
+            ->whereHas('information', function ($q) use ($params) {
+                $q->when(isset($params['country_id']),
+                    fn($q) => $q->whereHas('city',
+                        fn($q) => $q->where('country_id', '=', $params['country_id']))
+                )->when(isset($params['city_id']), fn($q) => $q->where('city_id', '=', $params['city_id']));
+            })
+            ->when(
+                isset($params['style_id']),
+                fn($q) => $q->whereHas('styles', fn($q) => $q->whereIn('id', [$params['style_id']]))
+            )
+            ->limit(5)
+            ->inRandomOrder()
+            ->get();
     }
 
     public function getBlacklist(User $user): Collection
