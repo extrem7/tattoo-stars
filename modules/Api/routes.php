@@ -1,6 +1,7 @@
 <?php
 
-use Modules\Api\Http\Controllers\{Auth\AuthController,
+use Modules\Api\Http\Controllers\{Advertising\TopController,
+    Auth\AuthController,
     Auth\EmailVerificationController,
     ChatController,
     CitiesController,
@@ -145,6 +146,11 @@ foreach ($versions as $version) {
                 Route::prefix('contest')->group(function () {
                     Route::get('', [ContestController::class, 'index']);
                     Route::post('{work}/vote', [ContestController::class, 'vote']);
+                });
+
+                Route::prefix('advertising')->group(function () {
+                    Route::get('/top', [TopController::class, 'status']);
+                    Route::post('/top', [TopController::class, 'pin']);
                 });
 
                 Route::get('notifications', [NotificationController::class, 'index']);

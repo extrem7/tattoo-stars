@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Advertising\Top;
 use App\Models\Chat\Chat;
 use App\Models\Chat\Message;
 use App\Models\Post\Comment;
@@ -270,6 +271,18 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
     public function incomeMessages(): Builder
     {
         return Message::whereIn('chat_id', $this->chats()->pluck('id'))->where('user_id', '!=', $this->id);
+    }
+
+    /* @return HasMany<Top>|Top */
+    public function tops(): HasMany
+    {
+        return $this->hasMany(Top::class);
+    }
+
+    public function scopeActiveTop(Builder $builder): Builder
+    {
+        /* @var $q HasMany<Top>|Top */
+        return $builder->whereHas('tops', fn(HasMany $q) => $q->active());
     }
 
     // ACCESSORS
