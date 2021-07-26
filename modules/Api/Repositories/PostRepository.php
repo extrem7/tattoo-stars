@@ -42,7 +42,25 @@ class PostRepository
 
     public function getPromotions(): Collection
     {
-        $promotions = Promotion::active()->inRandomOrder()->pluck('id', 'post_id');
+        $city = \Auth::user()->information->city;
+
+        $promotions = Promotion::active()
+            ->inRandomOrder()
+            ->where(fn(Builder $q) => $q
+                ->where(fn(Builder $q) => $q->whereNull('country_id')->whereNull('city_id'))
+                ->orWhere(
+                    fn(Builder $q) => $q->when(
+                        $city, fn(Builder $q) => $q
+                        ->where('country_id', '=', $city->country_id)
+                        ->where(
+                            fn(Builder $q) => $q
+                                ->whereNull('city_id')
+                                ->orWhere('city_id', '=', $city->id)
+                        )
+                    )
+                )
+            )
+            ->pluck('id', 'post_id');
 
         $posts = Post::whereIn('id', array_keys($promotions->toArray()))
             ->with($this->with)

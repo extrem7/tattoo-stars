@@ -2,7 +2,9 @@
 
 namespace Modules\Api\Repositories;
 
+use App\Models\Advertising\Banner;
 use App\Models\ContestWork;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Collection;
@@ -45,5 +47,27 @@ class ContestRepository
             ->with(['post' => fn(BelongsTo $q) => $q->with(['user', 'imagesMedia', 'videoMedia'])])
             ->orderByDesc('date')
             ->get(['id', 'post_id', 'date']);
+    }
+
+    public function getBanner(): ?Banner
+    {
+        $city = \Auth::user()->information->city;
+
+        return Banner::active()
+            ->inRandomOrder()
+            ->where(fn(Builder $q) => $q
+                ->where(fn(Builder $q) => $q->whereNull('country_id')->whereNull('city_id'))
+                ->orWhere(
+                    fn(Builder $q) => $q->when(
+                        $city, fn(Builder $q) => $q
+                        ->where('country_id', '=', $city->country_id)
+                        ->where(
+                            fn(Builder $q) => $q
+                                ->whereNull('city_id')
+                                ->orWhere('city_id', '=', $city->id)
+                        )
+                    )
+                )
+            )->first(['id', 'user_id', 'redirect_to_site']);
     }
 }

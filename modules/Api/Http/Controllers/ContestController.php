@@ -3,9 +3,7 @@
 namespace Modules\Api\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\Advertising\Banner;
 use App\Models\ContestWork;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Modules\Api\Http\Resources\BannerResource;
@@ -47,31 +45,17 @@ final class ContestController extends Controller
      */
     public function index(): JsonResponse
     {
-        $user = \Auth::user();
-        $city = $user->information->city;
-
-
         $totalVotes = $this->repository->getYesterdayVotesCount();
 
-        $banner = Banner::active()
-            ->inRandomOrder()
-            ->where(fn(Builder $q) => $q
-                ->where(fn(Builder $q) => $q->whereNull('country_id')->whereNull('city_id'))
-                ->orWhere(
-                    fn(Builder $q) => $q->when(
-                        $city, fn(Builder $q) => $q
-                        ->where('country_id', '=', $city->country_id)
-                        ->orWhere('city_id', '=', $city->id)
-                    )
-                ))
-            ->first(['id', 'user_id', 'redirect_to_site']);
+        $banner = $this->repository->getBanner();
 
         if ($banner) {
             $banner->increment('views');
+            $banner = new BannerResource($banner);
         }
 
         return response()->json([
-            'banner' => $banner ? new BannerResource($banner) : null,
+            'banner' => $banner,
             'votedToday' => \Auth::user()->hasVotedToday(),
             'works' => ContestWorkResource::collection($this->repository->getDaily()),
             'yesterdayResults' => ContestWorkResource::collection($this->repository->getYesterdayWinners())->each(
