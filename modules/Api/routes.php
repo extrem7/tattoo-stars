@@ -1,6 +1,7 @@
 <?php
 
 use Modules\Api\Http\Controllers\{Advertising\AdvertisingController,
+    Advertising\BannerController,
     Advertising\PromotionController,
     Advertising\TopController,
     Auth\AuthController,
@@ -159,6 +160,14 @@ foreach ($versions as $version) {
                         Route::patch('', [PromotionController::class, 'update']);
                         Route::post('pause', [PromotionController::class, 'pause']);
                         Route::post('click', [PromotionController::class, 'click']);
+                    });
+
+                    Route::post('/banner', [BannerController::class, 'store']);
+                    Route::prefix('/banner/{banner}')->group(function () {
+                        Route::get('', [BannerController::class, 'show']);
+                        Route::patch('', [BannerController::class, 'update']);
+                        Route::post('pause', [BannerController::class, 'pause']);
+                        Route::post('click', [BannerController::class, 'click']);
                     });
 
 

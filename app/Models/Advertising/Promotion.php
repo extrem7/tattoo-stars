@@ -46,6 +46,6 @@ class Promotion extends Model
 
     public function scopeActive(Builder $builder): Builder
     {
-        return $builder->whereNotNull('verified')->whereRaw('views < budget');
+        return $builder->whereNotNull('verified')->whereNull('on_pause')->whereRaw('views < budget');
     }
 }

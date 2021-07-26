@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Advertising\Banner;
 use App\Models\Advertising\Promotion;
 use App\Models\Advertising\Top;
 use App\Models\Chat\Chat;
@@ -278,6 +279,12 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
     public function promotions(): HasManyThrough
     {
         return $this->hasManyThrough(Promotion::class, Post::class);
+    }
+
+    /* @return HasManyThrough<HasMany>|HasMany */
+    public function banners(): HasMany
+    {
+        return $this->hasMany(Banner::class);
     }
 
     /* @return HasMany<Top>|Top */

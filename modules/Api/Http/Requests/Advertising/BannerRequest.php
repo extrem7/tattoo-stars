@@ -3,11 +3,10 @@
 namespace Modules\Api\Http\Requests\Advertising;
 
 use App\Models\City;
-use App\Models\Post;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Response;
 
-class PromotionRequest extends FormRequest
+class BannerRequest extends FormRequest
 {
     public function rules(): array
     {
@@ -20,23 +19,18 @@ class PromotionRequest extends FormRequest
         }
 
         return array_merge([
-            'post_id' => [!$update ? 'required' : 'nullable', 'exists:posts,id'],
+            'image' => [!$update ? 'required' : 'nullable', 'image', 'mimes:jpg,jpeg,bmp,png,gif', 'max:4096'],
+            'redirect_to_site' => ['nullable', 'bool'],
             'country_id' => ['nullable', 'exists:countries,id'],
             'city_id' => ['nullable', 'exists:cities,id'],
             'account_type' => ['nullable', 'in:users,other']
         ], $rules);
     }
 
-    public function validatePostAndCity(): void
+    public function validateCity(): void
     {
-        $post = Post::find($this->input('post_id'));
         $city = City::find($this->input('city_id'));
 
-        abort_unless(
-            $post->user_id === \Auth::id(),
-            Response::HTTP_FORBIDDEN,
-            'You are can\'t promote someone else\'s post.'
-        );
         abort_if(
             $city && $this->filled('country_id') && $city->country_id !== $this->input('country_id'),
             Response::HTTP_BAD_REQUEST,
