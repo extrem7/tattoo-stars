@@ -2,6 +2,7 @@
 
 namespace Modules\Api\Repositories;
 
+use App\Models\Advertising\Promotion;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\Paginator;
@@ -12,6 +13,20 @@ use Illuminate\Support\Collection;
 
 class PostRepository
 {
+    protected array $fields = ['id', 'description', 'created_at'];
+
+    protected array $with;
+
+    public function __construct()
+    {
+        $this->with = [
+            'imagesMedia',
+            'videoMedia',
+            'likes',
+            'bookmarkers' => fn($q) => $q->where('user_id', '=', \Auth::id())
+        ];
+    }
+
     public function getForIndex(User $user): Paginator
     {
         if ($user->subscriptions()->exists()) {
@@ -23,6 +38,22 @@ class PostRepository
         }
 
         return $this->paginate(Post::query());
+    }
+
+    public function getPromotions(): Collection
+    {
+        $promotions = Promotion::active()->inRandomOrder()->pluck('id', 'post_id');
+
+        $posts = Post::whereIn('id', array_keys($promotions->toArray()))
+            ->with($this->with)
+            ->withCount('comments')
+            ->inRandomOrder()
+            ->limit(2)
+            ->get($this->fields);
+
+        $posts->each(fn(Post $p) => $p->setRelation('promotions', [Promotion::find($promotions[$p->id])]));
+
+        return $posts;
     }
 
     public function search(string $query): Paginator
@@ -73,14 +104,6 @@ class PostRepository
      */
     protected function paginate($builder, bool $loadUsers = true, bool $hidePosts = true): Paginator
     {
-        $select = ['id', 'description', 'created_at'];
-        $with = [
-            'imagesMedia',
-            'videoMedia',
-            'likes',
-            'bookmarkers' => fn($q) => $q->where('user_id', '=', \Auth::id())
-        ];
-
         if ($loadUsers) {
             $select[] = 'user_id';
             $with[] = 'user';
@@ -104,8 +127,8 @@ class PostRepository
             }
         }
 
-        return $builder->select($select)
-            ->with(array_merge($with, $builder->getEagerLoads()))
+        return $builder->select($this->fields)
+            ->with(array_merge($this->with, $builder->getEagerLoads()))
             ->withCount('comments')
             ->whereNotIn('user_id', $notIn)
             ->latest()

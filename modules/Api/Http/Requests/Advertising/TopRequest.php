@@ -9,7 +9,7 @@ class TopRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'days' => ['required', 'integer', 'in:10,30']
+            'days' => ['required', 'integer', 'in:7,15,30']
         ];
     }
 

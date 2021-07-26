@@ -1,6 +1,8 @@
 <?php
 
-use Modules\Api\Http\Controllers\{Advertising\TopController,
+use Modules\Api\Http\Controllers\{Advertising\AdvertisingController,
+    Advertising\PromotionController,
+    Advertising\TopController,
     Auth\AuthController,
     Auth\EmailVerificationController,
     ChatController,
@@ -149,6 +151,17 @@ foreach ($versions as $version) {
                 });
 
                 Route::prefix('advertising')->group(function () {
+                    Route::get('', [AdvertisingController::class, 'index']);
+
+                    Route::post('/promotion', [PromotionController::class, 'store']);
+                    Route::prefix('/promotion/{promotion}')->group(function () {
+                        Route::get('', [PromotionController::class, 'show']);
+                        Route::patch('', [PromotionController::class, 'update']);
+                        Route::post('pause', [PromotionController::class, 'pause']);
+                        Route::post('click', [PromotionController::class, 'click']);
+                    });
+
+
                     Route::get('/top', [TopController::class, 'status']);
                     Route::post('/top', [TopController::class, 'pin']);
                 });

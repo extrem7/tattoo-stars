@@ -9,8 +9,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Top extends Model
 {
-    public $timestamps = null;
+    public $timestamps;
+
     protected $table = 'advertising_tops';
+
     protected $fillable = ['days'];
 
     protected $casts = [
@@ -27,6 +29,6 @@ class Top extends Model
 
     public function scopeActive(Builder $builder): Builder
     {
-        return $builder->whereNotNull('start_at')->whereDate('end_at', '>', now());
+        return $builder->whereNotNull('start_at')->whereDate('end_at', '>=', now());
     }
 }

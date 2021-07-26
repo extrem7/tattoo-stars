@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Advertising\Promotion;
 use App\Models\Advertising\Top;
 use App\Models\Chat\Chat;
 use App\Models\Chat\Message;
@@ -271,6 +272,12 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
     public function incomeMessages(): Builder
     {
         return Message::whereIn('chat_id', $this->chats()->pluck('id'))->where('user_id', '!=', $this->id);
+    }
+
+    /* @return HasManyThrough<Promotion>|Promotion */
+    public function promotions(): HasManyThrough
+    {
+        return $this->hasManyThrough(Promotion::class, Post::class);
     }
 
     /* @return HasMany<Top>|Top */

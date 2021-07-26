@@ -110,8 +110,12 @@ final class UserController extends Controller
         $params = $request->validated();
         $params['blacklist'] = \Auth::user()->blacklist()->pluck('id');
 
-        $topUsers = $this->repository->getTopUsers($params);
         $users = $this->repository->getUsers($params);
+        $topUsers = [];
+        if ($users->currentPage() === 1) {
+            $topUsers = $this->repository->getTopUsers($params);
+
+        }
 
         return response()->json([
             'topUsers' => TopUserResource::collection($topUsers),

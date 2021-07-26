@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use App\Models\Advertising\Promotion;
 use App\Models\Post\Comment;
 use App\Models\Traits\Searchable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -60,6 +62,7 @@ class Post extends Model implements HasMedia
     }
 
     //RELATIONS
+
     /* @return BelongsTo<User>|User */
     public function user(): BelongsTo
     {
@@ -100,5 +103,17 @@ class Post extends Model implements HasMedia
     public function stories(): HasMany
     {
         return $this->hasMany(Story::class);
+    }
+
+    /* @return HasMany<Promotion>|Promotion */
+    public function promotions(): HasMany
+    {
+        return $this->hasMany(Promotion::class);
+    }
+
+    public function scopeActivePromo(Builder $builder): Builder
+    {
+        /* @var $q Builder<Promotion>|Promotion */
+        return $builder->whereHas('promotions', fn(Builder $q) => $q->active());
     }
 }

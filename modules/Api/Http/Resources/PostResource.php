@@ -40,6 +40,7 @@ class PostResource extends JsonResource
             'bookmark_status' => $this->when(
                 $post->relationLoaded('bookmarkers'), fn() => $post->bookmarkers->isNotEmpty()
             ),
+            'promotionId' => $this->when($post->relationLoaded('promotions'), fn() => $post->promotions[0]->id)
         ];
     }
 }

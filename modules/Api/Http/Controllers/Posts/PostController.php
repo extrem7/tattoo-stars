@@ -59,9 +59,13 @@ final class PostController extends Controller
     public function index(): JsonResponse
     {
         $posts = $this->repository->getForIndex(\Auth::user());
+        $promotions = $this->repository->getPromotions();
+
+        \DB::transaction(fn() => $promotions->each(fn(Post $p) => $p->promotions[0]->increment('views')));
 
         return response()->json([
             'posts' => PostResource::collection($posts),
+            'promotions' => PostResource::collection($promotions),
             'hasMorePages' => $posts->hasMorePages()
         ]);
     }
