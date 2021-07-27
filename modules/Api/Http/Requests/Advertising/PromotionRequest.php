@@ -33,7 +33,7 @@ class PromotionRequest extends FormRequest
         $city = City::find($this->input('city_id'));
 
         abort_unless(
-            $post->user_id === \Auth::id(),
+            !$post || $post->user_id === \Auth::id(),
             Response::HTTP_FORBIDDEN,
             'You are can\'t promote someone else\'s post.'
         );
