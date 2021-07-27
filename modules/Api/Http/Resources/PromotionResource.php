@@ -35,9 +35,10 @@ class PromotionResource extends JsonResource
             'clicks' => $promo->clicks,
             'views' => $promo->views,
             'budget' => $promo->budget,
-            'accountType' => Promotion::$accountTypes[$promo->account_type],
+            'accountType' => $promo->account_type,
             'onPause' => (bool)$promo->on_pause,
             'verified' => (bool)$promo->verified,
+            'rejectReason' => $promo->reject_reason
         ];
     }
 }

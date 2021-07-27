@@ -152,7 +152,7 @@ foreach ($versions as $version) {
                 });
 
                 Route::prefix('advertising')->group(function () {
-                    Route::get('', [AdvertisingController::class, 'index']);
+                    Route::get('', AdvertisingController::class);
 
                     Route::post('/promotion', [PromotionController::class, 'store']);
                     Route::prefix('/promotion/{promotion}')->group(function () {

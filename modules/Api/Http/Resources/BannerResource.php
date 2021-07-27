@@ -17,20 +17,22 @@ class BannerResource extends JsonResource
             $location = "$city->name, {$city->country->name}";
         }
 
-        return [
+        return array_merge([
             'id' => $banner->id,
-            'user_id' => $banner->user_id,
+            'userId' => $banner->user_id,
             'site' => $banner->user->information->website,
             'redirectToSite' => (bool)$banner->redirect_to_site,
             'image' => $banner->imageMedia->getFullUrl(),
             'countryId' => $this->when($banner->country_id, fn() => $banner->country_id),
             'cityId' => $this->when($banner->city_id, fn() => $banner->city_id),
-            'location' => $this->when($location, $location),
-            'clicks' => $this->when($banner->clicks, fn() => $banner->clicks),
-            'views' => $this->when($banner->views, fn() => $banner->views),
-            'budget' => $this->when($banner->budget, fn() => $banner->budget),
-            'onPause' => $this->when(property_exists($banner, 'on_pause'), fn() => (bool)$banner->on_pause),
-            'verified' => $this->when(property_exists($banner, 'verified'), fn() => (bool)$banner->verified)
-        ];
+            'location' => $this->when($location, $location)
+        ], \Auth::id() === $banner->user_id ? [
+            'clicks' => $banner->clicks,
+            'views' => $banner->views,
+            'budget' => $banner->budget,
+            'onPause' => (bool)$banner->on_pause,
+            'verified' => (bool)$banner->verified,
+            'rejectReason' => $banner->reject_reason
+        ] : null);
     }
 }

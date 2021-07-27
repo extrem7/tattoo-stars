@@ -54,6 +54,8 @@ final class PostController extends Controller
      *
      * @apiUse Token
      * @apiUse Posts
+     * @apiSuccess {Object[]} promotions Promotion posts (same as posts collection).
+     * @apiSuccess {Number} promotions.promotionId Promotion id for /click.
      * @apiUse Pagination
      */
     public function index(): JsonResponse

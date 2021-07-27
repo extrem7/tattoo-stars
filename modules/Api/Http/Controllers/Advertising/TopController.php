@@ -4,11 +4,20 @@ namespace Modules\Api\Http\Controllers\Advertising;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Response;
 use Modules\Api\Http\Requests\Advertising\TopRequest;
 
-class TopController extends Controller
+final class TopController extends Controller
 {
+    /**
+     * @api {get} /advertising/top Pin to top account status
+     * @apiName AdvertisingTopStatus
+     * @apiGroup Advertising
+     *
+     * @apiUse Token
+     *
+     * @apiSuccess {Boolean} status Top account status.
+     * @apiSuccess {Date} until Top account until.
+     */
     public function status(): JsonResponse
     {
         $top = \Auth::user()->tops()->active()->first();
@@ -24,31 +33,28 @@ class TopController extends Controller
         return response()->json($response);
     }
 
+    /**
+     * @api {post} /advertising/top Pin account to top
+     * @apiName AdvertisingTopPin
+     * @apiGroup Advertising
+     *
+     * @apiUse Token
+     *
+     * @apiParam {Number} days Pin for days {7,15,30}.
+     *
+     * @apiSuccess {String} message Pin status.
+     */
     public function pin(TopRequest $request): JsonResponse
     {
-        $user = \Auth::user();
-
-        abort_unless(
-            in_array($user->account_type_id, [3, 4], true),
-            Response::HTTP_FORBIDDEN,
-            'Pin to top is now allowed for your account type.'
-        );
-
-        abort_if(
-            $user->tops()->active()->exists(), Response::HTTP_CONFLICT, 'You are already have top account.'
-        );
-
         $days = $request->input('days');
 
-        $top = $user->tops()->create(['days' => $days]);
+        $top = \Auth::user()->tops()->create(['days' => $days]);
 
         // todo billing stuff
         $top->start_at = now();
         $top->end_at = now()->addDays($days);
         $top->save();
 
-        return response()->json([
-            'message' => 'Your account has been pinned to top.'
-        ]);
+        return response()->json(['message' => 'Your account has been pinned to top.']);
     }
 }

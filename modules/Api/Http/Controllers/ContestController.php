@@ -25,6 +25,16 @@ final class ContestController extends Controller
      * @apiGroup Contest
      *
      * @apiUse Token
+     * @apiSuccess {Object} banner Banner.
+     * @apiSuccess {Number} banner.id Id.
+     * @apiSuccess {Number} banner.userId User id.
+     * @apiSuccess {String} banner.site Site.
+     * @apiSuccess {String} banner.redirectToSite Redirect to site.
+     * @apiSuccess {String} banner.image Image.
+     * @apiSuccess {Number} banner.countryId Country id.
+     * @apiSuccess {Number} banner.cityId City id.
+     * @apiSuccess {String} banner.location Location.
+     *
      * @apiSuccess {Boolean} votedToday Is user voted today.
      * @apiSuccess {Object[]} works Daily works.
      * @apiSuccess {Object[]} yesterdayResults Daily works.
