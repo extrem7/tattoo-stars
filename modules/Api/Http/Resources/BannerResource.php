@@ -29,8 +29,8 @@ class BannerResource extends JsonResource
             'clicks' => $this->when($banner->clicks, fn() => $banner->clicks),
             'views' => $this->when($banner->views, fn() => $banner->views),
             'budget' => $this->when($banner->budget, fn() => $banner->budget),
-            'onPause' => $this->when((bool)$banner->on_pause, fn() => $banner->on_pause),
-            'verified' => $this->when((bool)$banner->verified, fn() => $banner->verified)
+            'onPause' => $this->when(property_exists($banner, 'on_pause'), fn() => (bool)$banner->on_pause),
+            'verified' => $this->when(property_exists($banner, 'verified'), fn() => (bool)$banner->verified)
         ];
     }
 }
