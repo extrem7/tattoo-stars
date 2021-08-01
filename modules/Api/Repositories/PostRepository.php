@@ -123,8 +123,8 @@ class PostRepository
     protected function paginate($builder, bool $loadUsers = true, bool $hidePosts = true): Paginator
     {
         if ($loadUsers) {
-            $select[] = 'user_id';
-            $with[] = 'user';
+            $this->fields[] = 'user_id';
+            $this->with[] = 'user';
         }
 
         $user = \Auth::user();
