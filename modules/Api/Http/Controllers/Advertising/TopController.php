@@ -16,10 +16,12 @@ final class TopController extends Controller
      * @apiUse Token
      *
      * @apiSuccess {Boolean} status Top account status.
-     * @apiSuccess {Date} until Top account until.
+     * @apiSuccess {Date} [until] Top account until.
+     * @apiSuccess {Integer} [place] Current account place in search.
      */
     public function status(): JsonResponse
     {
+        $user = \Auth::user();
         $top = \Auth::user()->tops()->active()->first();
 
         $response = [
@@ -28,6 +30,18 @@ final class TopController extends Controller
 
         if ($top) {
             $response['until'] = $top->end_at->format('d.m.Y');
+        } else {
+            \DB::statement('SET @place=0;');
+            $response['place'] = \DB::select('SELECT sub.place
+                                                    FROM users
+                                                        LEFT OUTER JOIN (
+                                                            SELECT @place:=@place+1 as place, id
+                                                            FROM users
+                                                            WHERE account_type_id = ?
+                                                        )
+                                                            as sub on users.id = sub.id
+                                                    WHERE users.id = ?',
+                [$user->account_type_id, $user->id])[0]->place;
         }
 
         return response()->json($response);
