@@ -14,7 +14,7 @@ export default {
   },
   props: {
     resource: String,
-    data: Object,
+    data: Object | Array,
     table: Object,
     isTrash: {
       type: Boolean,

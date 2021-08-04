@@ -2,7 +2,7 @@ const mix = require('laravel-mix')
 const ChunkRenamePlugin = require('webpack-chunk-rename-plugin')
 const config = require('./intelij.webpack.js')
 
-//mix.browserSync('admin.tattoostars.loc')
+mix.browserSync('admin.tattoostars.loc')
 
 mix.webpackConfig({
   module: {

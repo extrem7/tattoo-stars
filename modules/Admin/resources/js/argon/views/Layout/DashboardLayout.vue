@@ -30,6 +30,15 @@
           }"
         />
         <SideBarItem
+          v-if="can('promotions.index')"
+          :link="{
+            name: 'Promotions',
+            path: route('promotions.index'),
+            icon: 'ni ni-notification-70 text-primary',
+            active:routeIncludes(['promotions'])
+          }"
+        />
+        <SideBarItem
           v-if="can('pages.index')"
           :link="{
             name: 'Страницы приложения',

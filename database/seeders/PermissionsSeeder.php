@@ -43,6 +43,10 @@ class PermissionsSeeder extends Seeder
                 'name' => 'Stories',
                 'permissions' => ['index', 'delete', 'include', 'exclude'],
             ],
+            'promotions' => [
+                'name' => 'Promotions',
+                'permissions' => ['index', 'delete', 'verify', 'reject'],
+            ],
         ];
 
         foreach ($sections as $key => $section) {

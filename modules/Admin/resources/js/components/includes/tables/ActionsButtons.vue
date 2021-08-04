@@ -1,5 +1,6 @@
 <template>
   <div class="d-flex">
+    <slot></slot>
     <InertiaLink
       v-if="can(`${resource}.edit`)"
       :href="route(`${resource}.edit`,id)"

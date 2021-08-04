@@ -5,7 +5,8 @@
  * @routePrefix("admin.")
  */
 
-use Modules\Admin\Http\Controllers\{AuthController,
+use Modules\Admin\Http\Controllers\{Advertising\PromotionController,
+    AuthController,
     DashboardController,
     FaqController,
     MediaController,
@@ -47,6 +48,17 @@ Route::middleware(['auth', 'can:admin-panel.access'])->group(function () {
             ->middleware('can:stories.exclude');
     });
 
+    Route::resource('promotions', PromotionController::class)
+        ->except(['show', 'edit', 'update'])
+        ->middleware('can:promotions.index');
+    Route::prefix('{promotion}')->name('promotions.')->group(function () {
+        Route::post('verify', [PromotionController::class, 'verify'])
+            ->name('verify')
+            ->middleware('can:promotions.verify');
+        Route::post('reject', [PromotionController::class, 'reject'])
+            ->name('reject')
+            ->middleware('can:promotions.reject');
+    });
 
     Route::prefix('users/{user}/avatar')
         ->as('users.avatar.')

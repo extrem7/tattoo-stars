@@ -37,7 +37,7 @@ class PromotionResource extends JsonResource
             'budget' => $promo->budget,
             'accountType' => $promo->account_type,
             'onPause' => (bool)$promo->on_pause,
-            'verified' => (bool)$promo->verified,
+            'verified' => $promo->verified,
             'rejectReason' => $promo->reject_reason
         ];
     }

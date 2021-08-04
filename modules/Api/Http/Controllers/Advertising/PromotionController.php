@@ -60,7 +60,7 @@ final class PromotionController extends Controller
      * @apiSuccess {Number} budget budget.
      * @apiSuccess {Enum} accountType Account type {'users','other',null}.
      * @apiSuccess {Boolean} onPause On pause.
-     * @apiSuccess {Boolean} verified Is verified.
+     * @apiSuccess {Boolean} verified Is verified {true,false,null}.
      * @apiSuccess {String} rejectReason Reject reason.
      */
     public function show(Promotion $promotion): JsonResponse
