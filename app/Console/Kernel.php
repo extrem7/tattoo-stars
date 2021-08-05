@@ -4,6 +4,7 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Modules\Api\Services\AdvertisingService;
 use Modules\Api\Services\ContestService;
 use Modules\Api\Services\StoryService;
 
@@ -32,6 +33,12 @@ class Kernel extends ConsoleKernel
                 app(ContestService::class)->startDailyContest();
             } catch (\Exception $e) {
                 \Log::error('Exception while starting daily contest.\n' . $e->getMessage());
+            }
+
+            try {
+                app(AdvertisingService::class)->sendExpirationNotifications();
+            } catch (\Exception $e) {
+                \Log::error('Exception while sending advertising expiration notifications.\n' . $e->getMessage());
             }
         })->daily();
     }

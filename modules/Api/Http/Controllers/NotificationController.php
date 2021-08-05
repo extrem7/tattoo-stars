@@ -44,21 +44,23 @@ class NotificationController extends Controller
 
         $items = collect($notifications->items());
 
+        $duplicateTypes = [UserSubscribed::class];
+
         return response()->json([
             'notifications' => array_values(
-                $items->filter(function (DatabaseNotification $n) use ($items): bool {
+                $items->filter(function (DatabaseNotification $n) use ($items, $duplicateTypes): bool {
+                    if (!in_array($n['type'], $duplicateTypes, true)) {
+                        return true;
+                    }
+
                     $duplicate = $items
                         ->where('type', '=', $n->type)
                         ->where('data.user.id', '=', $n->data['user']['id'])
                         ->where('id', '!=', $n->id)
                         ->first();
 
-                    $types = [UserSubscribed::class];
-
                     return !(
-                        $duplicate
-                        && in_array($duplicate->type, $types, true)
-                        && $duplicate->created_at > $n->created_at
+                        $duplicate && $duplicate->created_at > $n->created_at
                     );
                 })
                     ->map(function (DatabaseNotification $n): NotificationResource {

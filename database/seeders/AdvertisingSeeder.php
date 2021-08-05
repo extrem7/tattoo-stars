@@ -27,6 +27,7 @@ class AdvertisingSeeder extends Seeder
                 $promotion->save();
             });
         });
+
         \DB::transaction(function () {
             for ($i = 0; $i < 15; $i++) {
                 $banner = User::inRandomOrder()->first()->banners()->create([
@@ -39,6 +40,16 @@ class AdvertisingSeeder extends Seeder
                 $banner->on_pause = !random_int(0, 4) ? true : null;
                 $banner->save();
             }
+        });
+
+        \DB::transaction(function () {
+            User::whereDoesntHave('tops')->inRandomOrder()->limit(15)->get()->each(function (User $user) {
+                $days = random_int(3, 10);
+                $top = $user->tops()->create(['days' => $days]);
+                $top->start_at = now();
+                $top->end_at = now()->addDays($days);
+                $top->save();
+            });
         });
     }
 }

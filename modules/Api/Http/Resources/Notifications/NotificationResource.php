@@ -16,6 +16,7 @@ class NotificationResource extends JsonResource
         'PostLiked' => 'post_liked',
         'PostCommented' => 'post_commented',
         'UserSubscribed' => 'user_subscribed',
+        'AdvertisingNotification' => 'advertising_expires'
     ];
 
     protected array $user;
