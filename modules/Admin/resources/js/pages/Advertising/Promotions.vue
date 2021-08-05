@@ -167,8 +167,7 @@ export default {
     },
     show(url) {
       Swal.fire({
-        imageUrl: url,
-        // imageHeight: 1500,
+        imageUrl: url
       })
     }
   }

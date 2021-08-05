@@ -53,12 +53,18 @@
           />
         </div>
       </template>
-      <template #cell(actions)="{item:{id}}">
+      <template #cell(actions)="{item:{id,thumbnail}}">
         <ActionsButtons
           :id="id"
           :resource="resource"
           @delete="destroy(id)"
-        />
+        >
+          <a
+            href="#"
+            class="btn btn-primary"
+            @click.prevent="show(thumbnail)"
+          >Просмотреть</a>
+        </ActionsButtons>
       </template>
     </BTable>
   </IndexLayout>
@@ -67,6 +73,7 @@
 <script>
 import index from '@/mixins/crud/index'
 import {BFormCheckbox} from 'bootstrap-vue'
+import Swal from 'sweetalert2'
 
 export default {
   components: {
@@ -103,6 +110,11 @@ export default {
         preserveState: false,
         preserveScroll: true,
         replace: true
+      })
+    },
+    show(url) {
+      Swal.fire({
+        imageUrl: url
       })
     }
   }

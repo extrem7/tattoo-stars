@@ -14,9 +14,16 @@ class StoryResource extends JsonResource
     {
         $story = $this->resource;
 
+        if ($video = $story->post->videoMedia) {
+            $thumbnail = $video->getFullUrl('thumbnail');
+        } else {
+            $thumbnail = $story->post->imagesMedia()->first()->getFullUrl('thumb');
+        }
+
         return [
             'id' => $story->id,
             'postId' => $story->post_id,
+            'thumbnail' => $thumbnail,
             'rating' => $story->rating,
             'likes' => $story->likes_count,
             'dislikes' => $story->dislikes_count,
