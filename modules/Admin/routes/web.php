@@ -5,7 +5,8 @@
  * @routePrefix("admin.")
  */
 
-use Modules\Admin\Http\Controllers\{Advertising\PromotionController,
+use Modules\Admin\Http\Controllers\{Advertising\BannerController,
+    Advertising\PromotionController,
     AuthController,
     DashboardController,
     FaqController,
@@ -51,13 +52,25 @@ Route::middleware(['auth', 'can:admin-panel.access'])->group(function () {
     Route::resource('promotions', PromotionController::class)
         ->except(['show', 'edit', 'update'])
         ->middleware('can:promotions.index');
-    Route::prefix('{promotion}')->name('promotions.')->group(function () {
+    Route::prefix('promotions/{promotion}')->name('promotions.')->group(function () {
         Route::post('verify', [PromotionController::class, 'verify'])
             ->name('verify')
             ->middleware('can:promotions.verify');
         Route::post('reject', [PromotionController::class, 'reject'])
             ->name('reject')
             ->middleware('can:promotions.reject');
+    });
+
+    Route::resource('banners', BannerController::class)
+        ->except(['show', 'edit', 'update'])
+        ->middleware('can:banners.index');
+    Route::prefix('banners/{banner}')->name('banners.')->group(function () {
+        Route::post('verify', [BannerController::class, 'verify'])
+            ->name('verify')
+            ->middleware('can:banners.verify');
+        Route::post('reject', [BannerController::class, 'reject'])
+            ->name('reject')
+            ->middleware('can:banners.reject');
     });
 
     Route::prefix('users/{user}/avatar')

@@ -7,11 +7,11 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Modules\Admin\Http\Controllers\Controller;
 use Modules\Admin\Http\Requests\IndexRequest;
-use Modules\Admin\Repositories\PromotionRepository;
+use Modules\Admin\Repositories\AdvertisingRepository;
 
 class PromotionController extends Controller
 {
-    public function index(IndexRequest $request, PromotionRepository $repository)
+    public function index(IndexRequest $request, AdvertisingRepository $repository)
     {
         $this->seo()->setTitle('Реклама публикаций' . $this->appendPageToTitle($request));
 

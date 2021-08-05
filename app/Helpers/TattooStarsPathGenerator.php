@@ -2,6 +2,7 @@
 
 namespace App\Helpers;
 
+use App\Models\Advertising\Banner;
 use App\Models\Chat\Message;
 use App\Models\Post;
 use App\Models\User;
@@ -33,6 +34,8 @@ class TattooStarsPathGenerator implements PathGenerator
                 return 'users/' . $media->model_id . "/$collection";
             case Message::class:
                 return 'messages/' . $media->model_id . "/$collection";
+            case Banner::class:
+                return 'messages/' . $media->model_id . '/';
         }
 
         return "$folder/" . $media->model_id . "/$collection" . ($useKey ? "/{$media->getKey()}" : '');

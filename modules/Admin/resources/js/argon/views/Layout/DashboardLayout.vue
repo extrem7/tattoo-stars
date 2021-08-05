@@ -32,10 +32,19 @@
         <SideBarItem
           v-if="can('promotions.index')"
           :link="{
-            name: 'Promotions',
+            name: 'Рекламные посты',
             path: route('promotions.index'),
             icon: 'ni ni-notification-70 text-primary',
             active:routeIncludes(['promotions'])
+          }"
+        />
+        <SideBarItem
+          v-if="can('banners.index')"
+          :link="{
+            name: 'Банеры',
+            path: route('banners.index'),
+            icon: 'ni ni-notification-70 text-primary',
+            active:routeIncludes(['banners'])
           }"
         />
         <SideBarItem
@@ -129,6 +138,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
-</style>

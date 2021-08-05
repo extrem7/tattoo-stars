@@ -35,6 +35,9 @@ class AdvertisingSeeder extends Seeder
                     'redirect_to_site' => random_int(0, 1) ? true : null
                 ]);
                 $banner->addMediaFromUrl('https://i.pravatar.cc/225')->toMediaCollection('image');
+                $banner->verified = random_int(0, 1) ? true : null;
+                $banner->on_pause = !random_int(0, 4) ? true : null;
+                $banner->save();
             }
         });
     }
