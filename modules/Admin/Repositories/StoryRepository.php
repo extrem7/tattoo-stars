@@ -3,7 +3,6 @@
 namespace Modules\Admin\Repositories;
 
 use App\Models\Story;
-use App\Models\Traits\Searchable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
 
@@ -22,7 +21,7 @@ class StoryRepository
                 'views' => fn($q) => $q->where('story_views.user_id', '=', $id)
             ])
             ->withCount(['views', 'likes', 'dislikes'])
-            ->when($search['searchQuery'] ?? false, fn(Searchable $q) => $q->search($search['searchQuery']))
+            ->when($search['searchQuery'] ?? false, fn(Builder $q) => $q->search($search['searchQuery']))
             ->when(
                 isset($search['sortBy']) || isset($search['sortDesc']),
                 fn(Builder $q) => $q->orderBy(

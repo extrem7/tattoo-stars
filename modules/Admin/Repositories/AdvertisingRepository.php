@@ -4,7 +4,6 @@ namespace Modules\Admin\Repositories;
 
 use App\Models\Advertising\Banner;
 use App\Models\Advertising\Promotion;
-use App\Models\Traits\Searchable;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
@@ -15,7 +14,7 @@ class AdvertisingRepository
     public function getPromotionsForIndex(array $search, \Closure $scope = null): LengthAwarePaginator
     {
         return Promotion::with(['post.user', 'city.country'])
-            ->when($search['searchQuery'] ?? false, fn(Searchable $q) => $q->search($search['searchQuery']))
+            ->when($search['searchQuery'] ?? false, fn(Builder $q) => $q->search($search['searchQuery']))
             ->when($search['sortBy'] ?? false, fn(Builder $q) => $q->orderBy($search['sortBy'], $search['sortDesc'] ?? false ? 'desc' : 'asc'))
             ->when($scope, fn($q) => $scope($q))
             ->latest()
@@ -45,7 +44,7 @@ class AdvertisingRepository
     public function getBannersForIndex(array $search, \Closure $scope = null): LengthAwarePaginator
     {
         return Banner::with(['imageMedia', 'city.country'])
-            ->when($search['searchQuery'] ?? false, fn(Searchable $q) => $q->search($search['searchQuery']))
+            ->when($search['searchQuery'] ?? false, fn(Builder $q) => $q->search($search['searchQuery']))
             ->when($search['sortBy'] ?? false, fn(Builder $q) => $q->orderBy($search['sortBy'], $search['sortDesc'] ?? false ? 'desc' : 'asc'))
             ->when($scope, fn($q) => $scope($q))
             ->latest()
