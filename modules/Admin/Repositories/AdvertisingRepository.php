@@ -8,12 +8,13 @@ use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class AdvertisingRepository
 {
     public function getPromotionsForIndex(array $search, \Closure $scope = null): LengthAwarePaginator
     {
-        return Promotion::with(['post.user', 'city.country'])
+        return Promotion::with(['post' => fn($q) => $q->with(['user', 'imagesMedia', 'videoMedia']), 'city.country'])
             ->when($search['searchQuery'] ?? false, fn(Builder $q) => $q->search($search['searchQuery']))
             ->when($search['sortBy'] ?? false, fn(Builder $q) => $q->orderBy($search['sortBy'], $search['sortDesc'] ?? false ? 'desc' : 'asc'))
             ->when($scope, fn($q) => $scope($q))
@@ -30,12 +31,13 @@ class AdvertisingRepository
             if ($city = $promotion->city) {
                 $data['location'] = "$city->name, {$city->country->name}";
             }
-            if ($video = $promotion->post->videoMedia) {
-                $thumbnail = $video->getFullUrl('thumbnail');
-            } else {
-                $thumbnail = $promotion->post->imagesMedia()->first()->getFullUrl('thumb');
+
+            $images = $promotion->post->imagesMedia->map(fn(Media $m) => $m->getFullUrl());
+            if ($promotion->post->videoMedia) {
+                $images[] = $promotion->post->videoMedia->getFullUrl('thumbnail');
             }
-            $data['thumbnail'] = $thumbnail;
+            $data['images'] = $images;
+
             $data['user'] = $promotion->post->user;
             return $data;
         });

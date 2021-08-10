@@ -65,7 +65,7 @@
       <template #cell(updated_at)="{item:{updated_at}}">
         {{ updated_at | moment('DD.MM.YYYY HH:mm') }}
       </template>
-      <template #cell(actions)="{item:{id,thumbnail}}">
+      <template #cell(actions)="{item:{id,images}}">
         <ActionsButtons
           :id="id"
           :resource="resource"
@@ -74,19 +74,26 @@
           <a
             href="#"
             class="btn btn-primary"
-            @click.prevent="show(thumbnail)"
+            @click.prevent="show(images)"
           >Просмотреть</a>
         </ActionsButtons>
       </template>
     </BTable>
+    <CoolLightBox
+      :items="gallery.items"
+      :index="gallery.index"
+      @close="gallery.index = null">
+    </CoolLightBox>
   </IndexLayout>
 </template>
 
 <script>
 import index from '@/mixins/crud/index'
 import Swal from 'sweetalert2'
+import CoolLightBox from 'vue-cool-lightbox'
 
 export default {
+  components: {CoolLightBox},
   mixins: [index],
   props: {
     totals: Object
@@ -106,7 +113,11 @@ export default {
         {key: 'reject_reason', label: 'Причина отказа'},
         {key: 'created_at', label: 'Создана', thClass: 'date-column', sortable: true},
         {key: 'updated_at', label: 'Оновлена', thClass: 'date-column', sortable: true},
-      ]
+      ],
+      gallery: {
+        items: [],
+        index: null
+      },
     }
   },
   methods: {
@@ -165,10 +176,9 @@ export default {
         }
       }
     },
-    show(url) {
-      Swal.fire({
-        imageUrl: url
-      })
+    show(images) {
+      this.gallery.items = images
+      this.gallery.index = 0
     }
   }
 }

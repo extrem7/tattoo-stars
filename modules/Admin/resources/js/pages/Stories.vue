@@ -53,7 +53,7 @@
           />
         </div>
       </template>
-      <template #cell(actions)="{item:{id,thumbnail}}">
+      <template #cell(actions)="{item:{id,images}}">
         <ActionsButtons
           :id="id"
           :resource="resource"
@@ -62,23 +62,26 @@
           <a
             href="#"
             class="btn btn-primary"
-            @click.prevent="show(thumbnail)"
+            @click.prevent="show(images)"
           >Просмотреть</a>
         </ActionsButtons>
       </template>
     </BTable>
+    <CoolLightBox
+      :items="gallery.items"
+      :index="gallery.index"
+      @close="gallery.index = null">
+    </CoolLightBox>
   </IndexLayout>
 </template>
 
 <script>
 import index from '@/mixins/crud/index'
 import {BFormCheckbox} from 'bootstrap-vue'
-import Swal from 'sweetalert2'
+import CoolLightBox from 'vue-cool-lightbox'
 
 export default {
-  components: {
-    BFormCheckbox,
-  },
+  components: {BFormCheckbox, CoolLightBox},
   mixins: [index],
   data() {
     return {
@@ -92,7 +95,11 @@ export default {
         {key: 'excluded', label: 'Заблокировать завтра'},
         {key: 'created_at', label: 'Добавлено📅', thClass: 'date-column', sortable: true},
       ],
-      actionsClass: 'actions-column w-auto'
+      actionsClass: 'actions-column w-auto',
+      gallery: {
+        items: [],
+        index: null
+      },
     }
   },
   methods: {
@@ -112,10 +119,9 @@ export default {
         replace: true
       })
     },
-    show(url) {
-      Swal.fire({
-        imageUrl: url
-      })
+    show(images) {
+      this.gallery.items = images
+      this.gallery.index = 0
     }
   }
 }

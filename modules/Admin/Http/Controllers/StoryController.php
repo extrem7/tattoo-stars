@@ -5,7 +5,6 @@ namespace Modules\Admin\Http\Controllers;
 use App\Models\Story;
 use Illuminate\Http\RedirectResponse;
 use Modules\Admin\Http\Requests\IndexRequest;
-use Modules\Admin\Http\Resources\StoryResource;
 use Modules\Admin\Repositories\StoryRepository;
 
 final class StoryController extends Controller
@@ -28,7 +27,7 @@ final class StoryController extends Controller
         $this->seo()->setTitle($title);
 
         $stories = $this->repository->getForIndex($request->only(['searchQuery', 'sortBy', 'sortDesc']));
-        $stories->setCollection(StoryResource::collection($stories)->collection);
+        $this->repository->transformStories($stories);
 
         return inertia('Stories', [
             'resource' => 'stories',

@@ -5,6 +5,9 @@ namespace Modules\Admin\Repositories;
 use App\Models\Story;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
+use Modules\Admin\Http\Resources\StoryResource;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class StoryRepository
 {
@@ -16,7 +19,7 @@ class StoryRepository
 
         return Story::daily()
             ->with([
-                'post.user',
+                'post' => fn($q) => $q->with(['user', 'imagesMedia', 'videoMedia']),
                 'marks' => fn($q) => $q->where('user_id', '=', $id)->withPivot('is_dislike'),
                 'views' => fn($q) => $q->where('story_views.user_id', '=', $id)
             ])
@@ -31,5 +34,21 @@ class StoryRepository
             ->selectRaw(/* @lang MySQL */ "($subselect) as total")
             ->selectRaw(/* @lang MySQL */ "($subselect and date(s2.created_at) = current_date) as total_today")
             ->paginate(10);
+    }
+
+    public function transformStories(LengthAwarePaginator $stories): void
+    {
+        /* @var $promotions Collection<Story> */
+        $stories->transform(function (Story $story) {
+            $data = (new StoryResource($story))->toArray();
+
+            $images = $story->post->imagesMedia->map(fn(Media $m) => $m->getFullUrl());
+            if ($story->post->videoMedia) {
+                $images[] = $story->post->videoMedia->getFullUrl('thumbnail');
+            }
+            $data['images'] = $images;
+
+            return $data;
+        });
     }
 }
