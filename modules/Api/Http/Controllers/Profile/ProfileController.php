@@ -2,7 +2,6 @@
 
 namespace Modules\Api\Http\Controllers\Profile;
 
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\JsonResponse;
 use Modules\Api\Http\Controllers\Controller;
 use Modules\Api\Http\Requests\Users\ProfileUpdateRequest;
@@ -82,21 +81,21 @@ final class ProfileController extends Controller
         $user = $request->user();
         $main = array_filter($request->only(['nickname', 'name', 'email']), 'strlen');
 
-        $needConfirmEmail = $request->filled('email') && $main['email'] !== $user->email;
+        //$needConfirmEmail = $request->filled('email') && $main['email'] !== $user->email;
         $needUpdatePassword = $request->filled('password');
-        if ($needConfirmEmail) {
-            $main['email_verified_at'] = null;
-        }
+        //if ($needConfirmEmail) {
+        //    $main['email_verified_at'] = null;
+        //}
         if ($needUpdatePassword) {
             $main['password'] = \Hash::make($request->input('password'));
         }
         if ($user->update($main)) {
-            if ($needConfirmEmail) {
-                event(new Registered($user));
-            }
-            if ($needUpdatePassword) {
-                $user->tokens()->delete();
-            }
+            //if ($needConfirmEmail) {
+            //    event(new Registered($user));
+            //}
+            //if ($needUpdatePassword) {
+            //    $user->tokens()->delete();
+            //}
         }
 
         $styles = $request->input('styles');

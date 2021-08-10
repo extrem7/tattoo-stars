@@ -24,7 +24,7 @@ class ChatResource extends JsonResource
         if ($chat->relationLoaded('participants')) {
             /* @var $participant User */
             $participant = $chat->participants->where('id', '!=', \Auth::id())->first();
-            $owner = $chat->participants->where('id', '!=', $chat->user_id)->first();
+            $owner = $chat->participants->where('id', '=', $chat->user_id)->first();
         }
 
         if (!$this->listMessages) {
@@ -48,7 +48,7 @@ class ChatResource extends JsonResource
             ]),
             'lastMessage' => $this->when(!$this->listMessages && $lastMessage, fn() => new MessageResource($lastMessage)),
             'unreadCount' => $this->when(isset($this->unreadCount), $this->unreadCount),
-            'marked' => $chat->relationLoaded('participants') && $owner->pivot->marked
+            'marked' => (bool)($chat->relationLoaded('participants') && $chat->participants->where('id', '=', \Auth::id())->first()->pivot->marked)
         ];
     }
 }

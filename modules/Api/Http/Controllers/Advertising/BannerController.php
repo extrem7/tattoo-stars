@@ -19,6 +19,7 @@ final class BannerController extends Controller
      *
      * @apiParam {File} image Image less 4096kb.
      * @apiParam {Boolean} [redirect_to_site] Redirect to user's site.
+     * @apiParam {String} [site_url] Url of website to redirect.
      * @apiParam {Number} [country_id] Country id.
      * @apiParam {Number} [city_id] City id.
      * @apiParam {Number} budget Budget.
@@ -81,6 +82,7 @@ final class BannerController extends Controller
      *
      * @apiParam {File} [image] Image less 4096kb.
      * @apiParam {Boolean} [redirect_to_site] Redirect to user's site.
+     * @apiParam {String} [site_url] Url of website to redirect.
      * @apiParam {Number} [country_id] Country id.
      * @apiParam {Number} [city_id] City id.
      *

@@ -68,6 +68,6 @@ class ContestRepository
                         )
                     )
                 )
-            )->first(['id', 'user_id', 'redirect_to_site']);
+            )->first(['id', 'user_id', 'redirect_to_site', 'site_url']);
     }
 }

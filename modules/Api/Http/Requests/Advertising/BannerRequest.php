@@ -5,6 +5,7 @@ namespace Modules\Api\Http\Requests\Advertising;
 use App\Models\City;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Response;
+use Illuminate\Validation\Rule;
 
 class BannerRequest extends FormRequest
 {
@@ -21,6 +22,7 @@ class BannerRequest extends FormRequest
         return array_merge([
             'image' => [!$update ? 'required' : 'nullable', 'image', 'mimes:jpg,jpeg,bmp,png,gif', 'max:4096'],
             'redirect_to_site' => ['nullable', 'bool'],
+            'site_url' => [Rule::requiredIf($this->input('redirect_to_site')), 'url'],
             'country_id' => ['nullable', 'exists:countries,id'],
             'city_id' => ['nullable', 'exists:cities,id'],
             'account_type' => ['nullable', 'in:users,other']

@@ -20,7 +20,7 @@ class BannerResource extends JsonResource
         return array_merge([
             'id' => $banner->id,
             'userId' => $banner->user_id,
-            'site' => $banner->user->information->website,
+            'site' => $banner->site_url,
             'redirectToSite' => (bool)$banner->redirect_to_site,
             'image' => $banner->imageMedia->getFullUrl(),
             'countryId' => $this->when($banner->country_id, fn() => $banner->country_id),

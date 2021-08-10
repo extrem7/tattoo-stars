@@ -20,7 +20,7 @@ class Banner extends Model implements HasMedia
     use InteractsWithMedia;
 
     protected $table = 'advertising_banners';
-    protected $fillable = ['redirect_to_site', 'country_id', 'city_id', 'account_type', 'budget'];
+    protected $fillable = ['redirect_to_site', 'site_url', 'country_id', 'city_id', 'account_type', 'budget'];
     protected $casts = [
         'redirect_to_site' => 'bool',
         'city_id' => 'integer',
