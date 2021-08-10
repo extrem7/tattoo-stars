@@ -132,4 +132,21 @@ final class PromotionController extends Controller
 
         return response()->json(['message' => 'Click has been stored.']);
     }
+
+    /**
+     * @api {delete} /advertising/promotion/:id/ Delete promotion
+     * @apiName AdvertisingPromotionDelete
+     * @apiGroup Advertising
+     *
+     * @apiUse Token
+     *
+     * @apiSuccess {String} message Is promotion deleted message.
+     */
+    public function destroy(Promotion $promotion): JsonResponse
+    {
+        $promotion->delete();
+
+        return response()->json(['message' => 'Promotion has been deleted.']);
+    }
+
 }

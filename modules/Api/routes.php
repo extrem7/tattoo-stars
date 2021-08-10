@@ -158,6 +158,7 @@ foreach ($versions as $version) {
                     Route::prefix('/promotion/{promotion}')->group(function () {
                         Route::get('', [PromotionController::class, 'show']);
                         Route::patch('', [PromotionController::class, 'update']);
+                        Route::delete('', [PromotionController::class, 'destroy']);
                         Route::post('pause', [PromotionController::class, 'pause']);
                         Route::post('click', [PromotionController::class, 'click']);
                     });
@@ -166,6 +167,7 @@ foreach ($versions as $version) {
                     Route::prefix('/banner/{banner}')->group(function () {
                         Route::get('', [BannerController::class, 'show']);
                         Route::patch('', [BannerController::class, 'update']);
+                        Route::delete('', [BannerController::class, 'destroy']);
                         Route::post('pause', [BannerController::class, 'pause']);
                         Route::post('click', [BannerController::class, 'click']);
                     });

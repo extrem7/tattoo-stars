@@ -140,4 +140,20 @@ final class BannerController extends Controller
 
         return response()->json(['message' => 'Click has been stored.']);
     }
+
+    /**
+     * @api {delete} /advertising/banner/:id/ Delete banner
+     * @apiName AdvertisingBannerDelete
+     * @apiGroup Advertising
+     *
+     * @apiUse Token
+     *
+     * @apiSuccess {String} message Is banner deleted message.
+     */
+    public function destroy(Banner $banner): JsonResponse
+    {
+        $banner->delete();
+
+        return response()->json(['message' => 'Banner has been deleted.']);
+    }
 }
