@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'namespace' => 'Modules',
+    'namespace' => 'modules',
 
     /*
     |--------------------------------------------------------------------------
@@ -30,12 +30,12 @@ return [
         'files' => [
             'routes/web' => 'Routes/web.php',
             'routes/api' => 'Routes/api.php',
-            'views/index' => 'Resources/views/index.blade.php',
-            'views/master' => 'Resources/views/layouts/master.blade.php',
+            'views/index' => 'resources/views/index.blade.php',
+            'views/master' => 'resources/views/layouts/master.blade.php',
             'scaffold/config' => 'Config/config.php',
             'composer' => 'composer.json',
-            'assets/js/app' => 'Resources/assets/js/app.js',
-            'assets/sass/app' => 'Resources/assets/sass/app.scss',
+            'assets/js/app' => 'resources/assets/js/app.js',
+            'assets/sass/app' => 'resources/assets/sass/app.scss',
             'webpack' => 'webpack.mix.js',
             'package' => 'package.json',
         ],
@@ -125,7 +125,7 @@ return [
             'emails' => ['path' => 'Emails', 'generate' => false],
             'notifications' => ['path' => 'Notifications', 'generate' => false],
             'resource' => ['path' => 'Transformers', 'generate' => false],
-            'component-view' => ['path' => 'Resources/views/components', 'generate' => false],
+            'component-view' => ['path' => 'resources/views/components', 'generate' => false],
             'component-class' => ['path' => 'View/Component', 'generate' => false],
         ],
     ],
