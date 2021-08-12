@@ -27,6 +27,8 @@ class ContestService
         }
         $stories = $stories->concat($included);
 
+        \Log::info('Stories for : ' . today()->addDays(-1) . '\n' . print_r($stories->toArray(), true));
+
         $stories->each(fn(Story $item) => ContestWork::create(['post_id' => $item->post_id, 'rating' => $item->total]));
     }
 
@@ -34,8 +36,11 @@ class ContestService
     {
         $works = ContestWork::yesterday()->withCount('votes')->orderByDesc('votes_count')->get('id');
 
+        \Log::info('Works for : ' . today()->addDays(-1) . print_r($works->toArray(), true));
+
         /* @var $winner ContestWork */
         if ($winner = $works->first()) {
+            \Log::info('Mark winner work: ' . print_r($winner->toArray(), true));
             $winner->winner = true;
             $winner->save();
         }
