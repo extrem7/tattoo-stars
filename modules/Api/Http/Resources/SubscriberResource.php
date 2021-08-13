@@ -23,7 +23,8 @@ class SubscriberResource extends JsonResource
             'avatar' => $user->getAvatar('medium'),
             'name' => $user->name,
             'nickname' => $user->nickname,
-            'location' => $this->when($location, $location)
+            'location' => $this->when($location, $location),
+            'winner' => $user->contestWorks->isNotEmpty(),
         ];
     }
 }

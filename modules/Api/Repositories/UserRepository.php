@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
 class UserRepository
@@ -21,6 +22,7 @@ class UserRepository
                 'avatarMedia',
                 'information' => fn($q) => $q->select(['user_id', 'city_id']),
                 'information.city', 'information.city.country',
+                'contestWorks' => fn(HasManyThrough $q) => $q->whereNotNull('winner')
             ])
             ->withCount(['subscribers'])
             ->whereHas('information', function ($q) use ($params) {
