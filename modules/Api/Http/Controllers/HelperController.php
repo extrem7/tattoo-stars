@@ -68,7 +68,7 @@ final class HelperController extends Controller
         $user = \Auth::user();
 
         $hasMessages = $user->incomeMessages()->unread()->exists();
-        $dontVote = !$user->marks()->daily()->exists();
+        $dontVote = !$user->hasVotedToday();
         $hasNotifications = $user->notifications()->unread()->exists();
 
         return response()->json([
