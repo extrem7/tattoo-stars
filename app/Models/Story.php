@@ -57,17 +57,11 @@ class Story extends Model
     //SCOPES
     public function scopeDaily(Builder $query): Builder
     {
-        $to = today()->addDay()->subHours(3);
-        $from = $to->clone()->subDay();
-
-        return $query->whereBetween('created_at', [$from, $to]);
+        return $query->whereDate('created_at', '=', today());
     }
 
     public function scopeYesterday(Builder $query): Builder
     {
-        $to = today()->subHours(3);
-        $from = $to->clone()->subDay();
-
-        return $query->whereBetween('created_at', [$from, $to]);
+        return $query->whereDate('created_at', '=', today()->addDays(-1));
     }
 }
