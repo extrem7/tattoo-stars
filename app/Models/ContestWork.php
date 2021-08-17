@@ -34,11 +34,17 @@ class ContestWork extends Model
     //SCOPES
     public function scopeDaily(Builder $query): Builder
     {
-        return $query->whereDate('date', today());
+        $to = today()->addDay()->subHours(3);
+        $from = $to->clone()->subDay();
+
+        return $query->whereBetween('date', [$from, $to]);
     }
 
     public function scopeYesterday(Builder $query): Builder
     {
-        return $query->whereDate('date', '=', today()->addDays(-1));
+        $to = today()->subHours(3);
+        $from = $to->clone()->subDay();
+
+        return $query->whereBetween('date', [$from, $to]);
     }
 }
