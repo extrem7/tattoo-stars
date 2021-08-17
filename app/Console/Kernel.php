@@ -44,7 +44,7 @@ class Kernel extends ConsoleKernel
             } catch (\Exception $e) {
                 \Log::error('Exception while sending advertising expiration notifications.\n' . $e->getMessage());
             }
-        })->dailyAt('21:01');
+        })->dailyAt('00:01');
     }
 
     protected function commands(): void
