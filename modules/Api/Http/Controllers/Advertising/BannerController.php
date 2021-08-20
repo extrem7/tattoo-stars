@@ -38,8 +38,8 @@ final class BannerController extends Controller
         });
 
         // todo billing stuff
-        $banner->verified = true;
-        $banner->save();
+        //$banner->verified = true;
+        //$banner->save();
 
         return response()->json([
             'message' => 'Banner has been created.',

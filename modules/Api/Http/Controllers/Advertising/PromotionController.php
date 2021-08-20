@@ -33,8 +33,8 @@ final class PromotionController extends Controller
         $promotion = Promotion::create($request->validated());
 
         // todo billing stuff
-        $promotion->verified = true;
-        $promotion->save();
+        //$promotion->verified = true;
+        //$promotion->save();
 
         return response()->json([
             'message' => 'Promotion for your post has been created.',
