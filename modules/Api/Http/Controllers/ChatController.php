@@ -131,6 +131,11 @@ final class ChatController extends Controller
             Response::HTTP_FORBIDDEN,
             __('tattoo.chats.blacklist.participant')
         );
+        abort_if(
+            $participant->deletedChats()->find($chat->id) !== null,
+            Response::HTTP_FORBIDDEN,
+            __('tattoo.chats.deleted')
+        );
 
         $message = $this->repository->createMessage(
             $chat, $request->input('message'), $request->file('image'), $request->file('video')

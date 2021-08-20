@@ -60,6 +60,7 @@ return [
         'daily_limit' => 'You cannot add more posts today.'
     ],
     'chats' => [
+        'deleted' => 'Participant has deleted this chat.',
         'blacklist' => [
             'you' => 'This user has blacklisted you.',
             'participant' => 'You have blacklisted this user.'
