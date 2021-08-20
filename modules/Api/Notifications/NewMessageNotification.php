@@ -37,11 +37,11 @@ class NewMessageNotification extends Notification implements ShouldQueue
     {
         $author = $this->message->user;
 
-        return FcmMessage::create()->setNotification(
-            FcmNotification::create()
+        return FcmMessage::create()
+            ->setData(['type' => 'NewMessage'])
+            ->setNotification(FcmNotification::create()
                 ->setTitle(config('app.name'))
-                ->setBody(__('tattoo.notifications.new_message', ['nickname' => $author->nickname]))
-        );
+                ->setBody(__('tattoo.notifications.new_message', ['nickname' => $author->nickname])));
     }
 
     public function toArray(User $user): array
