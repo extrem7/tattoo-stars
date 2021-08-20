@@ -263,6 +263,12 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
         return $this->belongsToMany(Chat::class, 'chat_participants');
     }
 
+    /* @return BelongsToMany<Chat>|Chat */
+    public function deletedChats(): BelongsToMany
+    {
+        return $this->belongsToMany(Chat::class, 'chats_deleted');
+    }
+
     /* @return HasMany<Message>|Message */
     public function messages(): HasMany
     {

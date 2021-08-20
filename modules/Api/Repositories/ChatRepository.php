@@ -19,7 +19,10 @@ class ChatRepository
     {
         $user = \Auth::user();
 
+        $deletedIds = $user->deletedChats()->pluck('id');
+
         return $user->chats()
+            ->whereNotIn('id', $deletedIds)
             ->with([
                 'participants' => fn(BelongsToMany $q) => $q->withPivot('marked')->with('avatarMedia')
             ])

@@ -204,7 +204,7 @@ final class ChatController extends Controller
      */
     public function destroy(Chat $chat): JsonResponse
     {
-        $chat->delete();
+        \Auth::user()->deletedChats()->save($chat);
 
         return response()->json(['message' => 'Chat has been deleted.']);
     }
