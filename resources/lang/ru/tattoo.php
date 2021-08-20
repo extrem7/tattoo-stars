@@ -12,7 +12,6 @@ return [
         'female' => 'Женщина'
     ],
     'styles' => [
-        'blackgrey' => 'Черно белая',
         'abstraction' => 'Абстракция',
         'watercolor' => 'Акварель',
         'baroque' => 'Барокко',
@@ -46,6 +45,7 @@ return [
         'fantasy' => 'Фентези',
         'hand-poked' => 'Хендпоук',
         'horror' => 'Хоррор',
+        'blackgrey' => 'Черно белая',
         'chicano' => 'Чикано',
         'japanese' => 'Япония',
         '3d' => '3D'

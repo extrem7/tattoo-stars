@@ -12,7 +12,6 @@ return [
         'female' => 'Female'
     ],
     'styles' => [
-        'blackgrey' => 'Black&grey',
         'abstraction' => 'Abstraction',
         'watercolor' => 'Watercolor',
         'baroque' => 'Baroque',
@@ -46,6 +45,7 @@ return [
         'fantasy' => 'Fantasy',
         'hand-poked' => 'Hand-Poked',
         'horror' => 'Horror',
+        'blackgrey' => 'Black&grey',
         'chicano' => 'Chicano',
         'japanese' => 'Japanese',
         '3d' => '3D'
