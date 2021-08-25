@@ -17,6 +17,7 @@ class UserRepository
     {
         return User::where('account_type_id', '=', $params['account_type_id'])
             ->whereNotIn('id', $params['blacklist'])
+            ->whereDoesntHave('tops', fn(Builder $q) => $q->active())
             ->select(['id', 'name', 'nickname'])
             ->with([
                 'avatarMedia',
