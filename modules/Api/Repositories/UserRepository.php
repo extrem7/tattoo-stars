@@ -66,7 +66,10 @@ class UserRepository
             )
             ->limit(5)
             ->inRandomOrder()
-            ->get();
+            ->get()
+            ->map(fn(User $user) => $user->setRelation(
+                'posts', $user->posts()->with(['imagesMedia', 'videoMedia'])->limit(5)->latest()->get())
+            );
     }
 
     public function getBlacklist(User $user): Collection
