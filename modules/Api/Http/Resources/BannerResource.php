@@ -31,7 +31,7 @@ class BannerResource extends JsonResource
             'views' => $banner->views,
             'budget' => $banner->budget,
             'onPause' => (bool)$banner->on_pause,
-            'verified' => (bool)$banner->verified,
+            'verified' => $banner->verified,
             'rejectReason' => $banner->reject_reason
         ] : []);
     }
