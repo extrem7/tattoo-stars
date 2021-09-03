@@ -35,8 +35,9 @@ class ContestRepository
 
     public function getYesterdayVotesCount(): int
     {
+        $date = today()->subDay();
         return \DB::table('contest_votes')
-            ->whereRaw('exists (select * from contest where contest.id = contest_votes.work_id and date = subdate(current_date, 1))')
+            ->whereRaw("exists (select * from contest where contest.id = contest_votes.work_id and date = '$date')")
             ->count();
     }
 
