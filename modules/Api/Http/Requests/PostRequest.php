@@ -15,7 +15,7 @@ class PostRequest extends FormRequest
                 'array',
                 'max:6'
             ],
-            'images.*' => ['image', 'max:2048', 'dimensions:max_width=750,max_height=750'],
+            'images.*' => ['image', 'max:5096', 'dimensions:max_width=1080,max_height=1080'],
             'video' => [
                 Rule::requiredIf(empty($this->file('images'))),
                 'file',

@@ -34,7 +34,7 @@ class AdvertisingRepository
 
             $images = $promotion->post->imagesMedia->map(fn(Media $m) => $m->getFullUrl());
             if ($promotion->post->videoMedia) {
-                $images[] = $promotion->post->videoMedia->getFullUrl('thumbnail');
+                $images[] = $promotion->post->videoMedia->getFullUrl('thumb');
             }
             $data['images'] = $images;
 
