@@ -5,6 +5,7 @@ namespace Modules\Api\Repositories;
 use App\Models\Post;
 use App\Models\Story;
 use Illuminate\Contracts\Pagination\Paginator;
+use Illuminate\Support\Collection;
 
 class StoryRepository
 {
@@ -20,6 +21,15 @@ class StoryRepository
             ->withCount(['likes', 'dislikes'])
             ->latest()
             ->simplePaginate(20);
+    }
+
+    public function getYesterday(): Collection
+    {
+        return Story::yesterday()
+            ->with(['post.user'])
+            ->orderByDesc('rating')
+            //->limit(10)
+            ->get();
     }
 
     public function store(Post $post): Story

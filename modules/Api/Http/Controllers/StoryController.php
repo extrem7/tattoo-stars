@@ -39,6 +39,9 @@ final class StoryController extends Controller
      * @apiSuccess {Number} stories.dislikes Story dislikes count.
      * @apiSuccess {Enum} stories.likeStatus Story like status: {like|dislike|null}.
      * @apiSuccess {Boolean} stories.viewed Is story was viewed.
+     * @apiSuccess {Object[]} yesterday Yesterday top stories collection.
+     * @apiSuccess {Number} yesterday.id Story id.
+     * @apiSuccess {Object} yesterday.post Story post (see IndexPosts).
      * @apiUse Pagination
      */
     public function index(): JsonResponse
@@ -48,6 +51,7 @@ final class StoryController extends Controller
         return response()->json([
             'storyBalance' => \Auth::user()->story_balance,
             'stories' => StoryResource::collection($stories),
+            'yesterday' => $stories->isEmpty() ? StoryResource::collection($this->repository->getYesterday()) : [],
             'hasMorePages' => $stories->hasMorePages()
         ]);
     }
