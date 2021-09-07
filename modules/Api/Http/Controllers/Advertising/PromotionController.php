@@ -88,6 +88,7 @@ final class PromotionController extends Controller
 
         $promotion->update($request->validated());
         $promotion->verified = null;
+        $promotion->reject_reason = null;
         $promotion->save();
 
         return response()->json(['message' => 'Promotion has been updated.']);
