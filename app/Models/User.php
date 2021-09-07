@@ -72,7 +72,7 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
         $this->addMediaCollection('avatar')->singleFile()
             ->registerMediaConversions(function (Media $media) {
                 $this->addMediaConversion('big')
-                    ->width(225)
+                    ->width(680)
                     ->sharpen(0)
                     ->nonQueued();
                 $this->addMediaConversion('medium')

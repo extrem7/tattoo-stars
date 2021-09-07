@@ -44,7 +44,7 @@ class Post extends Model implements HasMedia
     {
         $this->addMediaCollection('images')->registerMediaConversions(function (Media $media) {
             $this->addMediaConversion('thumb')
-                ->crop('crop-center', 220, 220)
+                ->crop('crop-center', 1080, 1080)
                 ->sharpen(0)
                 ->nonQueued();
         });
