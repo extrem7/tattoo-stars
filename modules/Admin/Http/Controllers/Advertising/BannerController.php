@@ -38,6 +38,7 @@ class BannerController extends Controller
     public function verify(Banner $banner): RedirectResponse
     {
         $banner->verified = true;
+        $banner->reject_reason = null;
         $banner->save();
 
         return back()->with([

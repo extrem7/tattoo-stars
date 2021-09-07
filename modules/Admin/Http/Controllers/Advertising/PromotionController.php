@@ -38,6 +38,7 @@ class PromotionController extends Controller
     public function verify(Promotion $promotion): RedirectResponse
     {
         $promotion->verified = true;
+        $promotion->reject_reason = null;
         $promotion->save();
 
         return back()->with([
