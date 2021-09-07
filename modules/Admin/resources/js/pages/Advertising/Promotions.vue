@@ -30,8 +30,8 @@
 
       sort-icon-left
       @context-changed="update">
-      <template #cell(user)="{item:{user}}">
-        ID:{{ `${user.id} ${user.nickname}` }}
+      <template #cell(user)="{item:{post}}">
+        ID:{{ `${post.user.id} ${post.user.nickname}` }}
       </template>
       <template #cell(on_pause)="{item:{on_pause}}">
         {{ on_pause ? 'Да' : 'Нет' }}

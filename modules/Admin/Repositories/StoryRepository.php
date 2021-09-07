@@ -41,7 +41,7 @@ class StoryRepository
         /* @var $promotions Collection<Story> */
         $stories->transform(function (Story $story) {
             $data = (new StoryResource($story))->toArray();
-
+            $data['user'] = $story->user;
             $images = $story->post->imagesMedia->map(fn(Media $m) => $m->getFullUrl('thumb'));
             if ($story->post->videoMedia) {
                 $images[] = $story->post->videoMedia->getFullUrl('thumbnail');

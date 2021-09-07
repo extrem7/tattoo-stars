@@ -28,6 +28,9 @@
 
       sort-icon-left
       @context-changed="update">
+      <template #cell(user)="{item:{user}}">
+        ID:{{ `${user.id} ${user.nickname}` }}
+      </template>
       <template #cell(rating)="{item:{rating,likes,dislikes}}">
         {{ rating }} ({{ likes }}👍|{{ dislikes }}👎)
       </template>
@@ -87,6 +90,7 @@ export default {
     return {
       fields: [
         {key: 'id', sortable: true},
+        {key: 'user', label: 'Пользователь'},
         {key: 'postId', sortable: true, sortKey: 'post_id'},
         {key: 'rating', label: 'Рейтинг📈', sortable: true},
         {key: 'views', label: 'Просмотров👀', sortable: true, sortKey: 'views_count'},
