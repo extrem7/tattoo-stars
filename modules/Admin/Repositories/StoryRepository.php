@@ -42,7 +42,7 @@ class StoryRepository
         $stories->transform(function (Story $story) {
             $data = (new StoryResource($story))->toArray();
 
-            $images = $story->post->imagesMedia->map(fn(Media $m) => $m->getFullUrl());
+            $images = $story->post->imagesMedia->map(fn(Media $m) => $m->getFullUrl('thumb'));
             if ($story->post->videoMedia) {
                 $images[] = $story->post->videoMedia->getFullUrl('thumbnail');
             }
