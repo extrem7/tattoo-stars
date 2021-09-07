@@ -17,7 +17,7 @@ class TopRequest extends FormRequest
     public function authorize(): bool
     {
         abort_unless(
-            in_array($this->user()->account_type_id, [3, 4], true),
+            in_array($this->user()->account_type_id, [2, 3, 4], true),
             Response::HTTP_FORBIDDEN,
             'Pin to top is now allowed for your account type.'
         );
