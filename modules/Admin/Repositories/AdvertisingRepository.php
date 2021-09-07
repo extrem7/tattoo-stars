@@ -32,7 +32,7 @@ class AdvertisingRepository
                 $data['location'] = "$city->name, {$city->country->name}";
             }
 
-            $images = $promotion->post->imagesMedia->map(fn(Media $m) => $m->getFullUrl());
+            $images = $promotion->post->imagesMedia->map(fn(Media $m) => $m->getFullUrl('thumb'));
             if ($promotion->post->videoMedia) {
                 $images[] = $promotion->post->videoMedia->getFullUrl('thumb');
             }
